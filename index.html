@@ -476,6 +476,41 @@
 }
 
 
+
+  /* ================= B2B SAAS LAYER ================= */
+  .b2b-band{background:var(--navy);color:#fff;padding:30px 0;}
+  .b2b-band-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .b2b-mini{border-left:1px solid rgba(255,255,255,.16);padding-left:18px;}
+  .b2b-mini strong{display:block;font-family:'Fraunces',serif;font-size:22px;color:#fff;}
+  .b2b-mini span{font-size:11px;color:rgba(255,255,255,.6);}
+  .b2b-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:28px;transition:.25s ease;}
+  .b2b-card:hover{transform:translateY(-5px);box-shadow:0 22px 45px -22px rgba(16,26,46,.24);}
+  .b2b-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .b2b-icon{width:46px;height:46px;border-radius:13px;background:var(--blue-soft);color:var(--blue);display:grid;place-items:center;font-weight:800;margin-bottom:18px;}
+  .b2b-card h3{font-family:'Fraunces',serif;font-size:21px;margin-bottom:8px;}
+  .b2b-card p{font-size:13.5px;line-height:1.65;color:var(--text-dim);}
+  .b2b-list{list-style:none;margin-top:16px;display:grid;gap:9px;}
+  .b2b-list li{font-size:12.5px;color:var(--text-dim);}
+  .b2b-list li::before{content:'✓';color:var(--blue);font-weight:800;margin-right:8px;}
+  .b2b-dashboard{background:var(--navy);border-radius:24px;padding:18px;box-shadow:0 30px 60px -30px rgba(16,26,46,.5);}
+  .b2b-topbar{height:34px;display:flex;gap:6px;align-items:center;margin-bottom:12px;}
+  .b2b-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35);}
+  .b2b-screen{background:#f8fafc;border-radius:14px;padding:18px;}
+  .b2b-screen-head{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:800;}
+  .b2b-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px;}
+  .b2b-kpi{background:#fff;border:1px solid #e8edf0;border-radius:10px;padding:12px;}
+  .b2b-kpi b{font-size:19px;display:block;}.b2b-kpi small{font-size:9px;color:#89938d;}
+  .b2b-chart{height:150px;background:#fff;border:1px solid #e8edf0;border-radius:10px;margin-top:10px;padding:12px;}
+  .b2b-bars{height:110px;display:flex;align-items:flex-end;gap:8px;margin-top:8px;}
+  .b2b-bars i{flex:1;background:#cbd8ff;border-radius:4px 4px 0 0;}.b2b-bars i:nth-child(1){height:34%}.b2b-bars i:nth-child(2){height:48%}.b2b-bars i:nth-child(3){height:43%}.b2b-bars i:nth-child(4){height:65%}.b2b-bars i:nth-child(5){height:58%}.b2b-bars i:nth-child(6){height:82%;background:var(--blue)}.b2b-bars i:nth-child(7){height:95%;background:var(--coral)}
+  .b2b-trust{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+  .b2b-trust span{font-size:10px;padding:7px 10px;border-radius:999px;background:var(--blue-soft);color:var(--navy);font-weight:700;}
+  .b2b-cta{background:linear-gradient(135deg,var(--navy),var(--navy-2));border-radius:28px;padding:54px;display:grid;grid-template-columns:1.3fr .7fr;gap:30px;align-items:center;color:#fff;overflow:hidden;position:relative;}
+  .b2b-cta h2{color:#fff}.b2b-cta p{color:rgba(255,255,255,.65);line-height:1.7;margin-top:14px;max-width:600px;}
+  .b2b-cta-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;}.b2b-cta-actions .btn-primary{background:#fff;color:var(--navy);}.b2b-cta-actions .btn-ghost{color:#fff;}.b2b-cta-actions .play-circle{border-color:#fff;}
+  @media(max-width:900px){.b2b-band-grid{grid-template-columns:repeat(2,1fr)}.b2b-grid{grid-template-columns:1fr 1fr}.b2b-cta{grid-template-columns:1fr;padding:40px 30px}.b2b-cta-actions{justify-content:flex-start}}
+  @media(max-width:600px){.b2b-band-grid,.b2b-grid{grid-template-columns:1fr}.b2b-mini{border-left:0;border-top:1px solid rgba(255,255,255,.16);padding:12px 0 0}.b2b-cta{padding:32px 20px}.b2b-cta-actions .btn-primary,.b2b-cta-actions .btn-ghost{width:100%;justify-content:center}.b2b-kpis{grid-template-columns:1fr 1fr 1fr}.b2b-kpi{padding:9px}.b2b-kpi b{font-size:15px}}
+
   /* ================= RESPONSIVE POLISH ================= */
   section[id]{scroll-margin-top:88px;}
   .mobile-menu{display:none;}
@@ -611,6 +646,23 @@
   }
 
 </style>
+<style>.signal-marquee{overflow:hidden;background:#0c1712;color:#dfffea;padding:11px 0;white-space:nowrap}.marquee-track{display:flex;width:max-content;animation:marqueeMove 20s linear infinite}.marquee-track span{font-size:11px;font-weight:850;letter-spacing:.12em;padding:0 28px}@keyframes marqueeMove{to{transform:translateX(-50%)}}.growth-section{background:#f7faf8}.growth-score-card{background:#0c1712;border:1px solid #26382d;border-radius:24px;padding:40px;min-height:390px;display:flex;align-items:center;justify-content:center;flex-direction:column}.score-ring{width:250px;height:250px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#00c853 0 91%,#26382d 91% 100%);position:relative}.score-ring:before{content:"";position:absolute;inset:15px;border-radius:50%;background:#101a15}.score-ring>div{position:relative;text-align:center;color:#fff}.score-ring strong{display:block;font-size:64px;line-height:.9;letter-spacing:-4px}.score-ring small{font-size:13px;color:#8fa097}.score-ring span{display:block;margin-top:10px;color:#73f19c;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.12em}.score-caption{text-align:center;margin-top:22px}.score-caption b{color:#fff}.score-caption p{color:#91a098;font-size:12px;margin-top:5px}.video-card{position:relative;background:#0c1712;border-radius:20px;overflow:hidden;border:1px solid #26382d;min-height:330px;box-shadow:0 25px 60px rgba(17,24,39,.16)}.video-card video{width:100%;height:100%;min-height:330px;display:block;background:#07100b}@media(max-width:620px){.growth-score-card{padding:25px;min-height:330px}.score-ring{width:210px;height:210px}.score-ring strong{font-size:53px}.video-card,.video-card video{min-height:230px}.marquee-track{animation-duration:16s}}</style><style>
+.service-scroller{padding:90px 0;background:#f7faf8;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}.scroll-head{display:flex;align-items:end;justify-content:space-between;gap:25px}.scroll-controls{display:flex;gap:8px}.scroll-controls button{width:44px;height:44px;border:1px solid #d9e0dc;background:#fff;border-radius:10px;font-size:20px;transition:.2s}.scroll-controls button:hover{background:#e7f9ed;border-color:#00c853}.service-track{display:flex;gap:16px;overflow-x:auto;scroll-behavior:smooth;scrollbar-width:none;padding:28px 2px 12px;cursor:grab}.service-track:active{cursor:grabbing}.service-track::-webkit-scrollbar{display:none}.service-track article{flex:0 0 290px;min-height:245px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:25px;transition:.25s}.service-track article:hover{transform:translateY(-5px);box-shadow:0 20px 45px rgba(17,24,39,.09)}.service-track article>span{font-size:11px;color:#07853c;font-weight:900}.service-track h3{font-size:19px;margin-top:40px}.service-track p{font-size:13px;line-height:1.65;color:var(--muted);margin-top:8px}.service-track a{display:inline-block;margin-top:20px;color:#07853c;font-size:12px;font-weight:850}
+@media(max-width:620px){.service-scroller{padding:65px 0}.scroll-head{align-items:flex-start}.scroll-controls{flex:none}.scroll-controls button{width:40px;height:40px}.service-track article{flex-basis:82vw}}
+</style>
+<script>document.querySelectorAll('.scroll-controls button').forEach(btn=>btn.addEventListener('click',()=>{const track=document.querySelector('.service-track');track.scrollBy({left:btn.dataset.scroll==='right'?330:-330,behavior:'smooth'});}));</script><style>
+/* Continuous marquee cards */
+.service-marquee,.b2b-marquee{overflow:hidden;position:relative;margin-top:38px;mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent);-webkit-mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent)}
+.service-marquee-track,.b2b-marquee-track{display:flex;gap:18px;width:max-content;animation:cardsMarquee 30s linear infinite}
+.service-marquee:hover .service-marquee-track,.b2b-marquee:hover .b2b-marquee-track{animation-play-state:paused}
+.service-marquee .service-card{width:300px;flex:0 0 300px;min-height:245px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:0 10px 30px rgba(17,24,39,.04)}
+.b2b-marquee .b2b-card{width:360px;flex:0 0 360px;min-height:350px}
+@keyframes cardsMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.service-marquee::before,.service-marquee::after,.b2b-marquee::before,.b2b-marquee::after{content:"";position:absolute;z-index:2;top:0;bottom:0;width:70px;pointer-events:none;background:linear-gradient(90deg,#f7faf8,transparent)}
+.service-marquee::after,.b2b-marquee::after{right:0;transform:scaleX(-1)}
+@media(max-width:620px){.service-marquee-track,.b2b-marquee-track{animation-duration:24s}.service-marquee .service-card{width:78vw;flex-basis:78vw}.b2b-marquee .b2b-card{width:82vw;flex-basis:82vw}.service-marquee::before,.service-marquee::after,.b2b-marquee::before,.b2b-marquee::after{width:35px}}
+@media(prefers-reduced-motion:reduce){.service-marquee-track,.b2b-marquee-track{animation:none;overflow-x:auto}.service-marquee,.b2b-marquee{mask-image:none;-webkit-mask-image:none}}
+</style>
 </head>
 <body>
 
@@ -658,9 +710,9 @@
         </a>
       </div>
       <div class="stat-row">
-        <div class="stat"><b>240+</b><span>Brands scaled</span></div>
-        <div class="stat"><b>3.4x</b><span>Avg. revenue lift</span></div>
-        <div class="stat"><b>98%</b><span>Client retention</span></div>
+        <div class="stat"><b>240+</b><span>Projects delivered</span></div>
+        <div class="stat"><b>3.4x</b><span>Avg. growth impact</span></div>
+        <div class="stat"><b>98%</b><span>Client satisfaction</span></div>
       </div>
     </div>
 
@@ -724,7 +776,7 @@
       <p>From digging up digital evidence to shipping your next product — every service is handled in-house.</p>
     </div>
 
-    <div class="service-grid service-grid-4">
+    <div class="service-marquee"><div class="service-marquee-track">
       <div class="service-card">
         <div class="service-icon">🔍</div>
         <h3>Image Forensics</h3>
@@ -749,12 +801,74 @@
         <p>Tools, automation and full applications built to your spec — clean code, documented and maintainable.</p>
         <a href="#" class="service-more">Learn more →</a>
       </div>
-    </div>
+      <div class="service-card"><div class="service-icon">🔍</div><h3>Image Forensics</h3><p>Authenticity checks, metadata analysis and tamper detection for photos and digital evidence.</p><a href="#" class="service-more">Learn more →</a></div>
+      <div class="service-card accent"><div class="service-icon">✦</div><h3>Brand & Web Design</h3><p>Sites and identity systems built for conversion first — fast, clear, and on-brand.</p><a href="#" class="service-more">Learn more →</a></div>
+      <div class="service-card"><div class="service-icon">🛡</div><h3>Ethical Hacking</h3><p>Kali-based penetration testing and vulnerability assessments to harden your systems.</p><a href="#" class="service-more">Learn more →</a></div>
+      <div class="service-card accent"><div class="service-icon">⌨</div><h3>Custom Programming</h3><p>Tools, automation and applications built to your spec with clean maintainable code.</p><a href="#" class="service-more">Learn more →</a></div>
+    </div></div>
   </div>
 </section>
 
 <div class="wrap">
   
+
+
+<section class="b2b-band" aria-label="B2B capabilities">
+  <div class="wrap b2b-band-grid">
+    <div class="b2b-mini"><strong>B2B-first</strong><span>Built for decision-makers and growing teams</span></div>
+    <div class="b2b-mini"><strong>SaaS-ready</strong><span>Product, landing page and dashboard experiences</span></div>
+    <div class="b2b-mini"><strong>Security-minded</strong><span>Privacy, risk and technical best practices</span></div>
+    <div class="b2b-mini"><strong>Results-driven</strong><span>Design tied to business outcomes</span></div>
+  </div>
+</section>
+
+<section class="section" id="solutions">
+  <div class="wrap">
+    <div class="section-head"><span class="tag">B2B solutions</span><h2>Everything your business needs to look credible, sell clearly and scale.</h2><p>From your first landing page to a complete SaaS growth system, we connect brand, product, technology and performance into one experience.</p></div>
+    <div class="b2b-marquee"><div class="b2b-marquee-track">
+      <article class="b2b-card"><div class="b2b-icon">01</div><h3>SaaS & Product Design</h3><p>Conversion-focused interfaces for B2B SaaS products, dashboards, portals and customer journeys.</p><ul class="b2b-list"><li>Responsive UI systems</li><li>Dashboard & portal UX</li><li>Design system foundations</li></ul></article>
+      <article class="b2b-card"><div class="b2b-icon">02</div><h3>B2B Growth Websites</h3><p>Professional websites that explain complex offers quickly and move visitors toward qualified conversations.</p><ul class="b2b-list"><li>Landing pages & funnels</li><li>SEO-ready content structure</li><li>Lead generation CTAs</li></ul></article>
+      <article class="b2b-card"><div class="b2b-icon">03</div><h3>Security & Digital Forensics</h3><p>Technical support for teams that need stronger digital trust, investigation workflows and safer web operations.</p><ul class="b2b-list"><li>Digital evidence workflows</li><li>Security-focused web practices</li><li>Risk-aware implementation</li></ul></article>
+      <article class="b2b-card"><div class="b2b-icon">01</div><h3>SaaS & Product Design</h3><p>Conversion-focused interfaces for B2B SaaS products, dashboards, portals and customer journeys.</p><ul class="b2b-list"><li>Responsive UI systems</li><li>Dashboard & portal UX</li><li>Design system foundations</li></ul></article>
+      <article class="b2b-card"><div class="b2b-icon">02</div><h3>B2B Growth Websites</h3><p>Professional websites that explain complex offers quickly and move visitors toward qualified conversations.</p><ul class="b2b-list"><li>Landing pages & funnels</li><li>SEO-ready content structure</li><li>Lead generation CTAs</li></ul></article>
+      <article class="b2b-card"><div class="b2b-icon">03</div><h3>Security & Digital Forensics</h3><p>Technical support for teams that need stronger digital trust, investigation workflows and safer web operations.</p><ul class="b2b-list"><li>Digital evidence workflows</li><li>Security-focused web practices</li><li>Risk-aware implementation</li></ul></article>
+    </div></div>
+  </div>
+</section>
+
+<section class="section" id="b2b-analytics">
+  <div class="wrap about-grid">
+    <div>
+      <span class="tag">Business intelligence</span><h2>Turn your website into a measurable B2B growth engine.</h2>
+      <p style="margin-top:18px;color:var(--text-dim);line-height:1.7">A professional B2B presence should do more than look good. It should communicate value, build trust, capture intent and make the next action obvious.</p>
+      <div class="about-copy" style="margin-top:24px">
+        <div class="feature"><span class="feature-num">01</span><div><h3>Clear positioning</h3><p>Make your offer understandable for buyers, partners and technical stakeholders.</p></div></div>
+        <div class="feature"><span class="feature-num">02</span><div><h3>Conversion architecture</h3><p>Connect content, proof, CTAs and forms into one logical B2B funnel.</p></div></div>
+        <div class="feature"><span class="feature-num">03</span><div><h3>Scalable foundation</h3><p>Build components once so future pages, products and campaigns stay consistent.</p></div></div>
+      </div>
+    </div>
+    <div class="b2b-dashboard">
+      <div class="b2b-topbar"><i class="b2b-dot"></i><i class="b2b-dot"></i><i class="b2b-dot"></i></div>
+      <div class="b2b-screen">
+        <div class="b2b-screen-head"><span>Business growth overview</span><span style="color:#2f5fff">Q3 2026</span></div>
+        <div class="b2b-kpis"><div class="b2b-kpi"><b>4.8x</b><small>Pipeline ROI</small></div><div class="b2b-kpi"><b>62%</b><small>Lead quality</small></div><div class="b2b-kpi"><b>−31%</b><small>Acquisition cost</small></div></div>
+        <div class="b2b-chart"><small style="font-size:10px;color:#89938d;font-weight:700">Qualified opportunities</small><div class="b2b-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        <div class="b2b-trust"><span>SEO</span><span>Conversion</span><span>Analytics</span><span>Security</span><span>UX</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="section">
+  <div class="wrap">
+    <div class="b2b-cta">
+      <div><span class="tag" style="color:#9eb4ff">For ambitious teams</span><h2>Make your next digital project look enterprise-ready.</h2><p>Tell us what you are building, what is not working and where you want to go. We will shape the right digital path around it.</p></div>
+      <div class="b2b-cta-actions"><a href="#contact" class="btn-primary">Book a discovery call →</a><a href="#services" class="btn-ghost"><span class="play-circle">→</span> Explore services</a></div>
+    </div>
+  </div>
+</section>
 
 <section id="blogs">
   <div class="section wrap">
@@ -879,7 +993,7 @@ const blogs = [{
   title: "Blog Post 02: .....",
   video: "ss.mp4",
   link: "blog-post-02.html",
-  body: `...`},
+  body: `.....`},
   {
     id: 1,
     date: "1-18-2026",
