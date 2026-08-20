@@ -1734,9 +1734,9 @@ const blogs = [{
 ];
 
 const BLOG_KEY='fs_blog_state_v1';
-let blogState=JSON.parse(localStorage.getItem(BLOG_KEY)|'{}');
+let blogState=JSON.parse(localStorage.getItem(BLOG_KEY) || '{}');
 let activeBlogId=null;
-const getState=id=>blogState[id]|(blogState[id]={likes:0,dislikes:0,shares:0,copies:0,comments:[],liked:false,disliked:false});
+const getState=id=>blogState[id] || (blogState[id]={likes:0,dislikes:0,shares:0,copies:0,comments:[],liked:false,disliked:false});
 const saveState=()=>localStorage.setItem(BLOG_KEY,JSON.stringify(blogState));
 const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const icon={like:'♥',dislike:'▼',comment:'◌',share:'↗',copy:'⧉'};
@@ -1814,7 +1814,7 @@ function renderComments(){
 }
 
 document.getElementById('commentForm').addEventListener('submit',e=>{
-  e.preventDefault();const name=document.getElementById('commentName').value.trim(),text=document.getElementById('commentText').value.trim();if(!name|!text)return;
+  e.preventDefault();const name=document.getElementById('commentName').value.trim(),text=document.getElementById('commentText').value.trim();if(!name || !text)return;
   const st=getState(activeBlogId);st.comments.push({name,text,at:Date.now()});saveState();e.target.reset();renderComments();openBlog(activeBlogId);renderBlogs();
 });
 document.getElementById('blogClose').addEventListener('click',closeBlog);
@@ -1826,7 +1826,7 @@ renderBlogs();
 const menuToggle=document.getElementById('menuToggle');
 const mobileMenu=document.getElementById('mobileMenu');
 function setMenu(open){
-  if(!menuToggle|!mobileMenu)return;
+  if(!menuToggle || !mobileMenu)return;
   menuToggle.classList.toggle('is-open',open);
   menuToggle.setAttribute('aria-expanded',String(open));
   menuToggle.setAttribute('aria-label',open?'Close menu':'Open menu');
@@ -1865,7 +1865,7 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
 (function(){
   const el=document.querySelector('[data-score]');
   if(!el)return;
-  const target=Number(el.dataset.score|92);
+  const target=Number(el.dataset.score || 92);
   let start=0, startTime=null;
   function tick(t){
     if(!startTime)startTime=t;
@@ -1889,7 +1889,7 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function resize(){
-    const dpr=Math.min(window.devicePixelRatio|1,2);
+    const dpr=Math.min(window.devicePixelRatio || 1,2);
     w=window.innerWidth; h=window.innerHeight;
     c.width=w*dpr;c.height=h*dpr;c.style.width=w+'px';c.style.height=h+'px';
     ctx.setTransform(dpr,0,0,dpr,0,0);
@@ -1943,10 +1943,10 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
     form.addEventListener('submit',function(ev){
       ev.preventDefault();
       const fd=new FormData(form);
-      const name=(fd.get('name')|'').trim();
-      const sender=(fd.get('email')|'').trim();
-      const subject=(fd.get('subject')|'Website enquiry').trim();
-      const message=(fd.get('message')|'').trim();
+      const name=(fd.get('name') || '').trim();
+      const sender=(fd.get('email') || '').trim();
+      const subject=(fd.get('subject') || 'Website enquiry').trim();
+      const message=(fd.get('message') || '').trim();
       const body=[
         'Name: '+name,
         'Email: '+sender,
