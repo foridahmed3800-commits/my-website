@@ -926,6 +926,11 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:40;opa
 .fs-hud{position:absolute;padding:10px 12px;border:1px solid var(--line);background:rgba(2,12,8,.78);backdrop-filter:blur(10px);border-radius:10px;min-width:115px;box-shadow:0 0 22px rgba(0,245,107,.05);font-family:'Space Mono',monospace}.fs-hud small,.fs-hud b,.fs-hud em{display:block}.fs-hud small{font-size:7px;color:#698277;letter-spacing:.12em}.fs-hud b{font-size:12px;color:#fff;margin-top:4px}.fs-hud em{font-size:7px;color:var(--cy);font-style:normal;margin-top:3px}.h1{left:24px;top:26px}.h2{right:24px;top:26px}.h3{right:24px;bottom:28px}.fs-crosshair{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);color:rgba(0,245,107,.25);font:24px 'Space Mono'}.fs-3d-corner{position:absolute;left:22px;bottom:20px;font:7px 'Space Mono';color:#557166;letter-spacing:.08em}.fs-3d-corner b{color:#8faaa0}
 .fs-telemetry{border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,rgba(8,25,17,.92),rgba(2,10,7,.9));padding:24px;box-shadow:inset 0 0 50px rgba(0,245,107,.025);align-self:stretch}.fs-telemetry-head{display:flex;justify-content:space-between;align-items:center;font:800 9px 'Space Mono';letter-spacing:.1em;color:#d6e7de;padding-bottom:18px;border-bottom:1px solid var(--line)}.fs-telemetry-head b{font-size:7px;color:var(--cy)}.fs-telemetry-head i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--cy);box-shadow:0 0 12px var(--cy);margin-right:5px}.telemetry-row{margin-top:20px}.telemetry-row span{font-size:10px;color:#80978c}.telemetry-row b{float:right;font:800 10px 'Space Mono';color:var(--cy)}.telemetry-row>i{display:block;height:5px;background:#0b2518;border-radius:999px;margin-top:9px;overflow:hidden}.telemetry-row>i em{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#008f46,var(--cy));box-shadow:0 0 12px rgba(0,245,107,.4);animation:fsBar 1.4s cubic-bezier(.2,.8,.2,1)}@keyframes fsBar{from{width:0!important}}
 .fs-terminal-mini{margin-top:25px;padding:15px;border:1px solid rgba(0,245,107,.11);border-radius:12px;background:#010705;font:8px/2 'Space Mono';color:#6f8b7e}.fs-terminal-mini p{margin:0}.fs-terminal-mini p span{color:var(--cy)}.fs-terminal-mini b{color:var(--cy)}.fs-terminal-mini .typing{color:#a2b8ad;margin-top:5px}.typing span{animation:fsBlink .8s steps(2) infinite}.fs-ethical-badge{margin-top:18px;padding:12px;border:1px solid rgba(31,230,255,.15);background:rgba(31,230,255,.025);border-radius:12px}.fs-ethical-badge strong{display:block;color:var(--cy2);font:900 9px 'Space Mono';letter-spacing:.12em}.fs-ethical-badge span{display:block;color:#728a7f;font-size:9px;line-height:1.6;margin-top:5px}
+.fs-file-inspector{margin-top:18px;padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(0,245,107,.02)}
+.fs-file-inspector-btn{width:100%;background:rgba(0,245,107,.1);border:1px solid rgba(0,245,107,.4);color:var(--cy);padding:10px 14px;border-radius:999px;font:700 10px 'Space Mono',monospace;letter-spacing:.05em;cursor:pointer;transition:.2s ease}
+.fs-file-inspector-btn:hover{background:rgba(0,245,107,.18);box-shadow:0 0 14px rgba(0,245,107,.12)}
+.fs-file-inspector-result{margin-top:10px;font-size:9px;line-height:1.7;color:#7e988c;word-break:break-all}
+.fs-file-inspector-result b{color:var(--cy);display:block;font-size:10px}
 .qq-livebar{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#010604!important}.qq-dashboard-section,#about,#services,#solutions,#b2b-analytics,#blogs,#contact{background:#03100b!important}.section-head h2,h2,.feature h3,.b2b-card h3,.blog-body h3,.blog-dialog-content h2{color:#f2fff7}.section-head p,.feature p,.b2b-card p,.blog-excerpt,.info-row span{color:#89a197}.service-card,.blog-card,.b2b-card{background:rgba(7,24,16,.82)!important;border-color:var(--line)!important;box-shadow:inset 0 0 25px rgba(0,245,107,.015)}.service-card:hover,.blog-card:hover,.b2b-card:hover{box-shadow:0 20px 45px rgba(0,245,107,.08),inset 0 0 25px rgba(0,245,107,.03)}input,textarea{background:#06140d!important;color:#effff6!important;border-color:var(--line)!important}.cta-strip,.b2b-cta{background:linear-gradient(135deg,#06180e,#020906)!important;border:1px solid var(--line)}footer{background:#010604!important;border-top:1px solid var(--line)}
 @media(max-width:900px){.fs-3d-grid{grid-template-columns:1fr}.fs-3d-stage{height:520px}.fs-telemetry{min-height:0}.fs-3d-head{align-items:flex-start;flex-direction:column}}
 @media(max-width:620px){.fs-3d-lab{padding:70px 0}.fs-3d-stage{height:470px;border-radius:20px}.fs-3d-core{width:210px;height:210px}.fs-core-face{inset:38px}.fs-core-face span{font-size:38px}.fs-3d-hacker-model{transform:translateX(-50%) scale(.78);bottom:12px}.fs-hud{min-width:92px;padding:8px}.h1{left:10px;top:12px}.h2{right:10px;top:12px}.h3{right:10px;bottom:12px}.fs-3d-corner{left:12px;bottom:12px}.fs-3d-orbit.orbit-a{width:350px}.fs-3d-orbit.orbit-b{width:290px}.fs-3d-status{font-size:8px}}
@@ -1505,6 +1510,17 @@ body::before{
   color:#dffff0;border-color:rgba(31,230,255,.45);
   box-shadow:0 0 14px rgba(31,230,255,.08);
 }
+#forensic-3d .v8-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.v8-scan-upload{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.v8-scan-upload-btn{
+  background:rgba(31,230,255,.1);border:1px solid rgba(31,230,255,.4);color:#a9f5ff;
+  padding:11px 18px;border-radius:999px;font:700 12px 'Space Mono',monospace;letter-spacing:.04em;
+  cursor:pointer;transition:.2s ease;
+}
+.v8-scan-upload-btn:hover{background:rgba(31,230,255,.18);box-shadow:0 0 16px rgba(31,230,255,.15);}
+#v8ScanFileName{font:12px Inter,sans-serif;color:#8da49a;}
+#forensic-3d .v8-cube .face#v8FaceFront.has-image{background-size:cover;background-position:center;color:transparent;}
+@media(max-width:620px){.v8-scan-upload{width:100%}.v8-scan-upload-btn{width:100%;text-align:center}}
 @media(max-width:900px){
   .matrix-nav{display:none!important}
 }
@@ -1902,6 +1918,11 @@ body::before{
         <div class="telemetry-row"><span>Identity control</span><b>97%</b><i><em style="width:97%"></em></i></div>
         <div class="telemetry-row"><span>Forensics readiness</span><b>91%</b><i><em style="width:91%"></em></i></div>
         <div class="fs-terminal-mini"><p><span>$</span> fs-monitor --live</p><p><b>[OK]</b> secure tunnel established</p><p><b>[OK]</b> anomaly engine synchronized</p><p><b>[OK]</b> defensive policy active</p><p class="typing">awaiting authorized event<span>_</span></p></div>
+        <div class="fs-file-inspector">
+          <input type="file" id="fsModelFile" accept="image/*" hidden>
+          <button type="button" id="fsModelSelect" class="fs-file-inspector-btn">⤒ Inspect a sample file</button>
+          <div class="fs-file-inspector-result" id="fsModelResult">Local hash &amp; metadata check — nothing leaves your browser. Not malware detection.</div>
+        </div>
         <div class="fs-ethical-badge"><strong>ETHICAL ONLY</strong><span>Authorized testing · Responsible disclosure · Defensive learning</span></div>
       </div>
     </div>
@@ -2551,15 +2572,21 @@ exiftool -all= -o cleaned.jpg image.jpg</code></pre>
   <div class="wrap">
     <div class="v8-head">
       <div>
-        
+        <span class="tag">3D Forensic Cube</span>
+        <h2>Drop an image in — the cube reads it for real.</h2>
+        <p>Browser-local scan: SHA-256 hash, file type/size and pixel dimensions, no upload to any server.</p>
       </div>
-      
+      <div class="v8-scan-upload">
+        <input type="file" id="v8ScanFile" accept="image/*" hidden>
+        <button type="button" id="v8ScanSelect" class="v8-scan-upload-btn">+ Select image to scan</button>
+        <span id="v8ScanFileName">No file selected</span>
+      </div>
     </div>
 
     <div class="v8-3d-layout">
       <div class="v8-3d-stage" id="v8ScanStage">
         <div class="v8-cube">
-          <div class="face front">IMAGE</div><div class="face back">HASH</div>
+          <div class="face front" id="v8FaceFront">IMAGE</div><div class="face back">HASH</div>
           <div class="face right">EXIF</div><div class="face left">ELA</div>
           <div class="face top">AI</div><div class="face bottom">FILE</div>
         </div>
@@ -2574,9 +2601,9 @@ exiftool -all= -o cleaned.jpg image.jpg</code></pre>
       </div>
 
       <div class="v8-scan-panel">
-        <div class="v8-layer"><span>01 · FILE STRUCTURE</span><b>READY</b></div>
-        <div class="v8-layer"><span>02 · METADATA</span><b>READY</b></div>
-        <div class="v8-layer"><span>03 · HASH</span><b>READY</b></div>
+        <div class="v8-layer"><span>01 · FILE STRUCTURE</span><b id="v8ResType">NO IMAGE</b></div>
+        <div class="v8-layer"><span>02 · METADATA</span><b id="v8ResDim">—</b></div>
+        <div class="v8-layer"><span>03 · HASH</span><b id="v8ResHash">—</b></div>
         <div class="v8-layer"><span>04 · ELA</span><b>EXPERIMENTAL</b></div>
         <div class="v8-layer"><span>05 · AI-LIKE SIGNALS</span><b>HEURISTIC</b></div>
         <div class="v8-layer"><span>06 · PROVENANCE</span><b>NEEDS SOURCE</b></div>
@@ -3000,6 +3027,34 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
   }
   const threat=document.getElementById('threatValue'),traffic=document.getElementById('trafficValue');
   setInterval(()=>{const n=(7.5+Math.random()*2.5).toFixed(2);traffic.textContent=n+'K';if(threat)threat.textContent=Math.random()>.9?'GUARDED':'LOW'},2200);
+
+  // Real file inspector: SHA-256 hash + type/size/dimensions, computed locally.
+  const fmodInput=document.getElementById('fsModelFile');
+  const fmodBtn=document.getElementById('fsModelSelect');
+  const fmodResult=document.getElementById('fsModelResult');
+  if(fmodInput&&fmodBtn){
+    const fmtSize=n=>n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(2)+' MB';
+    async function sha256(file){
+      try{
+        const buf=await file.arrayBuffer();
+        const digest=await crypto.subtle.digest('SHA-256',buf);
+        return [...new Uint8Array(digest)].map(x=>x.toString(16).padStart(2,'0')).join('');
+      }catch(e){return 'unavailable';}
+    }
+    fmodBtn.addEventListener('click',()=>fmodInput.click());
+    fmodInput.addEventListener('change',async e=>{
+      const file=e.target.files&&e.target.files[0];
+      if(!file)return;
+      fmodResult.innerHTML='<b>Scanning…</b>';
+      const img=new Image();
+      const url=URL.createObjectURL(file);
+      let dims='reading…';
+      await new Promise(res=>{ img.onload=()=>{dims=img.naturalWidth+' × '+img.naturalHeight; res();}; img.onerror=res; img.src=url; });
+      const hash=await sha256(file);
+      fmodResult.innerHTML='<b>'+file.name+'</b>'+
+        (file.type||'unknown')+' · '+fmtSize(file.size)+' · '+dims+'<br>SHA-256: '+hash;
+    });
+  }
 })();
 </script>
 
@@ -3353,6 +3408,54 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
     if(b.dataset.scan==='layers') stage.classList.toggle('v8-layers-on');
   }));
 
+  // Real image scan for the 3D forensic cube (SHA-256 hash + type/size/dimensions,
+  // computed locally in the browser — nothing uploaded anywhere).
+  (function(){
+    const fileInput=document.getElementById('v8ScanFile');
+    const selectBtn=document.getElementById('v8ScanSelect');
+    const nameLabel=document.getElementById('v8ScanFileName');
+    const resType=document.getElementById('v8ResType');
+    const resDim=document.getElementById('v8ResDim');
+    const resHash=document.getElementById('v8ResHash');
+    const faceFront=document.getElementById('v8FaceFront');
+    if(!fileInput||!selectBtn)return;
+    const fmtSize=n=>n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(2)+' MB';
+    async function sha256(file){
+      try{
+        const buf=await file.arrayBuffer();
+        const digest=await crypto.subtle.digest('SHA-256',buf);
+        return [...new Uint8Array(digest)].map(x=>x.toString(16).padStart(2,'0')).join('');
+      }catch(e){return 'unavailable';}
+    }
+    async function runScan(file){
+      if(!file)return;
+      nameLabel.textContent=file.name+' • scanning…';
+      resType.textContent='READING…';resDim.textContent='READING…';resHash.textContent='CALCULATING…';
+      stage.classList.add('v8-force-scan');
+      const url=URL.createObjectURL(file);
+      const img=new Image();
+      img.onload=()=>{ resDim.textContent=img.naturalWidth+' × '+img.naturalHeight; };
+      img.src=url;
+      faceFront.style.backgroundImage='url('+url+')';
+      faceFront.classList.add('has-image');
+      const hash=await sha256(file);
+      resType.textContent=(file.type||'unknown')+' · '+fmtSize(file.size);
+      resHash.textContent=hash.slice(0,24)+'…';
+      nameLabel.textContent=file.name+' • scan complete';
+    }
+    selectBtn.addEventListener('click',()=>fileInput.click());
+    fileInput.addEventListener('change',e=>{
+      const f=e.target.files&&e.target.files[0];
+      if(f)runScan(f);
+    });
+    stage.addEventListener('dragover',e=>e.preventDefault());
+    stage.addEventListener('drop',e=>{
+      e.preventDefault();
+      const f=e.dataTransfer.files&&e.dataTransfer.files[0];
+      if(f)runScan(f);
+    });
+  })();
+
   // Bangladesh division weather from Open-Meteo (selectable division)
   const v8DivisionNames={dhaka:'DHAKA',chattogram:'CHATTOGRAM',khulna:'KHULNA',rajshahi:'RAJSHAHI',barishal:'BARISHAL',sylhet:'SYLHET',rangpur:'RANGPUR',mymensingh:'MYMENSINGH'};
   async function loadWeather(){
@@ -3647,5 +3750,36 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
 
 
 
+<style id="fs-mobile-fixes">
+/* Mobile fix: hero was forced to min-height:720px on ALL screens (see .qq-hero
+   rule in #fs-3d-live-overhaul), which on small phones pushed the "Start Hacking"
+   button down into the same zone as the fixed status bars below, causing overlap. */
+@media (max-width:900px){
+  .qq-hero{min-height:0!important;}
+}
+@media (max-width:640px){
+  .qq-hero{min-height:0!important;padding:28px 0 24px!important;}
+}
+
+/* Mobile fix: three separate fixed "HUD" bars (#cmhud, .fs-command-dock,
+   .fs-matrix-hud) all sit in the bottom-right corner. On desktop there's room
+   for them, but on phones they stack on top of each other and on top of the
+   WhatsApp button and page content. They're decorative only, so hide them on
+   small screens and keep just the functional WhatsApp button. */
+@media (max-width:768px){
+  #cmhud, .fs-command-dock, .fs-matrix-hud{display:none!important;}
+}
+
+/* Mobile fix: #forensic-3d .v8-3d-layout has its own ID-scoped grid-template-columns
+   rule that never lost to the .v8-3d-layout{grid-template-columns:1fr} media-query
+   rule (higher specificity wins regardless of source order), so the cube and its
+   result panel stayed squeezed side-by-side on phones instead of stacking. */
+@media (max-width:950px){
+  #forensic-3d .v8-3d-layout{grid-template-columns:1fr!important;}
+}
+@media (max-width:620px){
+  #forensic-3d .v8-3d-stage{min-height:430px!important;height:430px!important;}
+}
+</style>
 </body>
 </html>
