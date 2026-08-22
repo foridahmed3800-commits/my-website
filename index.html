@@ -2687,13 +2687,13 @@ exiftool -all= -o cleaned.jpg image.jpg</code></pre>
       <article class="v8-blog-card v8-featured">
         <span class="v8-featured-label">FEATURED · LIVE</span>
         <h3>🕋 মক্কা শরীফ — Live Broadcast</h3>
-        <p>বাংলা interface-এ Makkah live দেখতে পারবেন। এটি official Saudi Qur'an TV চ্যানেলের সরাসরি embed — চ্যানেলটি এই মুহূর্তে যা live করছে সেটাই দেখাবে, তাই কোনো নির্দিষ্ট video-link expire হয়ে "blocked/not available" দেখানোর সমস্যা হবে না।</p>
+        <p>বাংলা interface-এ Makkah live দেখতে পারবেন। Page load হওয়ার সময় official চ্যানেল এই মুহূর্তে কোন video-তে live করছে সেটা automatically খুঁজে বের করে embed করা হয় — তাই কোনো fixed video-link expire/blocked হওয়ার সমস্যা থাকবে না।</p>
         <div class="v8-video-wrap">
-          <iframe id="v8MakkahIframe" src="https://www.youtube.com/embed/live_stream?channel=UC2Ne1-eT4rxTqauo3ST1inA&rel=0" title="Makkah Live" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+          <iframe id="v8MakkahIframe" src="about:blank" title="Makkah Live" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
         </div>
         <div style="margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-          <a id="v8MakkahWatch" class="v8-watch" href="https://www.youtube.com/channel/UC2Ne1-eT4rxTqauo3ST1inA/live" target="_blank" rel="noopener">YouTube-এ সরাসরি দেখুন ↗</a>
-          <span id="v8MakkahStatus" style="font-size:9px;color:#00f56b;font-weight:800;letter-spacing:.04em;">● LIVE SOURCE CONNECTED</span>
+          <a id="v8MakkahWatch" class="v8-watch" href="https://www.youtube.com/@makkahlivehd4385/live" target="_blank" rel="noopener">YouTube-এ সরাসরি দেখুন ↗</a>
+          <span id="v8MakkahStatus" style="font-size:9px;color:#8f8190;font-weight:800;letter-spacing:.04em;">CONNECTING…</span>
         </div>
       </article>
 
@@ -3504,7 +3504,47 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
     loadWeather();
   });
 
-  // Makkah Live — fixed embed of the given YouTube live link (no auto-switching logic).
+  // Makkah Live — dynamically resolve whichever video is *currently* live on the official
+  // Saudi Qur'an TV channel, using YouTube's oEmbed endpoint against the channel's "/live" URL.
+  // oEmbed returns the real embed HTML for whatever that channel is broadcasting live right now,
+  // so this always plays the current live broadcast instead of a hardcoded video ID that
+  // eventually ends, gets blocked from embedding, or gets deleted.
+  (function(){
+    const sources=[
+      {live:'https://www.youtube.com/@makkahlivehd4385/live', watch:'https://www.youtube.com/@makkahlivehd4385/live'},
+      {live:'https://www.youtube.com/@SaudiQuranTv/live', watch:'https://www.youtube.com/@SaudiQuranTv/live'}
+    ];
+    const iframe=document.getElementById('v8MakkahIframe');
+    const watch=document.getElementById('v8MakkahWatch');
+    const status=document.getElementById('v8MakkahStatus');
+    if(!iframe)return;
+    function extractSrc(html){
+      const m=html && html.match(/src="([^"]+)"/);
+      return m?m[1]:null;
+    }
+    async function tryResolve(i){
+      if(i>=sources.length){
+        if(status){status.textContent='SOURCE UNAVAILABLE — সরাসরি লিংকে দেখুন';status.style.color='#ff8080';}
+        return;
+      }
+      if(status){status.textContent='CONNECTING…';status.style.color='#8f8190';}
+      try{
+        const r=await fetch('https://www.youtube.com/oembed?url='+encodeURIComponent(sources[i].live)+'&format=json');
+        if(!r.ok)throw new Error('bad status');
+        const data=await r.json();
+        const src=extractSrc(data.html);
+        if(!src)throw new Error('no src');
+        iframe.src=src.replace('youtube.com/embed/','youtube.com/embed/')+(src.includes('?')?'&rel=0':'?rel=0');
+        if(watch)watch.href=sources[i].watch;
+        if(status){status.textContent='● LIVE SOURCE CONNECTED';status.style.color='#00f56b';}
+      }catch(e){
+        tryResolve(i+1);
+      }
+    }
+    tryResolve(0);
+    // Re-check every 10 minutes in case the current live video ends and a new one starts.
+    setInterval(()=>tryResolve(0),10*60*1000);
+  })();
 
   // USGS earthquakes near Bangladesh (last 24h, rough regional bounding box)
   function v8QuakeAgo(ts){
