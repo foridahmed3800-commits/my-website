@@ -58,6 +58,9 @@
     background:var(--blue); transition:width .25s ease;
   }
   .nav-links a:hover::after{width:100%;}
+  .qq-bangla-btn{background:rgba(0,245,107,.12); border:1px solid rgba(0,245,107,.4); border-radius:999px; padding:7px 16px!important; color:#00f56b!important;}
+  .qq-bangla-btn::after{display:none!important;}
+  .qq-bangla-btn:hover{background:rgba(0,245,107,.22); border-color:#00f56b;}
   .nav-cta{
     background:var(--navy); color:var(--paper);
     padding:11px 22px; border-radius:100px;
@@ -1656,6 +1659,7 @@ body::before{
         <a href="#blogs">Resources <span>⌄</span></a>
         <a href="#qq-community">Community <span>⌄</span></a>
         <a href="#about">About <span>⌄</span></a>
+        <a href="#bangla-blogs" class="qq-bangla-btn">🇧🇩 বাংলা</a>
       </div>
 
       <div class="qq-nav-actions">
@@ -1695,7 +1699,7 @@ body::before{
     <a href="#bd-cyber-watch">🇧🇩 Bangladesh Cyber Watch <span>→</span></a>
     <a href="#forensic-3d">⬡ 3D Digital Forensics <span>→</span></a>
     <a href="#earth-weather">🌍 Earthquake + Weather <span>→</span></a>
-    <a href="#blogs">📝 Bangla Blogs <span>→</span></a>
+    <a href="#bangla-blogs">🇧🇩 বাংলা — Bangla Blogs & Makkah Live <span>→</span></a>
 
     <a href="#forensics">🔬 Image Forensics <span>→</span></a>
     <a href="#kali-forensics">⌨ Kali Forensics Lab <span>→</span></a>
@@ -2668,7 +2672,7 @@ exiftool -all= -o cleaned.jpg image.jpg</code></pre>
 </section>
 
 <!-- BANGLA BLOG + ADMIN -->
-<section class="v8-blog" id="blogs">
+<section class="v8-blog" id="bangla-blogs">
   <div class="wrap">
     <div class="v8-head">
       <div>
@@ -2683,13 +2687,13 @@ exiftool -all= -o cleaned.jpg image.jpg</code></pre>
       <article class="v8-blog-card v8-featured">
         <span class="v8-featured-label">FEATURED · LIVE</span>
         <h3>🕋 মক্কা শরীফ — Live Broadcast</h3>
-        <p>বাংলা interface-এ Makkah live দেখতে পারবেন। Stream automatically working source-এ connect হয়; কোনো একটি বন্ধ হলে backup source-এ auto-switch করবে।</p>
+        <p>বাংলা interface-এ Makkah live দেখতে পারবেন। এটি official Saudi Qur'an TV চ্যানেলের সরাসরি embed — চ্যানেলটি এই মুহূর্তে যা live করছে সেটাই দেখাবে, তাই কোনো নির্দিষ্ট video-link expire হয়ে "blocked/not available" দেখানোর সমস্যা হবে না।</p>
         <div class="v8-video-wrap">
-          <iframe id="v8MakkahIframe" src="https://www.youtube.com/embed/n1lsjQLfNbQ?rel=0" title="Makkah Live" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+          <iframe id="v8MakkahIframe" src="https://www.youtube.com/embed/live_stream?channel=UC2Ne1-eT4rxTqauo3ST1inA&rel=0" title="Makkah Live" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
         </div>
         <div style="margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-          <a id="v8MakkahWatch" class="v8-watch" href="https://www.youtube.com/watch?v=n1lsjQLfNbQ" target="_blank" rel="noopener">YouTube-এ সরাসরি দেখুন ↗</a>
-          <span id="v8MakkahStatus" style="font-size:9px;color:#8f8190;font-weight:800;letter-spacing:.04em;">CONNECTING…</span>
+          <a id="v8MakkahWatch" class="v8-watch" href="https://www.youtube.com/channel/UC2Ne1-eT4rxTqauo3ST1inA/live" target="_blank" rel="noopener">YouTube-এ সরাসরি দেখুন ↗</a>
+          <span id="v8MakkahStatus" style="font-size:9px;color:#00f56b;font-weight:800;letter-spacing:.04em;">● LIVE SOURCE CONNECTED</span>
         </div>
       </article>
 
@@ -3500,43 +3504,7 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
     loadWeather();
   });
 
-  // Makkah Live — auto-detect a working stream via YouTube oEmbed and auto-switch on failure
-  (function(){
-    const candidates=['n1lsjQLfNbQ','B_sm3TWwuLU','dyx2j7BO3QY','m9-Umj3aL1I','Dz4Citz4yqg'];
-    const iframe=document.getElementById('v8MakkahIframe');
-    const watch=document.getElementById('v8MakkahWatch');
-    const status=document.getElementById('v8MakkahStatus');
-    if(!iframe)return;
-    let currentId=null;
-    async function isAvailable(id){
-      try{
-        const r=await fetch('https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D'+id+'&format=json');
-        return r.ok;
-      }catch(e){return false}
-    }
-    function useId(id){
-      currentId=id;
-      iframe.src='https://www.youtube.com/embed/'+id+'?rel=0&autoplay=0';
-      if(watch)watch.href='https://www.youtube.com/watch?v='+id;
-      if(status){status.textContent='● LIVE SOURCE CONNECTED';status.style.color='#00f56b';}
-    }
-    async function connectToWorkingStream(excludeId){
-      if(status){status.textContent='CONNECTING…';status.style.color='#8f8190';}
-      for(const id of candidates){
-        if(id===excludeId)continue;
-        if(await isAvailable(id)){useId(id);return true;}
-      }
-      if(status){status.textContent='SOURCES UNAVAILABLE — TRY DIRECT LINK';status.style.color='#ff8080';}
-      return false;
-    }
-    connectToWorkingStream();
-    // Periodically re-check the active source; auto-switch to a backup if it goes down
-    setInterval(async()=>{
-      if(currentId && !(await isAvailable(currentId))){
-        connectToWorkingStream(currentId);
-      }
-    },5*60*1000);
-  })();
+  // Makkah Live — fixed embed of the given YouTube live link (no auto-switching logic).
 
   // USGS earthquakes near Bangladesh (last 24h, rough regional bounding box)
   function v8QuakeAgo(ts){
