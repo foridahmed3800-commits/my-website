@@ -2689,6 +2689,7 @@ exiftool -all= -o cleaned.jpg image.jpg</code></pre>
         <h3>🕋 মক্কা শরীফ — Live Broadcast</h3>
         <p>বাংলা interface-এ Makkah live দেখতে পারবেন। Page load হওয়ার সময় official চ্যানেল এই মুহূর্তে কোন video-তে live করছে সেটা automatically খুঁজে বের করে embed করা হয় — তাই কোনো fixed video-link expire/blocked হওয়ার সমস্যা থাকবে না।</p>
         <div class="v8-video-wrap">
+          <video id="v8MakkahVideo" muted playsinline autoplay controls style="width:100%;height:100%;background:#000;display:none"></video>
           <iframe id="v8MakkahIframe" src="about:blank" title="Makkah Live" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
         </div>
         <div style="margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
@@ -3504,46 +3505,115 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
     loadWeather();
   });
 
-  // Makkah Live — dynamically resolve whichever video is *currently* live on the official
-  // Saudi Qur'an TV channel, using YouTube's oEmbed endpoint against the channel's "/live" URL.
-  // oEmbed returns the real embed HTML for whatever that channel is broadcasting live right now,
-  // so this always plays the current live broadcast instead of a hardcoded video ID that
-  // eventually ends, gets blocked from embedding, or gets deleted.
+  // Makkah Live — plays a direct HLS (.m3u8) feed of Saudi Quran TV / Masjid al-Haram via
+  // hls.js, so playback doesn't depend on YouTube allowing embedding for whatever video
+  // happens to be live. Tries a short list of known HLS sources in order; if every HLS
+  // source fails (CDN down, geo-blocked, URL rotated), it falls back to resolving the
+  // current live video on the official YouTube channel via oEmbed, same as before.
   (function(){
-    const sources=[
+    const hlsSources=[
+      'https://cdn-globecast.akamaized.net/live/eds/saudi_quran/hls_roku/index.m3u8',
+      'https://media2.streambrothers.com:1936/8122/8122/playlist.m3u8'
+    ];
+    const youtubeSources=[
       {live:'https://www.youtube.com/@makkahlivehd4385/live', watch:'https://www.youtube.com/@makkahlivehd4385/live'},
       {live:'https://www.youtube.com/@SaudiQuranTv/live', watch:'https://www.youtube.com/@SaudiQuranTv/live'}
     ];
+    const video=document.getElementById('v8MakkahVideo');
     const iframe=document.getElementById('v8MakkahIframe');
     const watch=document.getElementById('v8MakkahWatch');
     const status=document.getElementById('v8MakkahStatus');
     if(!iframe)return;
-    function extractSrc(html){
+
+    function setStatus(text,color){ if(status){status.textContent=text;status.style.color=color;} }
+
+    function loadHlsJs(){
+      return new Promise((resolve,reject)=>{
+        if(window.Hls){resolve(window.Hls);return;}
+        const s=document.createElement('script');
+        s.src='https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.15/hls.min.js';
+        s.onload=()=>resolve(window.Hls);
+        s.onerror=()=>reject(new Error('hls.js failed to load'));
+        document.head.appendChild(s);
+      });
+    }
+
+    function extractYoutubeSrc(html){
       const m=html && html.match(/src="([^"]+)"/);
       return m?m[1]:null;
     }
-    async function tryResolve(i){
-      if(i>=sources.length){
-        if(status){status.textContent='SOURCE UNAVAILABLE — সরাসরি লিংকে দেখুন';status.style.color='#ff8080';}
+
+    async function tryYoutube(i){
+      if(i>=youtubeSources.length){
+        setStatus('SOURCE UNAVAILABLE — সরাসরি লিংকে দেখুন','#ff8080');
         return;
       }
-      if(status){status.textContent='CONNECTING…';status.style.color='#8f8190';}
+      setStatus('CONNECTING…','#8f8190');
       try{
-        const r=await fetch('https://www.youtube.com/oembed?url='+encodeURIComponent(sources[i].live)+'&format=json');
+        const r=await fetch('https://www.youtube.com/oembed?url='+encodeURIComponent(youtubeSources[i].live)+'&format=json');
         if(!r.ok)throw new Error('bad status');
         const data=await r.json();
-        const src=extractSrc(data.html);
+        const src=extractYoutubeSrc(data.html);
         if(!src)throw new Error('no src');
-        iframe.src=src.replace('youtube.com/embed/','youtube.com/embed/')+(src.includes('?')?'&rel=0':'?rel=0');
-        if(watch)watch.href=sources[i].watch;
-        if(status){status.textContent='● LIVE SOURCE CONNECTED';status.style.color='#00f56b';}
+        if(video)video.style.display='none';
+        iframe.style.display='block';
+        iframe.src=src+(src.includes('?')?'&rel=0':'?rel=0');
+        if(watch)watch.href=youtubeSources[i].watch;
+        setStatus('● LIVE SOURCE CONNECTED (YouTube)','#00f56b');
       }catch(e){
-        tryResolve(i+1);
+        tryYoutube(i+1);
       }
     }
-    tryResolve(0);
-    // Re-check every 10 minutes in case the current live video ends and a new one starts.
-    setInterval(()=>tryResolve(0),10*60*1000);
+
+    function playHlsUrl(url){
+      return new Promise((resolve,reject)=>{
+        if(video.canPlayType('application/vnd.apple.mpegurl')){
+          // Safari / iOS: native HLS support, no hls.js needed.
+          video.src=url;
+          const onReady=()=>{cleanup();resolve();};
+          const onError=()=>{cleanup();reject(new Error('native hls error'));};
+          function cleanup(){video.removeEventListener('loadedmetadata',onReady);video.removeEventListener('error',onError);}
+          video.addEventListener('loadedmetadata',onReady,{once:true});
+          video.addEventListener('error',onError,{once:true});
+          video.load();
+        } else if(window.Hls && window.Hls.isSupported()){
+          const hls=new window.Hls();
+          hls.loadSource(url);
+          hls.attachMedia(video);
+          hls.on(window.Hls.Events.MANIFEST_PARSED,()=>resolve());
+          hls.on(window.Hls.Events.ERROR,(evt,data)=>{
+            if(data && data.fatal){ hls.destroy(); reject(new Error(data.type||'hls fatal error')); }
+          });
+        } else {
+          reject(new Error('HLS not supported'));
+        }
+      });
+    }
+
+    async function tryHls(i){
+      if(i>=hlsSources.length){
+        // Every direct stream failed — fall back to the YouTube live resolver.
+        setStatus('CONNECTING… (fallback)','#8f8190');
+        tryYoutube(0);
+        return;
+      }
+      setStatus('CONNECTING…','#8f8190');
+      try{
+        await loadHlsJs();
+        await playHlsUrl(hlsSources[i]);
+        iframe.style.display='none';
+        video.style.display='block';
+        video.play().catch(()=>{ /* autoplay may be blocked until user interacts; controls are visible */ });
+        if(watch)watch.href=youtubeSources[0].watch;
+        setStatus('● LIVE SOURCE CONNECTED','#00f56b');
+      }catch(e){
+        tryHls(i+1);
+      }
+    }
+
+    if(video){ tryHls(0); } else { tryYoutube(0); }
+    // Re-check every 10 minutes in case a source drops.
+    setInterval(()=>{ if(video){tryHls(0);} else {tryYoutube(0);} },10*60*1000);
   })();
 
   // USGS earthquakes near Bangladesh (last 24h, rough regional bounding box)
