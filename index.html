@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FS. — Cyber Intelligence & Digital Security Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn-globecast.akamaized.net" crossorigin>
+<link rel="dns-prefetch" href="https://media2.streambrothers.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -3527,16 +3530,24 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
 
     function setStatus(text,color){ if(status){status.textContent=text;status.style.color=color;} }
 
+    let hlsJsPromise=null;
     function loadHlsJs(){
-      return new Promise((resolve,reject)=>{
+      // Kick off once and reuse — called immediately on page load so the library is
+      // usually already in memory by the time a stream URL is ready to attach.
+      if(hlsJsPromise)return hlsJsPromise;
+      hlsJsPromise=new Promise((resolve,reject)=>{
         if(window.Hls){resolve(window.Hls);return;}
         const s=document.createElement('script');
-        s.src='https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.15/hls.min.js';
+        // Always-current, officially documented URL (pinned to the stable v1 line) —
+        // a hand-picked version number on cdnjs can silently 404 if it's never been mirrored.
+        s.src='https://cdn.jsdelivr.net/npm/hls.js@1';
         s.onload=()=>resolve(window.Hls);
-        s.onerror=()=>reject(new Error('hls.js failed to load'));
+        s.onerror=()=>{hlsJsPromise=null;reject(new Error('hls.js failed to load'));};
         document.head.appendChild(s);
       });
+      return hlsJsPromise;
     }
+    loadHlsJs().catch(()=>{}); // pre-warm in the background, ignore failure here
 
     function extractYoutubeSrc(html){
       const m=html && html.match(/src="([^"]+)"/);
@@ -3565,6 +3576,15 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
       }
     }
 
+    let activeHls=null; // current Hls.js instance, so we can recover it on transient errors
+
+    function withTimeout(promise,ms){
+      return new Promise((resolve,reject)=>{
+        const t=setTimeout(()=>reject(new Error('timeout')),ms);
+        promise.then(v=>{clearTimeout(t);resolve(v);},e=>{clearTimeout(t);reject(e);});
+      });
+    }
+
     function playHlsUrl(url){
       return new Promise((resolve,reject)=>{
         if(video.canPlayType('application/vnd.apple.mpegurl')){
@@ -3577,12 +3597,29 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
           video.addEventListener('error',onError,{once:true});
           video.load();
         } else if(window.Hls && window.Hls.isSupported()){
-          const hls=new window.Hls();
+          const hls=new window.Hls({
+            // Tuned for a live channel: join near the live edge fast, don't buffer more
+            // than needed, and give up on a slow/dead source quickly instead of hanging.
+            lowLatencyMode:true,
+            liveSyncDuration:6,
+            maxBufferLength:15,
+            manifestLoadingTimeOut:6000,
+            manifestLoadingMaxRetry:1,
+            levelLoadingTimeOut:6000,
+            fragLoadingTimeOut:8000
+          });
+          activeHls=hls;
+          let settled=false;
           hls.loadSource(url);
           hls.attachMedia(video);
-          hls.on(window.Hls.Events.MANIFEST_PARSED,()=>resolve());
+          hls.on(window.Hls.Events.MANIFEST_PARSED,()=>{ settled=true; resolve(); });
           hls.on(window.Hls.Events.ERROR,(evt,data)=>{
-            if(data && data.fatal){ hls.destroy(); reject(new Error(data.type||'hls fatal error')); }
+            if(!data || !data.fatal)return; // ignore non-fatal — hls.js recovers those on its own
+            if(!settled){ hls.destroy(); activeHls=null; reject(new Error(data.type||'hls fatal error')); return; }
+            // Already playing — try to self-heal instead of freezing the stream.
+            if(data.type===window.Hls.ErrorTypes.NETWORK_ERROR){ hls.startLoad(); }
+            else if(data.type===window.Hls.ErrorTypes.MEDIA_ERROR){ hls.recoverMediaError(); }
+            else { hls.destroy(); activeHls=null; tryHls(0); }
           });
         } else {
           reject(new Error('HLS not supported'));
@@ -3591,6 +3628,7 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
     }
 
     async function tryHls(i){
+      if(activeHls){ activeHls.destroy(); activeHls=null; }
       if(i>=hlsSources.length){
         // Every direct stream failed — fall back to the YouTube live resolver.
         setStatus('CONNECTING… (fallback)','#8f8190');
@@ -3600,7 +3638,7 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
       setStatus('CONNECTING…','#8f8190');
       try{
         await loadHlsJs();
-        await playHlsUrl(hlsSources[i]);
+        await withTimeout(playHlsUrl(hlsSources[i]),8000);
         iframe.style.display='none';
         video.style.display='block';
         video.play().catch(()=>{ /* autoplay may be blocked until user interacts; controls are visible */ });
