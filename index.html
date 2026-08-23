@@ -1543,6 +1543,9 @@ body::before{
   cursor:pointer;transition:.2s ease;
 }
 .v8-scan-upload-btn:hover{background:rgba(31,230,255,.18);box-shadow:0 0 16px rgba(31,230,255,.15);}
+#v8ScanFile{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important;}
+.v8-scan-upload-btn{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;}
+.v8-picker-help{display:block;max-width:330px;margin-top:8px;color:#9fb2aa;font:11px/1.5 Inter,sans-serif;}
 #v8ScanFileName{font:12px Inter,sans-serif;color:#8da49a;}
 #forensic-3d .v8-cube .face#v8FaceFront.has-image{background-size:cover;background-position:center;color:transparent;}
 @media(max-width:620px){.v8-scan-upload{width:100%}.v8-scan-upload-btn{width:100%;text-align:center}}
@@ -2663,9 +2666,12 @@ If you've scanned an image in the Digital Forensics Lab below, real file data wi
         <p>Browser-local scan: SHA-256 hash, file type/size and pixel dimensions, no upload to any server.</p>
       </div>
       <div class="v8-scan-upload">
-        <input type="file" id="v8ScanFile" accept="image/*" hidden>
-        <button type="button" id="v8ScanSelect" class="v8-scan-upload-btn">+ Select image to scan</button>
+        <input type="file" id="v8ScanFile" accept="image/*" aria-label="Choose image to scan">
+        <label for="v8ScanFile" id="v8ScanSelect" class="v8-scan-upload-btn">+ Select image to scan</label>
         <span id="v8ScanFileName">No file selected</span>
+        <small id="v8PickerHelp" class="v8-picker-help" hidden>
+          Messenger/Facebook browser detected. If Android asks for media access, allow Photos & videos, or open this page in Chrome.
+        </small>
       </div>
     </div>
 
@@ -3652,7 +3658,13 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
       resHash.textContent=hash.slice(0,24)+'…';
       nameLabel.textContent=file.name+' • scan complete';
     }
-    selectBtn.addEventListener('click',()=>fileInput.click());
+    // Use the native <label for="v8ScanFile"> activation instead of a
+    // JavaScript-only input.click(). This is more reliable in mobile WebViews.
+    // The file chooser itself is still controlled by Android/Facebook/Messenger.
+    const pickerHelp=document.getElementById('v8PickerHelp');
+    if(pickerHelp && /FBAN|FBAV|Messenger|Instagram/i.test(navigator.userAgent||'')){
+      pickerHelp.hidden=false;
+    }
     fileInput.addEventListener('change',e=>{
       const f=e.target.files&&e.target.files[0];
       if(f)runScan(f);
