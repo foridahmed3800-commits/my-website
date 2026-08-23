@@ -1547,7 +1547,24 @@ body::before{
 .v8-scan-upload-btn{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;}
 .v8-picker-help{display:block;max-width:330px;margin-top:8px;color:#9fb2aa;font:11px/1.5 Inter,sans-serif;}
 #v8ScanFileName{font:12px Inter,sans-serif;color:#8da49a;}
-#forensic-3d .v8-cube .face#v8FaceFront.has-image{background-size:cover;background-position:center;color:transparent;}
+#forensic-3d .v8-cube .face#v8FaceFront.has-image{background-size:cover;background-position:center;color:transparent;box-shadow:inset 0 0 0 1px rgba(31,230,255,.35),0 0 35px rgba(0,245,107,.16);}
+#forensic-3d .v8-cube .face#v8FaceFront.has-image:after{content:"LIVE IMAGE";position:absolute;left:8px;bottom:8px;padding:4px 7px;border:1px solid rgba(31,230,255,.38);border-radius:5px;background:rgba(0,8,8,.72);color:#a9f5ff;font:700 7px "Space Mono",monospace;letter-spacing:.08em;}
+.v8-scan-upload{position:relative;align-items:center;}
+.v8-chrome-btn{border:1px solid rgba(255,207,102,.55);background:rgba(255,207,102,.09);color:#ffe7a0;padding:11px 16px;border-radius:999px;font:800 11px "Space Mono",monospace;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;transition:.2s ease;}
+.v8-chrome-btn:hover{background:rgba(255,207,102,.17);box-shadow:0 0 18px rgba(255,207,102,.12);}
+.v8-picker-help b{color:#ffe7a0;}
+.v8-scan-progress{width:100%;margin-top:14px;padding:12px 14px;border:1px solid rgba(31,230,255,.13);border-radius:12px;background:rgba(1,8,8,.72);box-sizing:border-box;}
+.v8-progress-top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px;font:800 8px "Space Mono",monospace;color:#72938a;letter-spacing:.06em;}
+.v8-progress-top b{color:#a9f5ff;}
+.v8-progress-track{height:5px;border-radius:999px;background:rgba(255,255,255,.055);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.025);}
+.v8-progress-track i{display:block;width:0;height:100%;border-radius:999px;background:linear-gradient(90deg,#00f56b,#1fe6ff);box-shadow:0 0 14px rgba(0,245,107,.35);transition:width .28s ease;}
+.v8-scan-progress.is-running .v8-progress-track i{animation:v8progresspulse 1.1s ease-in-out infinite;}
+.v8-scan-progress small{display:block;margin-top:7px;color:#647b72;font:9px Inter,sans-serif;}
+@keyframes v8progresspulse{50%{filter:brightness(1.35);}}
+#forensic-3d .v8-3d-stage.v8-webview:before{content:"MESSENGER / FACEBOOK BROWSER";position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;padding:5px 9px;border:1px solid rgba(255,207,102,.3);border-radius:999px;background:rgba(12,10,3,.82);color:#ffe7a0;font:800 7px "Space Mono",monospace;letter-spacing:.08em;white-space:nowrap;}
+#forensic-3d .v8-3d-stage.v8-has-image .v8-scan-line{animation-duration:1.8s;}
+#forensic-3d .v8-3d-stage.v8-scan-complete .v8-cube{filter:drop-shadow(0 0 18px rgba(0,245,107,.18));}
+@media(max-width:620px){.v8-scan-progress{margin-top:10px}.v8-chrome-btn{width:100%;text-align:center}.v8-picker-help{width:100%;}.v8-scan-upload{gap:8px}.v8-scan-upload-btn{width:100%;}.v8-scan-upload #v8ScanFileName{width:100%;}.v8-scan-upload{display:grid;grid-template-columns:1fr;}.v8-scan-upload .v8-chrome-btn{width:100%;}}
 @media(max-width:620px){.v8-scan-upload{width:100%}.v8-scan-upload-btn{width:100%;text-align:center}}
 @media(max-width:900px){
   .matrix-nav{display:none!important}
@@ -2666,12 +2683,18 @@ If you've scanned an image in the Digital Forensics Lab below, real file data wi
         <p>Browser-local scan: SHA-256 hash, file type/size and pixel dimensions, no upload to any server.</p>
       </div>
       <div class="v8-scan-upload">
-        <input type="file" id="v8ScanFile" accept="image/*" aria-label="Choose image to scan">
+        <input type="file" id="v8ScanFile" accept="image/jpeg,image/png,image/webp,image/gif,.jpg,.jpeg,.png,.webp,.gif" aria-label="Choose image to scan">
         <label for="v8ScanFile" id="v8ScanSelect" class="v8-scan-upload-btn">+ Select image to scan</label>
+        <button type="button" id="v8OpenChrome" class="v8-chrome-btn" hidden>↗ Open in Chrome</button>
         <span id="v8ScanFileName">No file selected</span>
         <small id="v8PickerHelp" class="v8-picker-help" hidden>
-          Messenger/Facebook browser detected. If Android asks for media access, allow Photos & videos, or open this page in Chrome.
+          Messenger/Facebook browser detected. For the most reliable image picker, tap <b>Open in Chrome</b>.
         </small>
+      </div>
+      <div class="v8-scan-progress" id="v8ScanProgress" aria-live="polite">
+        <div class="v8-progress-top"><span id="v8ProgressLabel">SCAN READY</span><b id="v8ProgressPct">0%</b></div>
+        <div class="v8-progress-track"><i id="v8ProgressBar"></i></div>
+        <small id="v8ProgressStage">Waiting for an image…</small>
       </div>
     </div>
 
@@ -3623,8 +3646,7 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
     if(b.dataset.scan==='layers') stage.classList.toggle('v8-layers-on');
   }));
 
-  // Real image scan for the 3D forensic cube (SHA-256 hash + type/size/dimensions,
-  // computed locally in the browser — nothing uploaded anywhere).
+  // Real image scan for the 3D forensic cube. Everything is processed locally.
   (function(){
     const fileInput=document.getElementById('v8ScanFile');
     const selectBtn=document.getElementById('v8ScanSelect');
@@ -3633,8 +3655,26 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
     const resDim=document.getElementById('v8ResDim');
     const resHash=document.getElementById('v8ResHash');
     const faceFront=document.getElementById('v8FaceFront');
-    if(!fileInput||!selectBtn)return;
+    const pickerHelp=document.getElementById('v8PickerHelp');
+    const chromeBtn=document.getElementById('v8OpenChrome');
+    const progress=document.getElementById('v8ScanProgress');
+    const progressBar=document.getElementById('v8ProgressBar');
+    const progressPct=document.getElementById('v8ProgressPct');
+    const progressLabel=document.getElementById('v8ProgressLabel');
+    const progressStage=document.getElementById('v8ProgressStage');
+    if(!fileInput||!selectBtn||!stage)return;
+
     const fmtSize=n=>n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(2)+' MB';
+    const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+    const setProgress=(pct,label,detail)=>{
+      const p=Math.max(0,Math.min(100,pct));
+      if(progressBar)progressBar.style.width=p+'%';
+      if(progressPct)progressPct.textContent=p+'%';
+      if(progressLabel)progressLabel.textContent=label;
+      if(progressStage)progressStage.textContent=detail;
+      if(progress)progress.classList.toggle('is-running',p>0&&p<100);
+    };
+
     async function sha256(file){
       try{
         const buf=await file.arrayBuffer();
@@ -3642,29 +3682,83 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
         return [...new Uint8Array(digest)].map(x=>x.toString(16).padStart(2,'0')).join('');
       }catch(e){return 'unavailable';}
     }
+
+    function isMessengerWebView(){
+      const ua=navigator.userAgent||'';
+      return /FBAN|FBAV|FB_IAB|FBIOS|Messenger|Instagram/i.test(ua);
+    }
+
+    function openChrome(){
+      const current=window.location.href;
+      // Android Chrome intent. If Chrome is unavailable, the WebView stays put.
+      if(/Android/i.test(navigator.userAgent||'')){
+        try{
+          const u=new URL(current);
+          const path=u.pathname+u.search+u.hash;
+          window.location.href='intent://'+u.host+path+'#Intent;scheme=https;package=com.android.chrome;end';
+          setTimeout(()=>{
+            if(document.visibilityState==='visible') window.open(current,'_blank');
+          },900);
+          return;
+        }catch(e){}
+      }
+      // iOS/desktop: open the page in a new browser tab where supported.
+      window.open(current,'_blank','noopener,noreferrer');
+    }
+
+    if(isMessengerWebView()){
+      if(pickerHelp)pickerHelp.hidden=false;
+      if(chromeBtn)chromeBtn.hidden=false;
+      document.getElementById('v8ScanStage')?.classList.add('v8-webview');
+    }
+    chromeBtn?.addEventListener('click',openChrome);
+
     async function runScan(file){
-      if(!file)return;
-      nameLabel.textContent=file.name+' • scanning…';
-      resType.textContent='READING…';resDim.textContent='READING…';resHash.textContent='CALCULATING…';
-      stage.classList.add('v8-force-scan');
+      if(!file||!/^image\//i.test(file.type||'')){
+        setProgress(0,'IMAGE REQUIRED','Please choose a JPG, PNG, WEBP or GIF image.');
+        nameLabel.textContent='Unsupported file';
+        return;
+      }
       const url=URL.createObjectURL(file);
-      const img=new Image();
-      img.onload=()=>{ resDim.textContent=img.naturalWidth+' × '+img.naturalHeight; };
-      img.src=url;
-      faceFront.style.backgroundImage='url('+url+')';
+      nameLabel.textContent=file.name+' • scanning…';
+      resType.textContent='READING…';
+      resDim.textContent='READING…';
+      resHash.textContent='CALCULATING…';
+      stage.classList.add('v8-force-scan','v8-has-image');
+      setProgress(8,'INITIALIZING','Opening image locally…');
+
+      // Put the real image on the front 3D face.
+      faceFront.style.backgroundImage='url("'+url+'")';
       faceFront.classList.add('has-image');
-      const hash=await sha256(file);
+      await sleep(180);
+      setProgress(24,'IMAGE LOADED','Mapping pixel dimensions…');
+
+      const dimensions=await new Promise(resolve=>{
+        const img=new Image();
+        img.onload=()=>resolve(img.naturalWidth+' × '+img.naturalHeight);
+        img.onerror=()=>resolve('unavailable');
+        img.src=url;
+      });
+      resDim.textContent=dimensions;
+      await sleep(160);
+      setProgress(42,'FILE STRUCTURE','Reading MIME type and file size…');
       resType.textContent=(file.type||'unknown')+' · '+fmtSize(file.size);
-      resHash.textContent=hash.slice(0,24)+'…';
+
+      await sleep(180);
+      setProgress(58,'HASH FINGERPRINT','Computing SHA-256 locally…');
+      const hash=await sha256(file);
+      resHash.textContent=hash==='unavailable'?'unavailable':hash.slice(0,24)+'…';
+
+      await sleep(180);
+      setProgress(74,'VISUAL MATRIX','Applying local visual scan…');
+      stage.classList.add('v8-scan-complete');
+      await sleep(220);
+      setProgress(88,'EVIDENCE CORRELATION','Updating forensic layers…');
+      await sleep(220);
+      setProgress(100,'SCAN COMPLETE','Local evidence scan complete — nothing uploaded.');
       nameLabel.textContent=file.name+' • scan complete';
     }
-    // Use the native <label for="v8ScanFile"> activation instead of a
-    // JavaScript-only input.click(). This is more reliable in mobile WebViews.
-    // The file chooser itself is still controlled by Android/Facebook/Messenger.
-    const pickerHelp=document.getElementById('v8PickerHelp');
-    if(pickerHelp && /FBAN|FBAV|Messenger|Instagram/i.test(navigator.userAgent||'')){
-      pickerHelp.hidden=false;
-    }
+
     fileInput.addEventListener('change',e=>{
       const f=e.target.files&&e.target.files[0];
       if(f)runScan(f);
