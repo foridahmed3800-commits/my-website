@@ -1614,8 +1614,16 @@ body::before{
 .v12-plane{position:absolute;width:min(67%,560px);aspect-ratio:16/10;border:1px solid rgba(31,230,255,.1);transform:rotateX(3deg) rotateY(-8deg) translateZ(-90px)}.v12-plane.p2{transform:rotateX(3deg) rotateY(-8deg) translateZ(-45px);border-color:rgba(0,245,107,.1)}
 .v12-image-plane{position:relative;width:min(67%,560px);aspect-ratio:16/10;transform-style:preserve-3d;transform:rotateX(3deg) rotateY(-8deg);transition:transform .35s;z-index:5}.v12-image-plane:before{content:"";position:absolute;inset:-10px;border:1px solid rgba(31,230,255,.14);transform:translateZ(-15px);box-shadow:0 0 30px rgba(31,230,255,.04)}.v12-image-plane:after{content:"";position:absolute;inset:-22px;border:1px solid rgba(31,230,255,.05);transform:translateZ(-30px)}
 #v12Preview{display:none;width:100%;height:100%;object-fit:contain;background:#000;border:1px solid rgba(31,230,255,.45)}.v12-placeholder{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:7px;background:radial-gradient(circle,rgba(31,230,255,.06),transparent 55%);border:1px solid rgba(31,230,255,.35);color:#55757d;font:800 8px "Space Mono",monospace}.v12-placeholder span{font-size:48px;color:#1fe6ff;text-shadow:0 0 24px rgba(31,230,255,.5)}.v12-placeholder small{font:8px sans-serif}.v12-beam{position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#1fe6ff,#00f56b,#1fe6ff,transparent);box-shadow:0 0 20px #1fe6ff;animation:v12beam 2.5s ease-in-out infinite;z-index:8;opacity:.9}@keyframes v12beam{0%,100%{top:2%}50%{top:98%}}
-.v12-frame-corners{position:absolute;inset:10px;border:1px solid rgba(31,230,255,.1);z-index:7}.v12-hotspot{position:absolute;z-index:9;color:#b5f8ff;font:7px "Space Mono",monospace;display:flex;gap:5px;align-items:center}.v12-hotspot i{width:6px;height:6px;border-radius:50%;background:#ffcf66;box-shadow:0 0 12px #ffcf66;animation:v12pulse 1.2s infinite}.hs1{left:18%;top:25%}.hs2{right:20%;top:35%}.hs3{left:45%;bottom:22%}.hs4{right:10%;bottom:15%}@keyframes v12pulse{50%{transform:scale(2);opacity:.35}}
-.v12-axis{position:absolute;color:#345760;font:7px "Space Mono",monospace}.v12-axis.x{right:27%;bottom:22px}.v12-axis.y{left:8%;top:28%}.v12-axis.z{right:8%;top:45%}.v12-corner-info{position:absolute;color:#466870;font:7px "Space Mono",monospace;line-height:1.6}.v12-corner-info span{color:#1fe6ff}.v12-corner-info.tl{left:18px;top:16px}.v12-corner-info.br{right:18px;bottom:16px;text-align:right}
+.v12-frame-corners{position:absolute;inset:10px;border:1px solid rgba(31,230,255,.1);z-index:7}.v12-hotspot{position:absolute;z-index:9;color:#b5f8ff;font:7px "Space Mono",monospace;display:flex;gap:5px;align-items:center;opacity:0;transition:opacity .4s ease;pointer-events:none}.v12-hotspot i{width:6px;height:6px;border-radius:50%;background:#ffcf66;box-shadow:0 0 12px #ffcf66;animation:v12pulse 1.2s infinite}.hs1{left:18%;top:25%}.hs2{right:20%;top:35%}.hs3{left:45%;bottom:22%}.hs4{right:10%;bottom:15%}@keyframes v12pulse{50%{transform:scale(2);opacity:.35}}
+.v12-axis{position:absolute;color:#345760;font:7px "Space Mono",monospace;opacity:0;transition:opacity .4s ease}.v12-axis.x{right:27%;bottom:22px}.v12-axis.y{left:8%;top:28%}.v12-axis.z{right:8%;top:45%}.v12-corner-info{position:absolute;color:#466870;font:7px "Space Mono",monospace;line-height:1.6}.v12-corner-info span{color:#1fe6ff}.v12-corner-info.tl{left:18px;top:16px}.v12-corner-info.br{right:18px;bottom:16px;text-align:right}
+/* Fix: the badge tags (A1/B2/C3/D4), axis labels and beam used to float over an
+   otherwise-empty tilted panel before any image was selected, reading as a broken
+   scattering of debris rather than an evidence overlay. Now they only appear once
+   there's actually an image to annotate. */
+.v12-beam{opacity:0}
+.v12-live-forensics.v12-has-image .v12-hotspot,
+.v12-live-forensics.v12-has-image .v12-axis,
+.v12-live-forensics.v12-has-image .v12-beam{opacity:1}
 .v12-controls{height:51px;border-top:1px solid rgba(31,230,255,.08);display:flex;gap:7px;align-items:center;padding:0 12px}.v12-controls button{background:#061419;border:1px solid rgba(31,230,255,.14);color:#729098;border-radius:4px;padding:8px 10px;font:800 8px "Space Mono",monospace;cursor:pointer}.v12-controls button:hover,.v12-controls button.active{color:#dfffff;border-color:#1fe6ff;box-shadow:0 0 14px rgba(31,230,255,.1)}
 .v12-panel{padding:17px}.v12-panel-head{display:flex;justify-content:space-between;border-bottom:1px solid rgba(31,230,255,.08);padding-bottom:13px;font:800 8px "Space Mono",monospace;color:#a9dce2}.v12-panel-head span{color:#ffcf66}.v12-signal>div{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(31,230,255,.06);font:7px "Space Mono",monospace;color:#6c858b}.v12-signal b{color:#8bc0c8}.v12-facts{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:13px 0}.v12-facts div{padding:9px;background:rgba(31,230,255,.025);border:1px solid rgba(31,230,255,.06)}.v12-facts small{display:block;color:#45656d;font:7px "Space Mono",monospace}.v12-facts b{display:block;color:#b9edf1;font:800 8px "Space Mono",monospace;margin-top:5px;overflow:hidden;text-overflow:ellipsis}
 .v12-log{border-top:1px solid rgba(31,230,255,.08)}.v12-log div{display:grid;grid-template-columns:25px 1fr auto;gap:6px;padding:10px 0;border-bottom:1px solid rgba(31,230,255,.05);font:7px "Space Mono",monospace}.v12-log span{color:#1fe6ff}.v12-log b{color:#809ba2}.v12-log em{font-style:normal;color:#557179}.v12-disclaimer{margin-top:13px;border-left:2px solid #ffcf66;padding:10px;background:rgba(255,207,102,.035);color:#7c7770;font-size:8px;line-height:1.6}
@@ -1676,6 +1684,7 @@ body::before{
     <a href="#forensics" role="menuitem">🔬 Forensics</a>
     <a href="#kali-forensics" role="menuitem">⌨ Kali Lab</a>
     <a href="#imei-lab" role="menuitem">📱 IMEI Check</a>
+    <a href="#bd-licence-lab" role="menuitem">🚗 Car/DL Check</a>
     <a href="#live-image-forensics" role="menuitem">◈ Image Scan</a>
     <a href="#bd-cyber-watch" role="menuitem">⌁ BD Cyber Watch</a>
     <a href="#forensic-3d" role="menuitem">⬡ 3D Forensics</a>
@@ -1707,6 +1716,7 @@ body::before{
     <a href="#forensics">🔬 Image Forensics <span>→</span></a>
     <a href="#kali-forensics">⌨ Kali Forensics Lab <span>→</span></a>
     <a href="#imei-lab">📱 IMEI Validator <span>→</span></a>
+    <a href="#bd-licence-lab">🚗 Car/DL Format Check <span>→</span></a>
 
     <a href="#platform">Platform <span>→</span></a>
     <a href="#services">Features <span>→</span></a>
@@ -2457,6 +2467,33 @@ body::before{
 </section>
 
 
+<section class="fs-imei" id="bd-licence-lab" style="background:linear-gradient(180deg,#020b08,#031a13)">
+  <div class="wrap">
+    <div class="fs-imei-card">
+      <div>
+        <span class="tag" style="color:#00f56b">VEHICLE &amp; DRIVING LICENCE — FORMAT CHECK</span>
+        <h2>BD Car Number &amp; Driving Licence Checker</h2>
+        <p>Type a Bangladeshi vehicle registration number or driving licence number and this tool will check that it <strong>looks like</strong> a well-formed number. It is <strong>not</strong> connected to any BRTA/BTRC government database — it cannot confirm real ownership, validity, fitness, fine status, or whether a licence is genuine. For an official, authoritative check, use BRTA's own online services linked below.</p>
+      </div>
+      <div class="fs-imei-form">
+        <input id="fsCarPlate" placeholder="e.g. Dhaka Metro Ga 11-1234" aria-label="Vehicle registration number">
+        <button id="fsCarPlateBtn" class="fs-cyan-btn" type="button">Check Format</button>
+      </div>
+      <div class="fs-imei-result" id="fsCarPlateResult">গাড়ির রেজিস্ট্রেশন নম্বর লিখুন — শুধু ফরম্যাট যাচাই হবে, সরকারি ডেটাবেজে সরাসরি লুকআপ নয়।</div>
+
+      <div class="fs-imei-form" style="margin-top:6px">
+        <input id="fsDLNumber" placeholder="e.g. DhakaXXXXXXXXXX" aria-label="Driving licence number">
+        <button id="fsDLBtn" class="fs-cyan-btn" type="button">Check Format</button>
+      </div>
+      <div class="fs-imei-result" id="fsDLResult">ড্রাইভিং লাইসেন্স নম্বর লিখুন — শুধু ফরম্যাট যাচাই হবে, সরকারি ডেটাবেজে সরাসরি লুকআপ নয়।
+        <br><br>
+        Official verification: <a href="https://bsp.brta.gov.bd" target="_blank" rel="noopener" style="color:#00f56b">bsp.brta.gov.bd</a> (BRTA — Bangladesh Road Transport Authority handles vehicle registration &amp; driving licences; BTRC regulates telecom, not vehicles).
+      </div>
+    </div>
+  </div>
+</section>
+
+
 <section class="fs-kali" id="kali-forensics">
   <div class="wrap">
     <div class="fs-kali-head">
@@ -2681,7 +2718,6 @@ exiftool -all= -o cleaned.jpg image.jpg</code></pre>
       <div>
         <span class="tag" style="color:#ff7ac8">📝 BANGLA BLOGS & MEDIA</span>
         <h2>Cyber • Tech • Digital Forensics • ইসলামিক লাইভ</h2>
-        <p>Viewerরা শুধু content দেখতে পারবে। Blog post/video publish করার জন্য secure server-side admin authentication প্রয়োজন।</p>
       </div>
       <button class="v8-speak" data-speak="বাংলা ব্লগ ও মিডিয়া সেকশনে সাইবার নিরাপত্তা, প্রযুক্তি, ডিজিটাল ফরেনসিক এবং ইসলামিক লাইভ কনটেন্ট পাওয়া যাবে।">🔊 শুনুন</button>
     </div>
@@ -2714,9 +2750,6 @@ exiftool -all= -o cleaned.jpg image.jpg</code></pre>
       <button id="v8AdminOpen" class="v8-admin-btn">🔐 Admin Login</button>
     </div>
 
-    <div class="v8-admin-note">
-      <b>Security note:</b> GitHub Pages একটি static host। তাই এখানে email/password hard-code করে “secure admin login” বানানো নিরাপদ নয়। Real production login-এর জন্য backend/Firebase/Supabase/WordPress authentication ব্যবহার করতে হবে। আপনার দেওয়া password আমি HTML/JavaScript-এর ভিতরে রাখিনি।
-    </div>
   </div>
 </section>
 
@@ -2725,7 +2758,6 @@ exiftool -all= -o cleaned.jpg image.jpg</code></pre>
     <button class="v8-close" id="v8AdminClose">×</button>
     <span class="tag">ADMIN AREA</span>
     <h2>Secure Blog Login</h2>
-    <p>Server-side authentication endpoint configure করুন। Static GitHub Pages-এ password যাচাই করা যাবে না।</p>
     <label>Email<input id="v8AdminEmail" type="email" placeholder="admin email"></label>
     <label>Password<input id="v8AdminPassword" type="password" placeholder="password"></label>
     <button id="v8AdminDemo" class="v8-admin-btn">Login / Connect Backend</button>
@@ -3265,6 +3297,44 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
       ? '<b style="color:#00f56b">✓ Valid IMEI check digit.</b> This validates the number structure only. No device tracking or owner lookup was performed.'
       : '<b style="color:#ff7b9b">✕ Invalid IMEI check digit.</b> This does not tell you whether a device is stolen, active, blocked or located.';
   });
+
+  // BD vehicle plate / driving licence — LOCAL FORMAT CHECK ONLY. There is no public
+  // BRTA/BTRC API this static page can call, so this never claims to look anything up;
+  // it only judges whether the text a person typed resembles a normal plate/DL shape.
+  const plate=$('fsCarPlate'), plateBtn=$('fsCarPlateBtn'), plateResult=$('fsCarPlateResult');
+  function checkPlateFormat(raw){
+    const s=raw.trim();
+    if(!s)return {ok:null,msg:'নম্বর লিখুন।'};
+    const hasLetters=/[A-Za-zঅ-হড়ঢ়য়০-৯]/.test(s);
+    const hasDigits=/[0-9০-৯]/.test(s);
+    const endsFourDigits=/[0-9০-৯]{4}\s*$/.test(s);
+    const seriesBlock=/[0-9০-৯]{1,2}\s*[-–—]\s*[0-9০-৯]{4}\s*$/.test(s);
+    if(hasLetters&&hasDigits&&endsFourDigits){
+      return {ok:true,msg:'<b style="color:#00f56b">✓ Looks like a normal plate shape</b> (city/division + class letter + series-number ending in 4 digits'+(seriesBlock?' with a series block':'')+'). This is only a shape check — it does not confirm the vehicle is registered, taxed, or real.'};
+    }
+    return {ok:false,msg:'<b style="color:#ff7b9b">✕ Doesn\'t look like a typical BD plate</b> — most plates read like "Dhaka Metro-Ga 11-1234" (city/division, class letter, then a number ending in 4 digits).'};
+  }
+  plateBtn?.addEventListener('click',()=>{
+    const r=checkPlateFormat(plate?.value||'');
+    plateResult.innerHTML=r.msg+'<br><br>Official verification: <a href="https://bsp.brta.gov.bd" target="_blank" rel="noopener" style="color:#00f56b">bsp.brta.gov.bd</a>';
+  });
+
+  const dl=$('fsDLNumber'), dlBtn=$('fsDLBtn'), dlResult=$('fsDLResult');
+  function checkDLFormat(raw){
+    const s=raw.trim();
+    if(!s)return {ok:null,msg:'নম্বর লিখুন।'};
+    const compact=s.replace(/\s+/g,'');
+    const hasLetters=/[A-Za-z]/.test(compact), hasDigits=/\d/.test(compact);
+    const lengthOk=compact.length>=10&&compact.length<=18;
+    if(hasLetters&&hasDigits&&lengthOk){
+      return {ok:true,msg:'<b style="color:#00f56b">✓ Looks like a plausible licence-number length/shape</b> (letters + digits, '+compact.length+' characters). This is only a shape check — BRTA does not publish a format spec this page can validate against, so this cannot confirm the licence is real, active, or belongs to anyone.'};
+    }
+    return {ok:false,msg:'<b style="color:#ff7b9b">✕ Doesn\'t look like a typical driving licence number</b> — expected a mix of letters and digits, roughly 10–18 characters.'};
+  }
+  dlBtn?.addEventListener('click',()=>{
+    const r=checkDLFormat(dl?.value||'');
+    dlResult.innerHTML=r.msg+'<br><br>Official verification: <a href="https://bsp.brta.gov.bd" target="_blank" rel="noopener" style="color:#00f56b">bsp.brta.gov.bd</a> (BRTA handles driving licences — BTRC is telecom regulation, not vehicles).';
+  });
 })();
 </script>
 
@@ -3554,9 +3624,17 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
       return m?m[1]:null;
     }
 
+    let currentlyLive=false; // true once a source is actually playing — guards the periodic
+                              // re-check below from tearing down a stream that's working fine.
+    let iframeWatchdog=null;
+
     async function tryYoutube(i){
       if(i>=youtubeSources.length){
+        currentlyLive=false;
         setStatus('SOURCE UNAVAILABLE — সরাসরি লিংকে দেখুন','#ff8080');
+        // Last resort so the "Watch" link always leads somewhere live, even if every
+        // known channel handle above has gone stale.
+        if(watch)watch.href='https://www.youtube.com/results?search_query=makkah+live';
         return;
       }
       setStatus('CONNECTING…','#8f8190');
@@ -3570,7 +3648,13 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
         iframe.style.display='block';
         iframe.src=src+(src.includes('?')?'&rel=0':'?rel=0');
         if(watch)watch.href=youtubeSources[i].watch;
-        setStatus('● LIVE SOURCE CONNECTED (YouTube)','#00f56b');
+        // Give the embed a little time to actually start; if the iframe stays blank
+        // (channel not live right now, embed blocked, etc.) move on to the next source
+        // instead of silently showing a dead player.
+        clearTimeout(iframeWatchdog);
+        currentlyLive=false;
+        iframeWatchdog=setTimeout(()=>{ if(!currentlyLive) tryYoutube(i+1); },9000);
+        iframe.onload=()=>{ currentlyLive=true; clearTimeout(iframeWatchdog); setStatus('● LIVE SOURCE CONNECTED (YouTube)','#00f56b'); };
       }catch(e){
         tryYoutube(i+1);
       }
@@ -3644,14 +3728,27 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
         video.play().catch(()=>{ /* autoplay may be blocked until user interacts; controls are visible */ });
         if(watch)watch.href=youtubeSources[0].watch;
         setStatus('● LIVE SOURCE CONNECTED','#00f56b');
+        currentlyLive=true;
       }catch(e){
+        currentlyLive=false;
         tryHls(i+1);
       }
     }
 
-    if(video){ tryHls(0); } else { tryYoutube(0); }
-    // Re-check every 10 minutes in case a source drops.
-    setInterval(()=>{ if(video){tryHls(0);} else {tryYoutube(0);} },10*60*1000);
+    if(video){
+      video.addEventListener('stalled',()=>{ currentlyLive=false; setStatus('RECONNECTING…','#ffcf66'); tryHls(0); });
+      video.addEventListener('error',()=>{ currentlyLive=false; setStatus('RECONNECTING…','#ffcf66'); tryHls(0); });
+      tryHls(0);
+    } else {
+      tryYoutube(0);
+    }
+    // Health check every 2 minutes, but only reconnect when the current source has
+    // actually dropped — previously this force-restarted the player every 10 minutes
+    // even while it was streaming fine, causing a visible freeze/reload glitch.
+    setInterval(()=>{
+      if(currentlyLive)return;
+      if(video){tryHls(0);} else {tryYoutube(0);}
+    },2*60*1000);
   })();
 
   // USGS earthquakes near Bangladesh (last 24h, rough regional bounding box)
@@ -3896,7 +3993,7 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
    set('v12FileState','SCANNING');set('v12Verdict','ANALYZING');set('v12EvidenceId','LOCAL-'+Math.random().toString(36).slice(2,8).toUpperCase());
    set('v12Type',file.type||'unknown');set('v12Size',fmt(file.size));set('v12Dimensions','READING…');set('v12Hash','CALCULATING…');
    ['v12Exif','v12File'].forEach(id=>set(id,'SCANNING'));set('v12Ela','EXPERIMENTAL');set('v12Ai','HEURISTIC');
-   root.classList.add('v12-fast-scan');
+   root.classList.add('v12-fast-scan','v12-has-image');
    const stages=[[12,'Reading file container…'],[27,'Mapping image pixels…'],[43,'Inspecting metadata layer…'],[59,'Building hash fingerprint…'],[74,'Evaluating compression signals…'],[88,'Correlating visual heuristics…'],[100,'Evidence scan complete']];
    for(const [pct,label] of stages){await new Promise(r=>setTimeout(r,320));stage(pct,label)}
    const im=new Image();im.onload=async()=>{
@@ -3959,7 +4056,7 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
    input.value='';preview.removeAttribute('src');preview.style.display='none';placeholder.style.display='grid';progress.style.width='0%';
    set('v12ProgressText','0%');set('v12GlobalStatus','SYSTEM READY');set('v12Engine','STANDBY');set('v12Stage','Waiting for evidence…');set('v12FileState','NO IMAGE');set('v12Verdict','WAITING');set('v12EvidenceId','WAITING');
    ['v12Type','v12Size','v12Dimensions','v12Hash','v12Camera','v12DateTaken'].forEach(x=>set(x,'—'));set('v12Exif','PENDING');set('v12File','PENDING');
-   root.classList.remove('v12-fast-scan','v12-rotating','v12-layers');
+   root.classList.remove('v12-fast-scan','v12-rotating','v12-layers','v12-has-image');
  });
  const plane=document.getElementById('v12ImagePlane');
  document.getElementById('v12Stage3D').addEventListener('mousemove',e=>{
