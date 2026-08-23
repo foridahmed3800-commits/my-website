@@ -577,9 +577,9 @@
     .burger.is-open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
     .burger.is-open span:nth-child(2){opacity:0;}
     .burger.is-open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
-    .mobile-menu{display:block;position:fixed;inset:68px 0 0;z-index:55;background:rgba(16,26,46,.42);backdrop-filter:blur(5px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,visibility .22s ease;}
+    .mobile-menu{display:block;position:fixed;inset:68px 0 0;z-index:55;background:rgba(16,26,46,.42);backdrop-filter:blur(5px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,visibility .22s ease;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
     .mobile-menu.open{opacity:1;visibility:visible;pointer-events:auto;}
-    .mobile-menu-inner{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 28px 22px;box-shadow:0 24px 50px rgba(16,26,46,.16);transform:translateY(-10px);transition:transform .22s ease;}
+    .mobile-menu-inner{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 28px 22px;box-shadow:0 24px 50px rgba(16,26,46,.16);transform:translateY(-10px);transition:transform .22s ease;min-height:min-content;}
     .mobile-menu.open .mobile-menu-inner{transform:translateY(0);}
     .mobile-menu-inner a{display:flex;align-items:center;justify-content:space-between;padding:16px 4px;border-bottom:1px solid var(--line);font-size:15px;font-weight:600;}
     .mobile-menu-inner a:last-child{border-bottom:0;}
@@ -1326,6 +1326,24 @@ body::before{
 .fs-tool-card b{color:#fff;font-size:13px}.fs-tool-card p{color:#7f958a;font-size:10px;line-height:1.65;margin:8px 0 0}.fs-tool-card code{color:#00f56b;background:#06130e;padding:3px 5px;border-radius:5px}
 .fs-command-warning{position:relative;margin-top:18px;padding:14px 16px;border-left:2px solid #ffbd5a;background:rgba(255,189,90,.045);color:#82968c;font-size:10px;line-height:1.6}
 .fs-command-warning strong{color:#ffd18a}
+.fs-live-terminal{margin:18px 22px 20px;border:1px solid rgba(0,245,107,.14);border-radius:12px;background:#010604;overflow:hidden}
+.fs-live-term-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px;padding:11px 14px;border-bottom:1px solid rgba(0,245,107,.1);font:9px "Space Mono",monospace}
+.fs-live-term-head b{color:#00f56b;letter-spacing:.06em}
+.fs-live-term-head span{color:#5c7669}
+.fs-live-term-chips{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px 0}
+.fs-live-term-chips button{background:#061510;border:1px solid rgba(0,245,107,.22);color:#8fe6b6;border-radius:999px;padding:6px 11px;font:9px "Space Mono",monospace;cursor:pointer;transition:.15s ease}
+.fs-live-term-chips button:hover{background:rgba(0,245,107,.14);border-color:#00f56b;color:#e8fff2}
+.fs-live-output{margin:12px 14px 0;padding:12px 14px;min-height:90px;max-height:260px;overflow:auto;background:#000;border:1px solid rgba(0,245,107,.08);border-radius:8px;font:10.5px/1.8 "Space Mono",monospace;color:#a8ffca;white-space:pre-wrap}
+.fs-live-output .ok{color:#00f56b}
+.fs-live-output .typed{color:#dfffee}
+.fs-live-output .err{color:#ff8080}
+.fs-live-output .dim{color:#5c7669}
+.fs-live-term-input{display:flex;align-items:center;gap:8px;padding:12px 14px 14px;font:10px "Space Mono",monospace}
+.fs-live-term-input span{color:#00f56b;white-space:nowrap}
+.fs-live-term-input input{flex:1;background:#050e0a;border:1px solid rgba(0,245,107,.18);border-radius:7px;padding:9px 10px;color:#e8fff2;font:10px "Space Mono",monospace}
+.fs-live-term-input input:focus{outline:none;border-color:#00f56b}
+.fs-live-term-input button{background:#00f56b;color:#001a0d;border:0;border-radius:7px;padding:9px 12px;font:800 9px "Space Mono",monospace;cursor:pointer;white-space:nowrap}
+@media(max-width:560px){.fs-live-terminal{margin:16px 16px 18px}.fs-live-term-input{flex-wrap:wrap}.fs-live-term-input button{width:100%}}
 @media(max-width:900px){.fs-kali-head{flex-direction:column;align-items:flex-start}.fs-kali-layout{grid-template-columns:1fr}.fs-security-nav,.fs-nav-divider{display:none}}
 @media(max-width:560px){.fs-kali{padding:70px 0}.fs-terminal pre{font-size:9px;padding:16px}.fs-terminal .fs-green-btn{margin-left:16px}}
 </style>
@@ -1379,12 +1397,13 @@ body::before{
 .v8-head{position:relative;display:flex;justify-content:space-between;align-items:flex-end;gap:25px;margin-bottom:32px}.v8-head h2{color:#fff;margin:11px 0}.v8-head p{max-width:800px;color:#839a8e;line-height:1.75}.v8-speak{border:1px solid rgba(31,230,255,.3);background:rgba(31,230,255,.04);color:#8defff;border-radius:999px;padding:10px 14px;font-weight:800;cursor:pointer;white-space:nowrap}
 .v8-cyber-grid{position:relative;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:16px}.v8-cyber-card,.v8-earth-card{border:1px solid rgba(131,255,179,.13);border-radius:20px;padding:22px;background:rgba(7,23,15,.78);box-shadow:0 25px 60px rgba(0,0,0,.25)}
 .v8-card-top{display:flex;justify-content:space-between;gap:10px;align-items:center;color:#8aa095;font:8px "Space Mono",monospace}.v8-card-top b{color:#dffff0;font-size:9px}.v8-live-dot{color:#00f56b}.v8-threat-level{margin:24px 0 10px}.v8-threat-level strong{display:block;color:#ffcf66;font-size:26px}.v8-threat-level span{color:#7e9589;font-size:9px}.v8-cyber-card p{color:#789086;font-size:10px;line-height:1.7}.v8-cyber-card h3{color:#e9fff4;font-size:15px;margin:24px 0 8px}.v8-cyber-actions{display:flex;gap:8px;margin-top:18px}.v8-cyber-actions a,.v8-read{color:#1fe6ff;text-decoration:none;font-size:9px;font-weight:800}.v8-disclaimer{position:relative;margin-top:18px;padding:14px 16px;border-left:2px solid #ffcf66;background:rgba(255,207,102,.04);color:#84978e;font-size:9px;line-height:1.7}
-.v8-3d-layout{position:relative;display:grid;grid-template-columns:1.2fr .8fr;gap:20px}.v8-3d-stage{height:520px;border:1px solid rgba(131,255,179,.13);border-radius:22px;background:radial-gradient(circle at center,rgba(0,245,107,.08),transparent 42%),#020805;position:relative;display:grid;place-items:center;perspective:900px;overflow:hidden}.v8-cube{width:180px;height:180px;position:relative;transform-style:preserve-3d;animation:v8cube 16s linear infinite}.v8-cube .face{position:absolute;inset:0;display:grid;place-items:center;border:1px solid rgba(0,245,107,.55);background:rgba(0,245,107,.045);color:#aaffcc;font:800 12px "Space Mono",monospace;backface-visibility:visible}.front{transform:translateZ(90px)}.back{transform:rotateY(180deg) translateZ(90px)}.right{transform:rotateY(90deg) translateZ(90px)}.left{transform:rotateY(-90deg) translateZ(90px)}.top{transform:rotateX(90deg) translateZ(90px)}.bottom{transform:rotateX(-90deg) translateZ(90px)}
+.v8-3d-layout{position:relative;display:grid;grid-template-columns:1.2fr .8fr;gap:20px}.v8-3d-stage{height:520px;border:1px solid rgba(131,255,179,.13);border-radius:22px;background:radial-gradient(circle at center,rgba(0,245,107,.08),transparent 42%),#020805;position:relative;display:grid;place-items:center;perspective:900px;-webkit-perspective:900px;overflow:hidden}.v8-cube{width:180px;height:180px;position:relative;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;animation:v8cube 16s linear infinite;-webkit-animation:v8cube 16s linear infinite}.v8-cube .face{position:absolute;inset:0;display:grid;place-items:center;border:1px solid rgba(0,245,107,.55);background:rgba(0,245,107,.045);color:#aaffcc;font:800 12px "Space Mono",monospace;backface-visibility:visible;-webkit-backface-visibility:visible}.front{transform:translateZ(90px);-webkit-transform:translateZ(90px)}.back{transform:rotateY(180deg) translateZ(90px);-webkit-transform:rotateY(180deg) translateZ(90px)}.right{transform:rotateY(90deg) translateZ(90px);-webkit-transform:rotateY(90deg) translateZ(90px)}.left{transform:rotateY(-90deg) translateZ(90px);-webkit-transform:rotateY(-90deg) translateZ(90px)}.top{transform:rotateX(90deg) translateZ(90px);-webkit-transform:rotateX(90deg) translateZ(90px)}.bottom{transform:rotateX(-90deg) translateZ(90px);-webkit-transform:rotateX(-90deg) translateZ(90px)}
+@-webkit-keyframes v8cube{from{-webkit-transform:rotateX(-16deg) rotateY(0)}to{-webkit-transform:rotateX(-16deg) rotateY(360deg)}}
 @keyframes v8cube{from{transform:rotateX(-16deg) rotateY(0)}to{transform:rotateX(-16deg) rotateY(360deg)}}.v8-scan-ring{position:absolute;border:1px solid rgba(31,230,255,.18);border-radius:50%;transform:rotateX(70deg)}.ring1{width:430px;height:430px;animation:v8ring 8s linear infinite}.ring2{width:280px;height:280px;animation:v8ring 5s linear infinite reverse}@keyframes v8ring{to{transform:rotateX(70deg) rotateZ(360deg)}}.v8-scan-line{position:absolute;width:75%;height:1px;background:linear-gradient(90deg,transparent,#00f56b,transparent);box-shadow:0 0 20px #00f56b;animation:v8scan 3s ease-in-out infinite}@keyframes v8scan{0%,100%{transform:translateY(-180px)}50%{transform:translateY(180px)}}.v8-node{position:absolute;color:#79a091;font:8px "Space Mono",monospace;border:1px solid rgba(0,245,107,.18);padding:6px 8px;border-radius:8px;background:#04100a}.n1{left:12%;top:20%}.n2{right:10%;top:28%}.n3{right:16%;bottom:22%}.v8-3d-controls{position:absolute;bottom:18px;display:flex;gap:7px}.v8-3d-controls button{background:#071810;border:1px solid rgba(131,255,179,.15);color:#94ab9f;border-radius:8px;padding:8px 10px;font-size:9px;cursor:pointer}.v8-scan-panel{border:1px solid rgba(131,255,179,.13);border-radius:22px;padding:22px;background:#031009}.v8-layer{display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(131,255,179,.08);color:#789187;font:9px "Space Mono",monospace}.v8-layer b{color:#00f56b;font-size:8px}.v8-scan-panel p{color:#71867c;font-size:9px;line-height:1.7;margin-top:20px}
 .v8-earth-grid{display:grid;grid-template-columns:1fr 1.25fr;gap:18px}.v8-division-select{margin-top:14px;width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(131,255,179,.16);border-radius:9px;color:#dfffea;font-size:12px;padding:9px 12px;font-family:'Inter',sans-serif;cursor:pointer}.v8-division-select:focus{outline:none;border-color:#00f56b}.v8-controls-row{display:flex;gap:8px;align-items:center}.v8-controls-row .v8-division-select{margin-top:14px}.v8-refresh-btn{margin-top:14px;flex:0 0 auto;width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.04);border:1px solid rgba(131,255,179,.16);color:#dfffea;font-size:15px;cursor:pointer;transition:transform .2s ease,background .2s ease}.v8-refresh-btn:hover{background:rgba(0,245,107,.12)}.v8-refresh-btn.spin{animation:v8spin .6s linear}@keyframes v8spin{to{transform:rotate(360deg)}}.v8-weather-main{display:flex;align-items:end;gap:15px;margin:30px 0 20px}.v8-weather-icon{font-size:40px;line-height:1;margin-bottom:6px}.v8-weather-main strong{font-size:54px;color:#fff}.v8-weather-main span{color:#8ea59a;font-size:12px;margin-bottom:9px}.v8-weather-mini{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.v8-weather-mini span{background:rgba(255,255,255,.025);border-radius:9px;padding:11px;color:#748b80;font-size:8px}.v8-weather-mini b{color:#dfffea}.v8-earth-card small{display:block;color:#52685d;font-size:8px;margin-top:15px}.v8-earth-card small b{color:#8fa49a;font-weight:700}.v8-globe{width:160px;height:160px;margin:20px auto;border-radius:50%;position:relative;background:radial-gradient(circle at 35% 30%,rgba(31,230,255,.4),rgba(0,60,70,.25) 45%,#010607 72%);box-shadow:0 0 50px rgba(31,230,255,.14);overflow:hidden}.v8-globe-grid{position:absolute;inset:0;border-radius:50%;background:repeating-linear-gradient(90deg,transparent 0 24px,rgba(31,230,255,.12) 25px),repeating-linear-gradient(0deg,transparent 0 24px,rgba(31,230,255,.12) 25px);animation:v8globe 8s linear infinite}.v8-globe-core{position:absolute;inset:18px;border:1px solid rgba(31,230,255,.22);border-radius:50%}@keyframes v8globe{to{transform:translateX(24px)}}.v8-globe-dot{position:absolute;width:7px;height:7px;background:#ffcf66;border-radius:50%;box-shadow:0 0 15px #ffcf66}.d1{left:45%;top:42%}.d2{left:64%;top:58%}.d3{left:31%;top:63%}.v8-quake-list{min-height:55px;color:#7f958a;font-size:9px;line-height:1.7}.v8-quake-item{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(131,255,179,.07)}.v8-quake-item span{display:flex;flex-direction:column;gap:2px}.v8-quake-item em{font-style:normal;color:#4d6058;font-size:8px}.v8-quake-item b{color:#ffcf66;padding:3px 8px;border-radius:999px;background:rgba(255,207,102,.1)}.v8-quake-item b.mag-mod{color:#ffcf66}.v8-quake-item b.mag-strong{color:#ff9c4a;background:rgba(255,156,74,.12)}.v8-quake-item b.mag-major{color:#ff5a5a;background:rgba(255,90,90,.14)}
 .v8-blog-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}.v8-blog-card,.v8-post{border:1px solid rgba(255,122,200,.12);border-radius:20px;background:rgba(18,5,15,.78);padding:20px}.v8-featured-label{color:#ff7ac8;font:800 8px "Space Mono",monospace}.v8-blog-card h3{color:#fff;font-size:19px;margin:12px 0}.v8-blog-card p,.v8-post p{color:#8f8190;font-size:10px;line-height:1.7}.v8-video-wrap{aspect-ratio:16/9;margin-top:15px;border-radius:13px;overflow:hidden;background:#000}.v8-video-wrap iframe{width:100%;height:100%;border:0}.v8-watch{display:inline-block;margin-top:10px;color:#ff9bd5;font-size:9px;text-decoration:none;font-weight:800}.v8-blog-list{display:grid;gap:12px}.v8-post span{color:#ff7ac8;font:8px "Space Mono",monospace}.v8-post h3{color:#f9eaf3;font-size:13px;margin:9px 0}.v8-admin{margin-top:20px;border:1px solid rgba(31,230,255,.13);border-radius:18px;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:15px;background:rgba(0,20,25,.55)}.v8-admin h3{color:#fff;margin:8px 0}.v8-admin p,.v8-admin-note{color:#748a80;font-size:9px;line-height:1.7}.v8-admin-btn{background:#1fe6ff;color:#001116;border:0;border-radius:9px;padding:11px 14px;font-weight:900;cursor:pointer;white-space:nowrap}.v8-admin-note{margin-top:10px;padding:13px;border-left:2px solid #1fe6ff;background:rgba(31,230,255,.025)}.v8-admin-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);place-items:center;padding:18px}.v8-admin-modal.open{display:grid}.v8-admin-box{position:relative;width:min(440px,100%);background:#06110b;border:1px solid rgba(131,255,179,.18);border-radius:20px;padding:25px}.v8-admin-box h2{color:#fff}.v8-admin-box p{color:#788e83;font-size:10px;line-height:1.7}.v8-admin-box label{display:block;color:#9bb0a5;font-size:9px;margin-top:12px}.v8-admin-box input{display:block;width:100%;box-sizing:border-box;margin-top:6px;background:#020805;border:1px solid rgba(131,255,179,.12);border-radius:8px;padding:11px;color:#dffff0}.v8-admin-box .v8-admin-btn{margin-top:15px}.v8-admin-box small{display:block;color:#ffcf66;margin-top:10px;font-size:8px}.v8-close{position:absolute;right:12px;top:9px;background:none;border:0;color:#9fb3a8;font-size:25px;cursor:pointer}
 @media(max-width:950px){.v8-cyber-grid,.v8-earth-grid,.v8-3d-layout,.v8-blog-grid{grid-template-columns:1fr}.v8-head{align-items:flex-start;flex-direction:column}.v8-speak{align-self:flex-start}}
-@media(max-width:620px){.v8-cyber,.v8-scan,.v8-earth,.v8-blog{padding:70px 0}.v8-cyber-card,.v8-earth-card,.v8-scan-panel,.v8-blog-card{padding:16px;border-radius:16px}.v8-3d-stage{height:390px}.v8-cube{width:130px;height:130px}.front{transform:translateZ(65px)}.back{transform:rotateY(180deg) translateZ(65px)}.right{transform:rotateY(90deg) translateZ(65px)}.left{transform:rotateY(-90deg) translateZ(65px)}.top{transform:rotateX(90deg) translateZ(65px)}.bottom{transform:rotateX(-90deg) translateZ(65px)}.v8-weather-main strong{font-size:44px}.v8-weather-mini{grid-template-columns:1fr}.v8-admin{align-items:flex-start;flex-direction:column}}
+@media(max-width:620px){.v8-cyber,.v8-scan,.v8-earth,.v8-blog{padding:70px 0}.v8-cyber-card,.v8-earth-card,.v8-scan-panel,.v8-blog-card{padding:16px;border-radius:16px}.v8-3d-stage{height:390px}.v8-cube{width:130px;height:130px}.front{transform:translateZ(65px);-webkit-transform:translateZ(65px)}.back{transform:rotateY(180deg) translateZ(65px);-webkit-transform:rotateY(180deg) translateZ(65px)}.right{transform:rotateY(90deg) translateZ(65px);-webkit-transform:rotateY(90deg) translateZ(65px)}.left{transform:rotateY(-90deg) translateZ(65px);-webkit-transform:rotateY(-90deg) translateZ(65px)}.top{transform:rotateX(90deg) translateZ(65px);-webkit-transform:rotateX(90deg) translateZ(65px)}.bottom{transform:rotateX(-90deg) translateZ(65px);-webkit-transform:rotateX(-90deg) translateZ(65px)}.v8-weather-main strong{font-size:44px}.v8-weather-mini{grid-template-columns:1fr}.v8-admin{align-items:flex-start;flex-direction:column}}
 </style>
 
 
@@ -1534,12 +1553,12 @@ body::before{
   #forensic-3d{padding-top:55px}
   #forensic-3d .v8-3d-stage{min-height:430px;height:430px}
   #forensic-3d .v8-cube{width:145px;height:145px}
-  #forensic-3d .v8-cube .front{transform:translateZ(72.5px)}
-  #forensic-3d .v8-cube .back{transform:rotateY(180deg) translateZ(72.5px)}
-  #forensic-3d .v8-cube .right{transform:rotateY(90deg) translateZ(72.5px)}
-  #forensic-3d .v8-cube .left{transform:rotateY(-90deg) translateZ(72.5px)}
-  #forensic-3d .v8-cube .top{transform:rotateX(90deg) translateZ(72.5px)}
-  #forensic-3d .v8-cube .bottom{transform:rotateX(-90deg) translateZ(72.5px)}
+  #forensic-3d .v8-cube .front{transform:translateZ(72.5px);-webkit-transform:translateZ(72.5px)}
+  #forensic-3d .v8-cube .back{transform:rotateY(180deg) translateZ(72.5px);-webkit-transform:rotateY(180deg) translateZ(72.5px)}
+  #forensic-3d .v8-cube .right{transform:rotateY(90deg) translateZ(72.5px);-webkit-transform:rotateY(90deg) translateZ(72.5px)}
+  #forensic-3d .v8-cube .left{transform:rotateY(-90deg) translateZ(72.5px);-webkit-transform:rotateY(-90deg) translateZ(72.5px)}
+  #forensic-3d .v8-cube .top{transform:rotateX(90deg) translateZ(72.5px);-webkit-transform:rotateX(90deg) translateZ(72.5px)}
+  #forensic-3d .v8-cube .bottom{transform:rotateX(-90deg) translateZ(72.5px);-webkit-transform:rotateX(-90deg) translateZ(72.5px)}
 }
 </style>
 
@@ -2531,6 +2550,28 @@ sha256sum image-a.jpg image-b.jpg
 exiftool -all= -o cleaned.jpg image.jpg</code></pre>
         <button id="fsCopyCommands" class="fs-green-btn" type="button">Copy safe commands</button>
         <span id="fsCopyStatus" class="fs-copy-status"></span>
+
+        <div class="fs-live-terminal">
+          <div class="fs-live-term-head"><b>⌁ LIVE COMMAND MACHINE</b><span>simulated shell — runs in your browser, no real system is touched</span></div>
+          <div class="fs-live-term-chips">
+            <button type="button" data-cmd="exiftool image.jpg">exiftool image.jpg</button>
+            <button type="button" data-cmd="sha256sum image.jpg">sha256sum image.jpg</button>
+            <button type="button" data-cmd="file image.jpg">file image.jpg</button>
+            <button type="button" data-cmd="identify image.jpg">identify image.jpg</button>
+            <button type="button" data-cmd="jpeginfo -c image.jpg">jpeginfo -c image.jpg</button>
+            <button type="button" data-cmd="strings -n 8 image.jpg | head -50">strings image.jpg</button>
+            <button type="button" data-cmd="help">help</button>
+          </div>
+          <pre id="fsLiveOutput" class="fs-live-output"><code><span class="ok">forensics@kali</span>:~$ <span class="typed">help</span>
+Type a command above or tap a chip. Try: exiftool image.jpg, sha256sum image.jpg, file image.jpg
+If you've scanned an image in the Digital Forensics Lab below, real file data will be used here.
+</code></pre>
+          <div class="fs-live-term-input">
+            <span>forensics@kali:~$</span>
+            <input id="fsLiveInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type a command… e.g. sha256sum image.jpg">
+            <button id="fsLiveRun" type="button">Run ⏎</button>
+          </div>
+        </div>
       </article>
 
       <article class="fs-tool-cards">
@@ -3358,6 +3399,92 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
   }
 })();
 </script>
+
+<script id="fs-kali-live-terminal-js">
+(function(){
+  const out=document.getElementById('fsLiveOutput');
+  const input=document.getElementById('fsLiveInput');
+  const runBtn=document.getElementById('fsLiveRun');
+  const chips=document.querySelectorAll('.fs-live-term-chips button');
+  if(!out||!input)return;
+
+  function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+  function println(html){ const d=document.createElement('div'); d.innerHTML=html; out.querySelector('code').appendChild(d); out.scrollTop=out.scrollHeight; }
+  function prompt(cmd){ println('<span class="ok">forensics@kali</span>:~$ <span class="typed">'+esc(cmd)+'</span>'); }
+
+  // Pull real numbers from the Digital Forensics Lab (#forensics) below, if the
+  // visitor already scanned a file there — so "sha256sum image.jpg" etc. shows an
+  // actual computed hash/type/size instead of a fake placeholder when possible.
+  function realScan(){
+    const status=document.getElementById('fsStatus');
+    if(!status || status.textContent.trim()!=='COMPLETE')return null;
+    const g=id=>{const e=document.getElementById(id);return e?e.textContent.trim():'—';};
+    return {name:g('fsName'),type:g('fsType'),size:g('fsSize'),dim:g('fsDimensions'),hash:g('fsHash'),modified:g('fsModified')};
+  }
+
+  const HELP='Commands: exiftool image.jpg · sha256sum image.jpg · file image.jpg · identify image.jpg · jpeginfo -c image.jpg · strings -n 8 image.jpg | head -50 · clear\nTip: scan an image in the Digital Forensics Lab section below first — this terminal will then show that file\'s real hash/type/size instead of a placeholder.';
+
+  function run(raw){
+    const cmd=raw.trim();
+    if(!cmd)return;
+    prompt(cmd);
+    const scan=realScan();
+    const norm=cmd.replace(/\s+/g,' ');
+
+    if(norm==='clear'){ out.querySelector('code').innerHTML=''; return; }
+    if(norm==='help'){ println('<span class="dim">'+esc(HELP).replace(/\n/g,'<br>')+'</span>'); return; }
+
+    if(/^exiftool( -a -u -g1)? image\.jpg$/.test(norm)){
+      if(scan){
+        println('File Name'.padEnd(22)+': '+esc(scan.name));
+        println('File Type'.padEnd(22)+': '+esc(scan.type));
+        println('File Size'.padEnd(22)+': '+esc(scan.size));
+        println('Image Size'.padEnd(22)+': '+esc(scan.dim));
+        println('File Modification Date'.padEnd(22)+': '+esc(scan.modified));
+        println('<span class="dim">Camera/GPS/EXIF tags shown only when actually embedded in the file — this browser demo cannot read fields beyond what the Digital Forensics Lab already extracted.</span>');
+      } else {
+        println('<span class="err">No file loaded.</span> Scan an image in the Digital Forensics Lab section first, or this stays a reference example:');
+        println('<span class="dim">File Name              : image.jpg\nFile Type              : JPEG\nCamera Model Name      : (present only if the file has it)\nGPS Position            : (present only if the file has it)</span>');
+      }
+      return;
+    }
+    if(/^sha256sum image\.jpg$/.test(norm)){
+      println(scan?esc(scan.hash)+'  image.jpg':'<span class="err">No file loaded.</span> Scan an image in the Digital Forensics Lab section first to compute a real SHA-256.');
+      return;
+    }
+    if(/^sha256sum image-a\.jpg image-b\.jpg$/.test(norm)){
+      println('<span class="dim">Compares two files\' hashes — identical output means byte-for-byte identical files. This demo only has one upload slot, so run sha256sum image.jpg on each file separately and compare by eye.</span>');
+      return;
+    }
+    if(/^file image\.jpg$/.test(norm)){
+      println(scan?'image.jpg: '+esc(scan.type)+', '+esc(scan.dim):'<span class="err">No file loaded.</span> Scan an image in the Digital Forensics Lab section first.');
+      return;
+    }
+    if(/^identify image\.jpg$/.test(norm)){
+      println(scan?'image.jpg '+esc(scan.type)+' '+esc(scan.dim)+' '+esc(scan.size):'<span class="err">No file loaded.</span> Scan an image in the Digital Forensics Lab section first.');
+      return;
+    }
+    if(/^jpeginfo -c image\.jpg$/.test(norm)){
+      println(scan?'image.jpg  '+esc(scan.dim)+'  24bit  N  [OK]':'<span class="err">No file loaded.</span> Scan an image in the Digital Forensics Lab section first.');
+      return;
+    }
+    if(/^strings -n 8 image\.jpg( \| head -50)?$/.test(norm)){
+      println('<span class="dim">Lists readable text sequences embedded in the file (comments, tool tags, sometimes leftover text from editing software). Nothing meaningful to show without a real file — scan one below, then re-run this.</span>');
+      return;
+    }
+    if(/^exiftool -all= -o cleaned\.jpg image\.jpg$/.test(norm)){
+      println('<span class="dim">Writes cleaned.jpg with metadata stripped, leaving image.jpg untouched. (Simulated — no file is written in this browser demo.)</span>');
+      return;
+    }
+    println('<span class="err">command not recognized in this simulated lab.</span> Type <span class="ok">help</span> for the supported command list.');
+  }
+
+  chips.forEach(b=>b.addEventListener('click',()=>run(b.dataset.cmd)));
+  runBtn?.addEventListener('click',()=>{ run(input.value); input.value=''; });
+  input?.addEventListener('keydown',e=>{ if(e.key==='Enter'){ run(input.value); input.value=''; } });
+})();
+</script>
+
 
 
 <script id="fs-v7-live-forensics-js">
