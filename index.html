@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<!-- This page ships its own dark design. Without this hint, some mobile browsers'
+     automatic "dark theme for websites" feature tries to re-color already-dark
+     pages and can tint plain text an unintended blue/cyan (seen on the মক্কা
+     শরীফ description text). Declaring color-scheme tells the browser this page
+     is intentionally dark, so it leaves the colors we set alone. -->
 <title>FS. — Cyber Intelligence & Digital Security Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -11,6 +17,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
+    color-scheme: dark;
     --navy:#101a2e;
     --navy-2:#1c2b4a;
     --blue:#2f5fff;
@@ -966,7 +973,7 @@ body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;ba
 .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g);margin-right:7px;animation:p 1.4s infinite}@keyframes p{50%{opacity:.25;transform:scale(.7)}}
 @media(max-width:600px){body:before{background-size:28px 28px}#cmhud{font-size:7px;left:8px;right:8px}#cmhud .r{display:none}.b2b-dashboard:before{display:none}}
 </style>
-<style id="soc-command-center">
+<style id="soc-command-center-style">
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root{
@@ -1281,7 +1288,23 @@ body::before{
 .fs-forensics-badge{border:1px solid rgba(0,245,107,.3);padding:9px 12px;border-radius:999px;color:#00f56b;font:700 9px "Space Mono",monospace}
 .fs-forensics-layout{position:relative;display:grid;grid-template-columns:.9fr 1.1fr;gap:20px}
 .fs-upload-card,.fs-report-card,.fs-imei-card{background:rgba(7,24,16,.82);border:1px solid rgba(131,255,179,.14);border-radius:24px;padding:25px;box-shadow:0 28px 70px rgba(0,0,0,.22);backdrop-filter:blur(12px)}
-.fs-drop{height:220px;border:1px dashed rgba(0,245,107,.35);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,245,107,.025);text-align:center}
+.fs-drop{height:220px;border:1px dashed rgba(0,245,107,.35);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,245,107,.025);text-align:center;transition:background .15s ease,border-color .15s ease}
+.fs-drop.fs-drop-active{background:rgba(0,245,107,.09);border-color:#00f56b}
+.kali-demo-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(4,10,7,.82);backdrop-filter:blur(8px);place-items:center;padding:18px}
+.kali-demo-modal.open{display:grid}
+.kali-demo-box{position:relative;width:min(640px,100%);max-height:88vh;overflow:auto;background:#06110b;border:1px solid rgba(131,255,179,.18);border-radius:20px;padding:26px}
+.kali-demo-close{position:absolute;right:14px;top:10px;background:none;border:0;color:#9fb3a8;font-size:26px;cursor:pointer;line-height:1}
+.kali-demo-head h3{color:#fff;font-family:'Space Mono',monospace;margin:10px 0 8px;font-size:20px}
+.kali-demo-head p{color:#8ba297;font-size:12.5px;line-height:1.7;max-width:520px}
+.kali-demo-terminal{margin-top:18px;background:#0b1712;border:1px solid #1e3327;border-radius:14px;overflow:hidden}
+.kali-demo-terminal pre{margin:0;padding:16px;min-height:220px;max-height:340px;overflow:auto;font-family:'Space Mono',monospace;font-size:12px;line-height:1.75;color:#9be8b3}
+.kali-demo-terminal code{white-space:pre-wrap;word-break:break-word}
+.kali-demo-terminal .kd-cursor{display:inline-block;width:7px;height:13px;background:#00f56b;vertical-align:-2px;animation:kdBlink 1s step-end infinite}
+@keyframes kdBlink{50%{opacity:0}}
+.kali-demo-terminal .kd-cmd{color:#e8fff2}
+.kali-demo-terminal .kd-note{color:#6f8a7d}
+.kali-demo-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:16px;flex-wrap:wrap}
+@media(max-width:560px){.kali-demo-box{padding:18px}.kali-demo-terminal pre{min-height:180px;font-size:11px}}
 .fs-drop input{display:none}.fs-drop-icon{font-size:35px;color:#00f56b}.fs-drop strong{color:#fff;margin-top:12px}.fs-drop small,.fs-drop em{color:#758d81;font-size:10px;margin-top:7px}.fs-drop em{font-style:normal}
 .fs-image-preview{height:180px;margin-top:15px;border:1px solid rgba(131,255,179,.1);border-radius:15px;display:grid;place-items:center;overflow:hidden;color:#687f74;font-size:11px;background:#04100b}
 .fs-image-preview img{width:100%;height:100%;object-fit:contain}.fs-forensics-actions{display:flex;gap:10px;margin-top:15px}.fs-green-btn,.fs-cyan-btn,.fs-ghost-btn{border:0;border-radius:10px;padding:12px 16px;font-weight:900;cursor:pointer}.fs-green-btn{background:#00f56b;color:#00150b}.fs-cyan-btn{background:#1fe6ff;color:#00232a}.fs-ghost-btn{background:#10221a;color:#b8cfc4;border:1px solid rgba(131,255,179,.13)}.fs-green-btn:disabled{opacity:.4;cursor:not-allowed}
@@ -1783,7 +1806,7 @@ body::before{
 
         <div class="hero-actions qq-actions">
           <a href="#solutions" class="btn-primary qq-primary"><span class="qq-play">▶</span> Start Hacking <b>→</b></a>
-          <a href="#about" class="btn-ghost qq-demo"><span class="play-circle">▷</span> Watch Demo</a>
+          <button type="button" id="kaliDemoOpen" class="btn-ghost qq-demo"><span class="play-circle">▷</span> Watch Demo</button>
         </div>
 
         <div class="qq-community-proof">
@@ -1842,6 +1865,25 @@ body::before{
     </div>
   </div>
 </section>
+
+<div class="kali-demo-modal" id="kaliDemoModal" aria-hidden="true">
+  <div class="kali-demo-box">
+    <button class="kali-demo-close" id="kaliDemoClose" aria-label="Close demo">×</button>
+    <div class="kali-demo-head">
+      <span class="tag" style="color:#00f56b">DEMO ANIMATION · SIMULATED</span>
+      <h3>⌘ Kali Linux — Recon Walkthrough</h3>
+      <p>A simulated terminal animation showing a typical, well-known Kali Linux workflow. Nothing here runs for real — no live scan, no network request, no target is touched.</p>
+    </div>
+    <div class="kali-demo-terminal">
+      <div class="fs-terminal-bar"><i></i><i></i><i></i><span>demo@kali:~ · SIMULATED — NOT LIVE</span></div>
+      <pre id="kaliDemoOutput"><code></code></pre>
+    </div>
+    <div class="kali-demo-foot">
+      <button type="button" id="kaliDemoReplay" class="v8-admin-btn" style="background:#00f56b">↺ Replay</button>
+      <a href="#kali-forensics" id="kaliDemoGoLab" class="v8-watch" style="color:#00f56b">Try the real (offline) forensics lab →</a>
+    </div>
+  </div>
+</div>
 
 <section class="fs-world" id="world-control">
   <div class="fs-world-grid"></div>
@@ -3319,13 +3361,31 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
     set('fsStatus','WAITING');$('fsSignalBar').style.width='0%';
     $('fsChecks').innerHTML='<div>Image structure <b>—</b></div><div>Metadata visibility <b>—</b></div><div>Browser-readable EXIF <b>—</b></div>';
   }
-  fileInput?.addEventListener('change',e=>{
-    selected=e.target.files?.[0]||null; if(!selected)return;
-    if(!selected.type.startsWith('image/')){alert('Please choose an image file.');fileInput.value='';return;}
+  function loadSelectedFile(f){
+    selected=f||null; if(!selected)return;
+    if(!selected.type.startsWith('image/')){alert('Please choose an image file.');if(fileInput)fileInput.value='';return;}
     analyze.disabled=false; preview.innerHTML='';
     const img=document.createElement('img'); img.alt='Selected image preview'; img.src=URL.createObjectURL(selected); preview.appendChild(img);
     resetReport(); set('fsStatus','READY');
+  }
+  fileInput?.addEventListener('change',e=>{
+    loadSelectedFile(e.target.files?.[0]||null);
   });
+  // Drag & drop support — the drop zone said "Drop an image here" but previously
+  // only the click-to-browse path (native <label>+<input>) actually worked.
+  const dropZone=$('fsDrop');
+  if(dropZone){
+    ['dragenter','dragover'].forEach(evt=>dropZone.addEventListener(evt,e=>{
+      e.preventDefault(); e.stopPropagation(); dropZone.classList.add('fs-drop-active');
+    }));
+    ['dragleave','drop'].forEach(evt=>dropZone.addEventListener(evt,e=>{
+      e.preventDefault(); e.stopPropagation(); dropZone.classList.remove('fs-drop-active');
+    }));
+    dropZone.addEventListener('drop',e=>{
+      const f=e.dataTransfer?.files?.[0];
+      if(f)loadSelectedFile(f);
+    });
+  }
   analyze?.addEventListener('click',async()=>{
     if(!selected)return;
     set('fsStatus','ANALYZING');
@@ -3426,6 +3486,82 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
       setTimeout(()=>status.textContent='',2500);
     });
   }
+})();
+</script>
+
+<script id="fs-kali-home-demo-js">
+(function(){
+  const openBtn=document.getElementById('kaliDemoOpen');
+  const closeBtn=document.getElementById('kaliDemoClose');
+  const replayBtn=document.getElementById('kaliDemoReplay');
+  const modal=document.getElementById('kaliDemoModal');
+  const goLab=document.getElementById('kaliDemoGoLab');
+  const codeEl=document.getElementById('kaliDemoOutput')?.querySelector('code');
+  if(!openBtn||!modal||!codeEl)return;
+
+  // Purely cosmetic scripted animation — a well-known, illustrative Kali Linux
+  // recon sequence. Nothing is executed; it only types text into the terminal.
+  const lines=[
+    {t:'cmd', text:'nmap -sV -T4 192.168.1.10'},
+    {t:'note', text:'Starting Nmap ... scanning target (simulated output)'},
+    {t:'note', text:'22/tcp   open  ssh\n80/tcp   open  http\n443/tcp  open  https'},
+    {t:'cmd', text:'whatweb 192.168.1.10'},
+    {t:'note', text:'Detected: Apache 2.4, PHP, WordPress (illustrative demo data)'},
+    {t:'cmd', text:'sqlmap -u "http://target/page?id=1" --batch'},
+    {t:'note', text:'[demo] This step is shown for education only — no request is sent.'},
+    {t:'cmd', text:'exiftool image.jpg'},
+    {t:'note', text:'File Type : JPEG\nCamera Model : (example)\nGPS Position : (example)'},
+    {t:'note', text:'✓ Demo complete — this is a scripted animation, not a live scan.'}
+  ];
+  let timers=[];
+  function clearTimers(){timers.forEach(clearTimeout);timers=[];}
+
+  function typeLine(line,onDone){
+    const row=document.createElement('div');
+    if(line.t==='cmd'){
+      row.innerHTML='<span style="color:#00f56b">demo@kali</span>:~$ <span class="kd-cmd"></span><span class="kd-cursor"></span>';
+    } else {
+      row.innerHTML='<span class="kd-note"></span>';
+    }
+    codeEl.appendChild(row);
+    const target=row.querySelector(line.t==='cmd'?'.kd-cmd':'.kd-note');
+    const cursor=row.querySelector('.kd-cursor');
+    const text=line.text;
+    let i=0;
+    (function step(){
+      target.textContent=text.slice(0,i);
+      i++;
+      if(i<=text.length){
+        timers.push(setTimeout(step,line.t==='cmd'?26:4));
+      } else {
+        if(cursor)cursor.remove();
+        codeEl.parentElement.scrollTop=codeEl.parentElement.scrollHeight;
+        timers.push(setTimeout(onDone,line.t==='cmd'?260:420));
+      }
+    })();
+  }
+  function playAll(){
+    codeEl.innerHTML='';
+    let i=0;
+    (function next(){
+      if(i>=lines.length)return;
+      typeLine(lines[i],()=>{i++;next();});
+    })();
+  }
+  function openModal(){
+    modal.classList.add('open');modal.setAttribute('aria-hidden','false');
+    clearTimers();playAll();
+  }
+  function closeModal(){
+    modal.classList.remove('open');modal.setAttribute('aria-hidden','true');
+    clearTimers();
+  }
+  openBtn.addEventListener('click',openModal);
+  closeBtn?.addEventListener('click',closeModal);
+  replayBtn?.addEventListener('click',()=>{clearTimers();playAll();});
+  goLab?.addEventListener('click',closeModal);
+  modal.addEventListener('click',e=>{ if(e.target===modal)closeModal(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&modal.classList.contains('open'))closeModal(); });
 })();
 </script>
 
@@ -3811,19 +3947,25 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
     loadWeather();
   });
 
-  // Makkah Live — plays a direct HLS (.m3u8) feed of Saudi Quran TV / Masjid al-Haram via
-  // hls.js, so playback doesn't depend on YouTube allowing embedding for whatever video
-  // happens to be live. Tries a short list of known HLS sources in order; if every HLS
-  // source fails (CDN down, geo-blocked, URL rotated), it falls back to resolving the
-  // current live video on the official YouTube channel via oEmbed, same as before.
+  // Makkah Live — primary: real, permanent YouTube channel IDs via the official
+  // "live_stream" embed (https://www.youtube.com/embed/live_stream?channel=ID).
+  // This is a plain iframe src — no fetch(), no oEmbed call, no CORS dependency —
+  // so it isn't affected by cross-origin restrictions the way the old oEmbed-based
+  // resolver was (that approach silently failed for @handle/live URLs and ended in
+  // "SOURCE UNAVAILABLE"). Direct HLS sources are tried first for the best-quality
+  // native <video> playback; if those fail (CDN down/geo-blocked), we fall back to
+  // these YouTube channel embeds, which work as long as the channel is live.
   (function(){
     const hlsSources=[
       'https://cdn-globecast.akamaized.net/live/eds/saudi_quran/hls_roku/index.m3u8',
       'https://media2.streambrothers.com:1936/8122/8122/playlist.m3u8'
     ];
+    // Permanent channel IDs (UC…) resolved for the two known channels — using the
+    // ID instead of the @handle means this doesn't depend on resolving a handle at
+    // runtime, and works with the always-current "live_stream" embed endpoint.
     const youtubeSources=[
-      {live:'https://www.youtube.com/@makkahlivehd4385/live', watch:'https://www.youtube.com/@makkahlivehd4385/live'},
-      {live:'https://www.youtube.com/@SaudiQuranTv/live', watch:'https://www.youtube.com/@SaudiQuranTv/live'}
+      {channel:'UC-zwmH_IA9oLkhK5pg-eFEg', watch:'https://www.youtube.com/@makkahlivehd4385/live'},
+      {channel:'UCos52azQNBgW63_9uDJoPDA', watch:'https://www.youtube.com/@SaudiQuranTv/live'}
     ];
     const video=document.getElementById('v8MakkahVideo');
     const iframe=document.getElementById('v8MakkahIframe');
@@ -3852,45 +3994,28 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
     }
     loadHlsJs().catch(()=>{}); // pre-warm in the background, ignore failure here
 
-    function extractYoutubeSrc(html){
-      const m=html && html.match(/src="([^"]+)"/);
-      return m?m[1]:null;
-    }
-
     let currentlyLive=false; // true once a source is actually playing — guards the periodic
                               // re-check below from tearing down a stream that's working fine.
-    let iframeWatchdog=null;
 
-    async function tryYoutube(i){
+    function tryYoutube(i){
       if(i>=youtubeSources.length){
         currentlyLive=false;
         setStatus('SOURCE UNAVAILABLE — সরাসরি লিংকে দেখুন','#ff8080');
-        // Last resort so the "Watch" link always leads somewhere live, even if every
-        // known channel handle above has gone stale.
         if(watch)watch.href='https://www.youtube.com/results?search_query=makkah+live';
         return;
       }
       setStatus('CONNECTING…','#8f8190');
-      try{
-        const r=await fetch('https://www.youtube.com/oembed?url='+encodeURIComponent(youtubeSources[i].live)+'&format=json');
-        if(!r.ok)throw new Error('bad status');
-        const data=await r.json();
-        const src=extractYoutubeSrc(data.html);
-        if(!src)throw new Error('no src');
-        if(video)video.style.display='none';
-        iframe.style.display='block';
-        iframe.src=src+(src.includes('?')?'&rel=0':'?rel=0');
-        if(watch)watch.href=youtubeSources[i].watch;
-        // Give the embed a little time to actually start; if the iframe stays blank
-        // (channel not live right now, embed blocked, etc.) move on to the next source
-        // instead of silently showing a dead player.
-        clearTimeout(iframeWatchdog);
-        currentlyLive=false;
-        iframeWatchdog=setTimeout(()=>{ if(!currentlyLive) tryYoutube(i+1); },9000);
-        iframe.onload=()=>{ currentlyLive=true; clearTimeout(iframeWatchdog); setStatus('● LIVE SOURCE CONNECTED (YouTube)','#00f56b'); };
-      }catch(e){
-        tryYoutube(i+1);
-      }
+      if(video)video.style.display='none';
+      iframe.style.display='block';
+      // live_stream?channel=ID always shows whatever that channel currently has
+      // live (or its normal "offline" placeholder) — no fetch/CORS step needed.
+      iframe.src='https://www.youtube.com/embed/live_stream?channel='+youtubeSources[i].channel+'&autoplay=1&mute=1&rel=0';
+      if(watch)watch.href=youtubeSources[i].watch;
+      currentlyLive=true; // the embed itself loaded fine; we can't inspect cross-origin
+                           // content to confirm the channel is live right now, so we
+                           // treat a successfully loading embed as a working fallback.
+      iframe.onload=()=>{ setStatus('● LIVE SOURCE CONNECTED (YouTube)','#00f56b'); };
+      iframe.onerror=()=>{ tryYoutube(i+1); };
     }
 
     let activeHls=null; // current Hls.js instance, so we can recover it on transient errors
@@ -3947,7 +4072,7 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
     async function tryHls(i){
       if(activeHls){ activeHls.destroy(); activeHls=null; }
       if(i>=hlsSources.length){
-        // Every direct stream failed — fall back to the YouTube live resolver.
+        // Every direct stream failed — fall back to the YouTube channel embed.
         setStatus('CONNECTING… (fallback)','#8f8190');
         tryYoutube(0);
         return;
