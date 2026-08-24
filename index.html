@@ -1296,15 +1296,10 @@ body::before{
 .kali-demo-close{position:absolute;right:14px;top:10px;background:none;border:0;color:#9fb3a8;font-size:26px;cursor:pointer;line-height:1}
 .kali-demo-head h3{color:#fff;font-family:'Space Mono',monospace;margin:10px 0 8px;font-size:20px}
 .kali-demo-head p{color:#8ba297;font-size:12.5px;line-height:1.7;max-width:520px}
-.kali-demo-terminal{margin-top:18px;background:#0b1712;border:1px solid #1e3327;border-radius:14px;overflow:hidden}
-.kali-demo-terminal pre{margin:0;padding:16px;min-height:220px;max-height:340px;overflow:auto;font-family:'Space Mono',monospace;font-size:12px;line-height:1.75;color:#9be8b3}
-.kali-demo-terminal code{white-space:pre-wrap;word-break:break-word}
-.kali-demo-terminal .kd-cursor{display:inline-block;width:7px;height:13px;background:#00f56b;vertical-align:-2px;animation:kdBlink 1s step-end infinite}
-@keyframes kdBlink{50%{opacity:0}}
-.kali-demo-terminal .kd-cmd{color:#e8fff2}
-.kali-demo-terminal .kd-note{color:#6f8a7d}
+.kali-demo-video{margin-top:18px;background:#000;border-radius:14px;overflow:hidden;aspect-ratio:16/9}
+.kali-demo-video iframe{width:100%;height:100%;border:0;display:block}
 .kali-demo-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:16px;flex-wrap:wrap}
-@media(max-width:560px){.kali-demo-box{padding:18px}.kali-demo-terminal pre{min-height:180px;font-size:11px}}
+@media(max-width:560px){.kali-demo-box{padding:18px}}
 .fs-drop input{display:none}.fs-drop-icon{font-size:35px;color:#00f56b}.fs-drop strong{color:#fff;margin-top:12px}.fs-drop small,.fs-drop em{color:#758d81;font-size:10px;margin-top:7px}.fs-drop em{font-style:normal}
 .fs-image-preview{height:180px;margin-top:15px;border:1px solid rgba(131,255,179,.1);border-radius:15px;display:grid;place-items:center;overflow:hidden;color:#687f74;font-size:11px;background:#04100b}
 .fs-image-preview img{width:100%;height:100%;object-fit:contain}.fs-forensics-actions{display:flex;gap:10px;margin-top:15px}.fs-green-btn,.fs-cyan-btn,.fs-ghost-btn{border:0;border-radius:10px;padding:12px 16px;font-weight:900;cursor:pointer}.fs-green-btn{background:#00f56b;color:#00150b}.fs-cyan-btn{background:#1fe6ff;color:#00232a}.fs-ghost-btn{background:#10221a;color:#b8cfc4;border:1px solid rgba(131,255,179,.13)}.fs-green-btn:disabled{opacity:.4;cursor:not-allowed}
@@ -1870,16 +1865,15 @@ body::before{
   <div class="kali-demo-box">
     <button class="kali-demo-close" id="kaliDemoClose" aria-label="Close demo">×</button>
     <div class="kali-demo-head">
-      <span class="tag" style="color:#00f56b">DEMO ANIMATION · SIMULATED</span>
-      <h3>⌘ Kali Linux — Recon Walkthrough</h3>
-      <p>A simulated terminal animation showing a typical, well-known Kali Linux workflow. Nothing here runs for real — no live scan, no network request, no target is touched.</p>
+      <span class="tag" style="color:#00f56b">FEATURED DEMO · YOUTUBE</span>
+      <h3>⌘ Kali Linux in Action</h3>
+      <p>A popular, well-known Kali Linux walkthrough from NetworkChuck — a widely-followed cybersecurity education channel.</p>
     </div>
-    <div class="kali-demo-terminal">
-      <div class="fs-terminal-bar"><i></i><i></i><i></i><span>demo@kali:~ · SIMULATED — NOT LIVE</span></div>
-      <pre id="kaliDemoOutput"><code></code></pre>
+    <div class="kali-demo-video">
+      <iframe id="kaliDemoIframe" src="" title="Kali Linux demo video" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
     </div>
     <div class="kali-demo-foot">
-      <button type="button" id="kaliDemoReplay" class="v8-admin-btn" style="background:#00f56b">↺ Replay</button>
+      <a href="https://www.youtube.com/watch?v=U7e-mcJdZok" target="_blank" rel="noopener" class="v8-watch" style="color:#00f56b">YouTube-এ দেখুন ↗</a>
       <a href="#kali-forensics" id="kaliDemoGoLab" class="v8-watch" style="color:#00f56b">Try the real (offline) forensics lab →</a>
     </div>
   </div>
@@ -3493,72 +3487,26 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
 (function(){
   const openBtn=document.getElementById('kaliDemoOpen');
   const closeBtn=document.getElementById('kaliDemoClose');
-  const replayBtn=document.getElementById('kaliDemoReplay');
   const modal=document.getElementById('kaliDemoModal');
   const goLab=document.getElementById('kaliDemoGoLab');
-  const codeEl=document.getElementById('kaliDemoOutput')?.querySelector('code');
-  if(!openBtn||!modal||!codeEl)return;
+  const iframe=document.getElementById('kaliDemoIframe');
+  if(!openBtn||!modal||!iframe)return;
 
-  // Purely cosmetic scripted animation — a well-known, illustrative Kali Linux
-  // recon sequence. Nothing is executed; it only types text into the terminal.
-  const lines=[
-    {t:'cmd', text:'nmap -sV -T4 192.168.1.10'},
-    {t:'note', text:'Starting Nmap ... scanning target (simulated output)'},
-    {t:'note', text:'22/tcp   open  ssh\n80/tcp   open  http\n443/tcp  open  https'},
-    {t:'cmd', text:'whatweb 192.168.1.10'},
-    {t:'note', text:'Detected: Apache 2.4, PHP, WordPress (illustrative demo data)'},
-    {t:'cmd', text:'sqlmap -u "http://target/page?id=1" --batch'},
-    {t:'note', text:'[demo] This step is shown for education only — no request is sent.'},
-    {t:'cmd', text:'exiftool image.jpg'},
-    {t:'note', text:'File Type : JPEG\nCamera Model : (example)\nGPS Position : (example)'},
-    {t:'note', text:'✓ Demo complete — this is a scripted animation, not a live scan.'}
-  ];
-  let timers=[];
-  function clearTimers(){timers.forEach(clearTimeout);timers=[];}
-
-  function typeLine(line,onDone){
-    const row=document.createElement('div');
-    if(line.t==='cmd'){
-      row.innerHTML='<span style="color:#00f56b">demo@kali</span>:~$ <span class="kd-cmd"></span><span class="kd-cursor"></span>';
-    } else {
-      row.innerHTML='<span class="kd-note"></span>';
-    }
-    codeEl.appendChild(row);
-    const target=row.querySelector(line.t==='cmd'?'.kd-cmd':'.kd-note');
-    const cursor=row.querySelector('.kd-cursor');
-    const text=line.text;
-    let i=0;
-    (function step(){
-      target.textContent=text.slice(0,i);
-      i++;
-      if(i<=text.length){
-        timers.push(setTimeout(step,line.t==='cmd'?26:4));
-      } else {
-        if(cursor)cursor.remove();
-        codeEl.parentElement.scrollTop=codeEl.parentElement.scrollHeight;
-        timers.push(setTimeout(onDone,line.t==='cmd'?260:420));
-      }
-    })();
-  }
-  function playAll(){
-    codeEl.innerHTML='';
-    let i=0;
-    (function next(){
-      if(i>=lines.length)return;
-      typeLine(lines[i],()=>{i++;next();});
-    })();
-  }
+  // NetworkChuck's "create the ULTIMATE hacking lab in 5min!!" — a popular,
+  // widely-watched Kali Linux walkthrough. The iframe src is only set while the
+  // modal is open, and cleared on close, so the video stops playing immediately
+  // instead of continuing in the background.
+  const VIDEO_ID='U7e-mcJdZok';
   function openModal(){
+    iframe.src='https://www.youtube.com/embed/'+VIDEO_ID+'?autoplay=1&rel=0';
     modal.classList.add('open');modal.setAttribute('aria-hidden','false');
-    clearTimers();playAll();
   }
   function closeModal(){
     modal.classList.remove('open');modal.setAttribute('aria-hidden','true');
-    clearTimers();
+    iframe.src=''; // stop playback
   }
   openBtn.addEventListener('click',openModal);
   closeBtn?.addEventListener('click',closeModal);
-  replayBtn?.addEventListener('click',()=>{clearTimers();playAll();});
   goLab?.addEventListener('click',closeModal);
   modal.addEventListener('click',e=>{ if(e.target===modal)closeModal(); });
   document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&modal.classList.contains('open'))closeModal(); });
