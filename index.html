@@ -1297,7 +1297,7 @@ body::before{
 .kali-demo-head h3{color:#fff;font-family:'Space Mono',monospace;margin:10px 0 8px;font-size:20px}
 .kali-demo-head p{color:#8ba297;font-size:12.5px;line-height:1.7;max-width:520px}
 .kali-demo-video{margin-top:18px;background:#000;border-radius:14px;overflow:hidden;aspect-ratio:16/9}
-.kali-demo-video iframe,.kali-demo-video video{width:100%;height:100%;border:0;display:block;background:#020906;object-fit:contain}
+.kali-demo-video iframe{width:100%;height:100%;border:0;display:block}
 .kali-demo-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:16px;flex-wrap:wrap}
 @media(max-width:560px){.kali-demo-box{padding:18px}}
 .fs-drop input{display:none}.fs-drop-icon{font-size:35px;color:#00f56b}.fs-drop strong{color:#fff;margin-top:12px}.fs-drop small,.fs-drop em{color:#758d81;font-size:10px;margin-top:7px}.fs-drop em{font-style:normal}
@@ -1865,20 +1865,16 @@ body::before{
   <div class="kali-demo-box">
     <button class="kali-demo-close" id="kaliDemoClose" aria-label="Close demo">×</button>
     <div class="kali-demo-head">
-      <span class="tag" style="color:#00f56b">FEATURED DEMO · SAFE SIMULATION</span>
-      <h3>⌘ Kali Linux Ethical Hacking Lab</h3>
-      <p>A short, self-hosted visual demo showing a safe lab workflow: reconnaissance, web-security checks and digital-forensics evidence review. It does not attack or contact a real target.</p>
+      <span class="tag" style="color:#00f56b">FEATURED DEMO · YOUTUBE</span>
+      <h3>⌘ Kali Linux in Action</h3>
+      <p>A popular, well-known Kali Linux walkthrough from NetworkChuck — a widely-followed cybersecurity education channel.</p>
     </div>
     <div class="kali-demo-video">
-      <video id="kaliDemoVideo" controls playsinline preload="metadata" poster="kali-demo-poster.jpg" title="Kali Linux ethical hacking lab demo">
-        <source src="kali-ethical-hacking-demo.mp4" type="video/mp4">
-        Your browser does not support HTML5 video.
-      </video>
+      <iframe id="kaliDemoIframe" src="" title="Kali Linux demo video" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
     </div>
     <div class="kali-demo-foot">
-      <span class="v8-watch" style="color:#8fa89a">▶ 12s • Self-hosted MP4</span>
-      <a href="https://www.youtube.com/watch?v=U7e-mcJdZok" target="_blank" rel="noopener" class="v8-watch" style="color:#00f56b">Watch a full Kali walkthrough ↗</a>
-      <a href="#kali-forensics" id="kaliDemoGoLab" class="v8-watch" style="color:#00f56b">Try the offline forensics lab →</a>
+      <a href="https://www.youtube.com/watch?v=U7e-mcJdZok" target="_blank" rel="noopener" class="v8-watch" style="color:#00f56b">YouTube-এ দেখুন ↗</a>
+      <a href="#kali-forensics" id="kaliDemoGoLab" class="v8-watch" style="color:#00f56b">Try the real (offline) forensics lab →</a>
     </div>
   </div>
 </div>
@@ -3493,20 +3489,21 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
   const closeBtn=document.getElementById('kaliDemoClose');
   const modal=document.getElementById('kaliDemoModal');
   const goLab=document.getElementById('kaliDemoGoLab');
-  const video=document.getElementById('kaliDemoVideo');
-  if(!openBtn||!modal||!video)return;
+  const iframe=document.getElementById('kaliDemoIframe');
+  if(!openBtn||!modal||!iframe)return;
 
+  // NetworkChuck's "create the ULTIMATE hacking lab in 5min!!" — a popular,
+  // widely-watched Kali Linux walkthrough. The iframe src is only set while the
+  // modal is open, and cleared on close, so the video stops playing immediately
+  // instead of continuing in the background.
+  const VIDEO_ID='U7e-mcJdZok';
   function openModal(){
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden','false');
-    video.currentTime=0;
-    video.play().catch(()=>{});
+    iframe.src='https://www.youtube.com/embed/'+VIDEO_ID+'?autoplay=1&rel=0';
+    modal.classList.add('open');modal.setAttribute('aria-hidden','false');
   }
   function closeModal(){
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden','true');
-    video.pause();
-    video.currentTime=0;
+    modal.classList.remove('open');modal.setAttribute('aria-hidden','true');
+    iframe.src=''; // stop playback
   }
   openBtn.addEventListener('click',openModal);
   closeBtn?.addEventListener('click',closeModal);
@@ -4045,8 +4042,32 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
     }
 
     if(video){
-      video.addEventListener('stalled',()=>{ currentlyLive=false; setStatus('RECONNECTING…','#ffcf66'); tryHls(0); });
-      video.addEventListener('error',()=>{ currentlyLive=false; setStatus('RECONNECTING…','#ffcf66'); tryHls(0); });
+      // 'stalled' fires very often on live HLS — it just means the next fragment
+      // hasn't arrived *yet*, which is normal and usually self-corrects in a
+      // second or two. Previously this triggered an immediate full tryHls(0)
+      // rebuild (destroy + reattach + reload), which blanked the video and
+      // showed "CONNECTING…" for every brief hiccup — causing the repeated
+      // black-screen flicker seen during normal playback. Now we try a gentle
+      // recovery first (nudge hls.js / resume playback) and only fall back to
+      // a full rebuild if playback hasn't resumed after a short grace period,
+      // canceling that timer as soon as normal playback resumes.
+      let stallTimer=null;
+      function clearStallTimer(){ if(stallTimer){ clearTimeout(stallTimer); stallTimer=null; } }
+      video.addEventListener('playing',clearStallTimer);
+      video.addEventListener('timeupdate',clearStallTimer);
+      video.addEventListener('stalled',()=>{
+        if(stallTimer)return; // already waiting on a recovery attempt
+        setStatus('BUFFERING…','#ffcf66');
+        if(activeHls)activeHls.startLoad(); // gentle nudge, no teardown
+        else video.play().catch(()=>{});
+        stallTimer=setTimeout(()=>{
+          stallTimer=null;
+          if(video.paused||video.readyState<3){
+            currentlyLive=false; setStatus('RECONNECTING…','#ffcf66'); tryHls(0);
+          }
+        },5000);
+      });
+      video.addEventListener('error',()=>{ clearStallTimer(); currentlyLive=false; setStatus('RECONNECTING…','#ffcf66'); tryHls(0); });
       tryHls(0);
     } else {
       tryYoutube(0);
