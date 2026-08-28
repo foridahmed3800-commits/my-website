@@ -1727,7 +1727,7 @@ body::before{
         <a href="#blogs">Resources <span>⌄</span></a>
         <a href="#qq-community">Community <span>⌄</span></a>
         <a href="#about">About <span>⌄</span></a>
-        <a href="#bangla-blogs" class="qq-bangla-btn">🇧🇩 বাংলা</a>
+        <a href="#bangla-blogs" class="qq-bangla-btn qq-makkah-nav">🕋 Makkah Live</a>
       </div>
 
       <div class="qq-nav-actions">
@@ -1768,7 +1768,7 @@ body::before{
     <a href="#bd-cyber-watch">🇧🇩 Bangladesh Cyber Watch <span>→</span></a>
     <a href="#forensic-3d">⬡ 3D Digital Forensics <span>→</span></a>
     <a href="#earth-weather">🌍 Earthquake + Weather <span>→</span></a>
-    <a href="#bangla-blogs">🇧🇩 বাংলা — Bangla Blogs & Makkah Live <span>→</span></a>
+    <a href="#bangla-blogs">🕋 Makkah Live <span>→</span></a>
 
     <a href="#forensics">🔬 Image Forensics <span>→</span></a>
     <a href="#kali-forensics">⌨ Kali Forensics Lab <span>→</span></a>
@@ -3007,8 +3007,13 @@ function renderBlogs(){
         <span class="blog-date">${esc(post.date)}</span>
         <h3>${esc(post.title)}</h3>
         <p class="blog-excerpt">${esc(post.body)}</p>
-        <div class="blog-meta">
-          <div class="blog-stats"><span class="blog-stat">♥ ${st.likes}</span><span class="blog-stat">◌ ${st.comments.length}</span><span class="blog-stat">↗ ${st.shares}</span></div>
+        <div class="blog-meta blog-meta-actions">
+          <div class="blog-card-actions" aria-label="Post interactions">
+            <button type="button" class="blog-card-action like-card ${st.liked?'active':''}" onclick="cardReact(${post.id},'like')" title="Like this post">♥ <span>${st.likes}</span></button>
+            <button type="button" class="blog-card-action dislike-card ${st.disliked?'active':''}" onclick="cardReact(${post.id},'dislike')" title="Dislike this post">▼ <span>${st.dislikes}</span></button>
+            <button type="button" class="blog-card-action comment-card" onclick="cardComment(${post.id})" title="Comment on this post">💬 <span>${st.comments.length}</span></button>
+            <button type="button" class="blog-card-action share-card" onclick="cardShare(${post.id})" title="Share this post">↗ <span>${st.shares}</span></button>
+          </div>
           <button class="blog-open" onclick="openBlog(${post.id})">Read post →</button>
         </div>
       </div>
@@ -4429,5 +4434,36 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
   #forensic-3d .v8-3d-stage{min-height:430px!important;height:430px!important;}
 }
 </style>
+
+<style id="fs-blog-card-interaction-fix">
+.qq-makkah-nav{color:#00f56b!important;border-color:rgba(0,245,107,.42)!important;background:rgba(0,245,107,.09)!important}
+.qq-makkah-nav:hover{background:rgba(0,245,107,.18)!important;box-shadow:0 0 18px rgba(0,245,107,.12)}
+.blog-meta-actions{align-items:center;gap:10px;flex-wrap:wrap}
+.blog-card-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.blog-card-action{appearance:none;border:1px solid rgba(141,164,154,.30);background:rgba(255,255,255,.045);color:#bfe8d0;border-radius:999px;padding:7px 10px;display:inline-flex;align-items:center;gap:5px;font:800 11px Inter,Arial,sans-serif;cursor:pointer;transition:transform .18s ease,background .18s ease,border-color .18s ease,color .18s ease;min-width:38px;justify-content:center}
+.blog-card-action:hover{transform:translateY(-1px);background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.34);color:#fff}
+.blog-card-action.like-card{color:#ff6f8f;border-color:rgba(255,111,143,.35)}
+.blog-card-action.like-card.active{background:#e94b68;color:#fff;border-color:#e94b68;box-shadow:0 0 16px rgba(233,75,104,.22)}
+.blog-card-action.dislike-card{color:#c8d0d7;border-color:rgba(200,208,215,.30)}
+.blog-card-action.dislike-card.active{background:#66717d;color:#fff;border-color:#66717d}
+.blog-card-action.comment-card{color:#67e8ff;border-color:rgba(31,230,255,.30)}
+.blog-card-action.share-card{color:#83ffb3;border-color:rgba(0,245,107,.28)}
+.blog-card-action span{font-variant-numeric:tabular-nums}.blog-open{white-space:nowrap}
+@media(max-width:900px){.blog-card-actions{width:100%}.blog-meta-actions .blog-open{margin-left:0}}
+</style>
+<script id="fs-blog-card-interactions">
+(function(){
+  function cardReact(id,type){
+    const st=getState(id);
+    if(type==='like'){if(st.liked){st.liked=false;st.likes=Math.max(0,st.likes-1)}else{st.liked=true;st.likes++;if(st.disliked){st.disliked=false;st.dislikes=Math.max(0,st.dislikes-1)}}}
+    else{if(st.disliked){st.disliked=false;st.dislikes=Math.max(0,st.dislikes-1)}else{st.disliked=true;st.dislikes++;if(st.liked){st.liked=false;st.likes=Math.max(0,st.likes-1)}}}
+    saveState();renderBlogs();
+  }
+  function cardComment(id){openBlog(id);setTimeout(focusComment,60)}
+  async function cardShare(id){activeBlogId=id;const post=blogs.find(x=>x.id===id),st=getState(id);if(!post)return;st.shares++;saveState();try{await navigator.share({title:post.title,text:post.body,url:new URL(post.link,location.href).href})}catch(e){try{await navigator.clipboard.writeText(new URL(post.link,location.href).href)}catch(_){} }renderBlogs()}
+  window.cardReact=cardReact;window.cardComment=cardComment;window.cardShare=cardShare;
+  renderBlogs();
+})();
+</script>
 </body>
 </html>
