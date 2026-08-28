@@ -680,6 +680,19 @@
   }
 
 </style>
+<style id="makkah-hd-pause-upgrade">
+/* Makkah Live — larger premium player + HD presentation + pause control */
+.v8-blog-grid{grid-template-columns:minmax(0,1.55fr) minmax(280px,.45fr);gap:24px;align-items:stretch}
+.v8-blog-card.v8-featured{min-height:100%;padding:26px;border-color:rgba(255,122,200,.20);box-shadow:0 28px 70px rgba(0,0,0,.18)}
+.v8-blog-card.v8-featured h3{font-size:clamp(20px,2vw,28px);margin:12px 0 16px}
+.v8-video-wrap{position:relative;aspect-ratio:16/9;min-height:430px;margin-top:15px;border-radius:18px;overflow:hidden;background:#000;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 24px 55px rgba(0,0,0,.25)}
+.v8-video-wrap iframe,.v8-video-wrap video{width:100%;height:100%;border:0;display:block;object-fit:cover}
+.v8-video-pause{position:absolute;left:18px;bottom:18px;z-index:8;border:1px solid rgba(255,255,255,.25);background:rgba(3,10,7,.84);backdrop-filter:blur(12px);color:#fff;border-radius:999px;padding:11px 16px;font:800 12px Inter,Arial,sans-serif;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.28);transition:.2s ease}
+.v8-video-pause:hover{transform:translateY(-2px);background:rgba(0,245,107,.92);color:#00130a;border-color:#00f56b}
+.v8-hd-badge{position:absolute;top:16px;left:16px;z-index:7;padding:7px 10px;border-radius:999px;background:rgba(0,245,107,.14);border:1px solid rgba(0,245,107,.35);color:#7dffad;font:900 10px 'Space Mono',monospace;letter-spacing:.08em;pointer-events:none}
+@media(max-width:950px){.v8-blog-grid{grid-template-columns:1fr}.v8-video-wrap{min-height:0}}
+@media(max-width:620px){.v8-blog-card.v8-featured{padding:16px}.v8-video-wrap{min-height:240px;border-radius:14px}.v8-video-pause{left:10px;bottom:10px;padding:9px 13px;font-size:11px}.v8-hd-badge{top:10px;left:10px;font-size:9px}}
+</style>
 <style>.signal-marquee{overflow:hidden;background:#0c1712;color:#dfffea;padding:11px 0;white-space:nowrap}.marquee-track{display:flex;width:max-content;animation:marqueeMove 20s linear infinite}.marquee-track span{font-size:11px;font-weight:850;letter-spacing:.12em;padding:0 28px}@keyframes marqueeMove{to{transform:translateX(-50%)}}.growth-section{background:#f7faf8}.growth-score-card{background:#0c1712;border:1px solid #26382d;border-radius:24px;padding:40px;min-height:390px;display:flex;align-items:center;justify-content:center;flex-direction:column}.score-ring{width:250px;height:250px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#00c853 0 91%,#26382d 91% 100%);position:relative}.score-ring:before{content:"";position:absolute;inset:15px;border-radius:50%;background:#101a15}.score-ring>div{position:relative;text-align:center;color:#fff}.score-ring strong{display:block;font-size:64px;line-height:.9;letter-spacing:-4px}.score-ring small{font-size:13px;color:#8fa097}.score-ring span{display:block;margin-top:10px;color:#73f19c;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.12em}.score-caption{text-align:center;margin-top:22px}.score-caption b{color:#fff}.score-caption p{color:#91a098;font-size:12px;margin-top:5px}.video-card{position:relative;background:#0c1712;border-radius:20px;overflow:hidden;border:1px solid #26382d;min-height:330px;box-shadow:0 25px 60px rgba(17,24,39,.16)}.video-card video{width:100%;height:100%;min-height:330px;display:block;background:#07100b}@media(max-width:620px){.growth-score-card{padding:25px;min-height:330px}.score-ring{width:210px;height:210px}.score-ring strong{font-size:53px}.video-card,.video-card video{min-height:230px}.marquee-track{animation-duration:16s}}</style><style>
 .service-scroller{padding:90px 0;background:#f7faf8;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}.scroll-head{display:flex;align-items:end;justify-content:space-between;gap:25px}.scroll-controls{display:flex;gap:8px}.scroll-controls button{width:44px;height:44px;border:1px solid #d9e0dc;background:#fff;border-radius:10px;font-size:20px;transition:.2s}.scroll-controls button:hover{background:#e7f9ed;border-color:#00c853}.service-track{display:flex;gap:16px;overflow-x:auto;scroll-behavior:smooth;scrollbar-width:none;padding:28px 2px 12px;cursor:grab}.service-track:active{cursor:grabbing}.service-track::-webkit-scrollbar{display:none}.service-track article{flex:0 0 290px;min-height:245px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:25px;transition:.25s}.service-track article:hover{transform:translateY(-5px);box-shadow:0 20px 45px rgba(17,24,39,.09)}.service-track article>span{font-size:11px;color:#07853c;font-weight:900}.service-track h3{font-size:19px;margin-top:40px}.service-track p{font-size:13px;line-height:1.65;color:var(--muted);margin-top:8px}.service-track a{display:inline-block;margin-top:20px;color:#07853c;font-size:12px;font-weight:850}
 @media(max-width:620px){.service-scroller{padding:65px 0}.scroll-head{align-items:flex-start}.scroll-controls{flex:none}.scroll-controls button{width:40px;height:40px}.service-track article{flex-basis:82vw}}
@@ -2832,9 +2845,11 @@ If you've scanned an image in the Digital Forensics Lab below, real file data wi
       <article class="v8-blog-card v8-featured">
         <span class="v8-featured-label">FEATURED · LIVE</span>
         <h3>🕋 মক্কা শরীফ — Live Broadcast</h3>
-        <div class="v8-video-wrap">
-          <video id="v8MakkahVideo" muted playsinline autoplay controls style="width:100%;height:100%;background:#000;display:none"></video>
-          <iframe id="v8MakkahIframe" src="about:blank" title="Makkah Live" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+        <div class="v8-video-wrap" id="v8MakkahPlayerWrap">
+          <span class="v8-hd-badge">● LIVE • HD</span>
+          <video id="v8MakkahVideo" muted playsinline autoplay controls preload="auto" style="width:100%;height:100%;background:#000;display:none"></video>
+          <iframe id="v8MakkahIframe" src="about:blank" title="Makkah Live HD" loading="eager" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+          <button id="v8MakkahPause" class="v8-video-pause" type="button" aria-label="Pause Makkah live">⏸ Pause Live</button>
         </div>
         <div style="margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
           <a id="v8MakkahWatch" class="v8-watch" href="https://www.youtube.com/@makkahlivehd4385/live" target="_blank" rel="noopener">YouTube-এ সরাসরি দেখুন ↗</a>
@@ -3923,6 +3938,28 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
     const iframe=document.getElementById('v8MakkahIframe');
     const watch=document.getElementById('v8MakkahWatch');
     const status=document.getElementById('v8MakkahStatus');
+    const pauseBtn=document.getElementById('v8MakkahPause');
+    let makkahPaused=false;
+    function setPauseLabel(){
+      if(!pauseBtn)return;
+      pauseBtn.textContent=makkahPaused?'▶ Resume Live':'⏸ Pause Live';
+      pauseBtn.setAttribute('aria-label',makkahPaused?'Resume Makkah live':'Pause Makkah live');
+    }
+    function youtubeCommand(func){
+      if(!iframe || iframe.style.display==='none')return false;
+      try{ iframe.contentWindow.postMessage(JSON.stringify({event:'command',func,args:[]}), 'https://www.youtube.com'); return true; }catch(e){ return false; }
+    }
+    pauseBtn?.addEventListener('click',()=>{
+      makkahPaused=!makkahPaused;
+      if(video && video.style.display!=='none'){
+        if(makkahPaused) video.pause(); else video.play().catch(()=>{});
+      }else{
+        youtubeCommand(makkahPaused?'pauseVideo':'playVideo');
+      }
+      setPauseLabel();
+    });
+    video?.addEventListener('play',()=>{makkahPaused=false;setPauseLabel();});
+    video?.addEventListener('pause',()=>{makkahPaused=true;setPauseLabel();});
     if(!iframe)return;
 
     function setStatus(text,color){ if(status){status.textContent=text;status.style.color=color;} }
@@ -3961,7 +3998,7 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
       iframe.style.display='block';
       // live_stream?channel=ID always shows whatever that channel currently has
       // live (or its normal "offline" placeholder) — no fetch/CORS step needed.
-      iframe.src='https://www.youtube.com/embed/live_stream?channel='+youtubeSources[i].channel+'&autoplay=1&mute=1&rel=0';
+      iframe.src='https://www.youtube.com/embed/live_stream?channel='+youtubeSources[i].channel+'&autoplay=1&mute=1&rel=0&vq=hd1080&enablejsapi=1&playsinline=1&origin='+encodeURIComponent(location.origin);
       if(watch)watch.href=youtubeSources[i].watch;
       currentlyLive=true; // the embed itself loaded fine; we can't inspect cross-origin
                            // content to confirm the channel is live right now, so we
@@ -3995,8 +4032,10 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
             // Tuned for a live channel: join near the live edge fast, don't buffer more
             // than needed, and give up on a slow/dead source quickly instead of hanging.
             lowLatencyMode:true,
+            startLevel:-1,
+            capLevelToPlayerSize:false,
             liveSyncDuration:6,
-            maxBufferLength:15,
+            maxBufferLength:30,
             manifestLoadingTimeOut:6000,
             manifestLoadingMaxRetry:1,
             levelLoadingTimeOut:6000,
@@ -4006,7 +4045,7 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
           let settled=false;
           hls.loadSource(url);
           hls.attachMedia(video);
-          hls.on(window.Hls.Events.MANIFEST_PARSED,()=>{ settled=true; resolve(); });
+          hls.on(window.Hls.Events.MANIFEST_PARSED,()=>{ settled=true; if(hls.levels && hls.levels.length>1){ hls.currentLevel=hls.levels.length-1; } resolve(); });
           hls.on(window.Hls.Events.ERROR,(evt,data)=>{
             if(!data || !data.fatal)return; // ignore non-fatal — hls.js recovers those on its own
             if(!settled){ hls.destroy(); activeHls=null; reject(new Error(data.type||'hls fatal error')); return; }
