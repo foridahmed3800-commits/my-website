@@ -680,6 +680,10 @@
   }
 
 </style>
+<style>
+.image-save-btn{position:absolute;left:16px;bottom:16px;z-index:6;background:rgba(16,26,46,.86)!important;color:#fff!important;border-color:rgba(255,255,255,.24)!important;backdrop-filter:blur(8px)}
+.blog-dialog-media .image-save-btn{display:inline-flex}
+</style>
 <style id="makkah-hd-pause-upgrade">
 /* Makkah Live — larger premium player + HD presentation + pause control */
 .v8-blog-grid{grid-template-columns:minmax(0,1.55fr) minmax(280px,.45fr);gap:24px;align-items:stretch}
@@ -3041,6 +3045,26 @@ If you've scanned an image in the Digital Forensics Lab below, real file data wi
 </footer>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ================= SUPABASE CONFIG =================
+   Publishable/anon key is safe for browser use when RLS is configured.
+   IMPORTANT: replace SUPABASE_URL with your Supabase Project URL.
+*/
+const SUPABASE_URL = "https://gzwbckukypeqkfvtbfn.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_FaYdMrrPX6MSsldYbDxuUQ_wPJ4AQe3";
+const supabaseClient =
+  (window.supabase && SUPABASE_URL.includes("supabase.co"))
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY)
+    : null;
+
+const FS_VISITOR_ID_KEY = "fs_visitor_id_v1";
+let fsVisitorId = localStorage.getItem(FS_VISITOR_ID_KEY);
+if (!fsVisitorId) {
+  fsVisitorId = (crypto.randomUUID ? crypto.randomUUID() : "v-" + Date.now() + "-" + Math.random().toString(36).slice(2));
+  localStorage.setItem(FS_VISITOR_ID_KEY, fsVisitorId);
+}
+</script>
 <script>
 /* ================= BLOG SYSTEM =================
    Add posts here. `video` can be a local .mp4 URL or a hosted video URL.
@@ -3063,18 +3087,92 @@ const blogs = [{
   }
 ];
 
-const BLOG_KEY='fs_blog_state_v1';
+const BLOG_KEY='fs_blog_state_v2';
 let blogState=JSON.parse(localStorage.getItem(BLOG_KEY) || '{}');
 let activeBlogId=null;
+
 const getState=id=>blogState[id] || (blogState[id]={likes:0,dislikes:0,shares:0,copies:0,comments:[],liked:false,disliked:false});
 const saveState=()=>localStorage.setItem(BLOG_KEY,JSON.stringify(blogState));
 const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-const icon={like:'♥',dislike:'▼',comment:'◌',share:'↗',copy:'⧉'};
+const icon={like:'♥',dislike:'▼',comment:'◌',share:'↗',copy:'⧉',save:'⇩'};
+
+async function sbLoadPostState(postId){
+  if(!supabaseClient) return;
+  try{
+    const [{data: reactions, error:rErr},{data: comments, error:cErr}] = await Promise.all([
+      supabaseClient.from('fs_post_reactions').select('reaction,visitor_id').eq('post_id',String(postId)),
+      supabaseClient.from('fs_post_comments').select('name,text,created_at').eq('post_id',String(postId)).order('created_at',{ascending:true})
+    ]);
+    if(rErr || cErr) throw (rErr || cErr);
+
+    const st=getState(postId);
+    st.likes=(reactions||[]).filter(x=>x.reaction==='like').length;
+    st.dislikes=(reactions||[]).filter(x=>x.reaction==='dislike').length;
+    const mine=(reactions||[]).find(x=>x.visitor_id===fsVisitorId);
+    st.liked=mine?.reaction==='like';
+    st.disliked=mine?.reaction==='dislike';
+    st.comments=(comments||[]).map(x=>({name:x.name,text:x.text,at:x.created_at}));
+    saveState();
+  }catch(err){
+    console.warn('Supabase state load failed:',err.message||err);
+  }
+}
+
+async function sbLoadAll(){
+  if(!supabaseClient) return;
+  await Promise.all(blogs.map(p=>sbLoadPostState(p.id)));
+  renderBlogs();
+  if(activeBlogId!==null) openBlog(activeBlogId,false);
+}
+
+async function sbReaction(postId,type){
+  const st=getState(postId);
+  if(!supabaseClient){
+    // Offline fallback keeps the current browser-only behavior.
+    if(type==='like'){
+      if(st.liked){st.liked=false;st.likes=Math.max(0,st.likes-1);}
+      else {st.liked=true;st.likes++;if(st.disliked){st.disliked=false;st.dislikes=Math.max(0,st.dislikes-1);}}
+    }else{
+      if(st.disliked){st.disliked=false;st.dislikes=Math.max(0,st.dislikes-1);}
+      else {st.disliked=true;st.dislikes++;if(st.liked){st.liked=false;st.likes=Math.max(0,st.likes-1);}}
+    }
+    saveState(); renderBlogs(); if(activeBlogId===postId) openBlog(postId,false);
+    return;
+  }
+
+  try{
+    const {data: mine, error: findErr}=await supabaseClient
+      .from('fs_post_reactions').select('id,reaction')
+      .eq('post_id',String(postId)).eq('visitor_id',fsVisitorId).maybeSingle();
+    if(findErr) throw findErr;
+
+    if(mine && mine.reaction===type){
+      const {error}=await supabaseClient.from('fs_post_reactions').delete().eq('id',mine.id);
+      if(error) throw error;
+    }else if(mine){
+      const {error}=await supabaseClient.from('fs_post_reactions').update({reaction:type}).eq('id',mine.id);
+      if(error) throw error;
+    }else{
+      const {error}=await supabaseClient.from('fs_post_reactions').insert({
+        post_id:String(postId), visitor_id:fsVisitorId, reaction:type
+      });
+      if(error) throw error;
+    }
+    await sbLoadPostState(postId);
+    renderBlogs(); if(activeBlogId===postId) openBlog(postId,false);
+  }catch(err){
+    console.error('Reaction save failed:',err);
+    alert('Could not save your reaction. Check the Supabase URL/RLS settings.');
+  }
+}
 
 function mediaHTML(post,modal=false){
   const cls=modal?'':'blog-media';
   if(post.video) return `<div class="${cls}"><video controls preload="metadata" src="${esc(post.video)}"></video>${modal?'':'<span class="blog-video-badge">▶ VIDEO</span>'}</div>`;
-  if(post.image) return `<div class="${cls}"><img src="${esc(post.image)}" alt="${esc(post.title)}" loading="lazy"></div>`;
+  if(post.image){
+    const saveBtn = modal ? `<button type="button" class="blog-action image-save-btn" onclick="savePostImage()">⇩ Save image</button>` : '';
+    return `<div class="${cls}"><img id="${modal?'blogModalImage':''}" src="${esc(post.image)}" alt="${esc(post.title)}" loading="lazy">${saveBtn}</div>`;
+  }
   return modal?'<div class="media-placeholder" style="height:100%;">FS. Journal</div>':'<div class="blog-media"><div class="media-placeholder">FS. Journal</div></div>';
 }
 
@@ -3104,7 +3202,7 @@ function renderBlogs(){
   saveState();
 }
 
-function openBlog(id){
+function openBlog(id,loadRemote=true){
   const post=blogs.find(x=>x.id===id); if(!post)return;
   activeBlogId=id; const st=getState(id);
   const modal=document.getElementById('blogModal');
@@ -3120,13 +3218,84 @@ function openBlog(id){
     <button class="blog-action" onclick="copyBlogLink()">${icon.copy} Copy link <span>${st.copies}</span></button>`;
   renderComments();
   modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
+  if(loadRemote && supabaseClient) sbLoadPostState(id).then(()=>openBlog(id,false));
 }
+
 function closeBlog(){document.getElementById('blogModal').classList.remove('open');document.getElementById('blogModal').setAttribute('aria-hidden','true');document.body.style.overflow='';activeBlogId=null;}
-function toggleReaction(type){
-  const st=getState(activeBlogId);
-  if(type==='like'){ if(st.liked){st.liked=false;st.likes=Math.max(0,st.likes-1);} else {st.liked=true;st.likes++;if(st.disliked){st.disliked=false;st.dislikes=Math.max(0,st.dislikes-1);}} }
-  else { if(st.disliked){st.disliked=false;st.dislikes=Math.max(0,st.dislikes-1);} else {st.disliked=true;st.dislikes++;if(st.liked){st.liked=false;st.likes=Math.max(0,st.likes-1);}} }
-  saveState(); openBlog(activeBlogId); renderBlogs();
+
+function toggleReaction(type){ sbReaction(activeBlogId,type); }
+
+async function shareBlog(){
+  const post=blogs.find(x=>x.id===activeBlogId),st=getState(activeBlogId); if(!post)return;
+  st.shares++;saveState();
+  try{await navigator.share({title:post.title,text:post.body,url:new URL(post.link,location.href).href});}
+  catch(e){try{await navigator.clipboard.writeText(new URL(post.link,location.href).href);alert('Share link copied to clipboard.');}catch(_){}}
+  openBlog(activeBlogId,false);renderBlogs();
+}
+
+async function copyBlogLink(){
+  const post=blogs.find(x=>x.id===activeBlogId),st=getState(activeBlogId); if(!post)return;
+  const url=new URL(post.link,location.href).href;
+  try{await navigator.clipboard.writeText(url);st.copies++;saveState();openBlog(activeBlogId,false);renderBlogs();}
+  catch(e){alert('Could not copy the link.');}
+}
+
+async function savePostImage(){
+  const post=blogs.find(x=>x.id===activeBlogId);
+  if(!post || !post.image){alert('This post has no image.');return;}
+  try{
+    const res=await fetch(post.image,{mode:'cors'});
+    if(!res.ok) throw new Error('image fetch failed');
+    const blob=await res.blob();
+    const ext=(blob.type.split('/')[1]||'jpg').replace('jpeg','jpg');
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=(post.title||'fs-image').replace(/[^a-z0-9_-]+/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'')+'.'+ext;
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+  }catch(e){
+    window.open(post.image,'_blank','noopener');
+  }
+}
+
+function focusComment(){document.getElementById('commentText').focus();}
+function renderComments(){
+  const st=getState(activeBlogId);document.getElementById('commentCount').textContent=`(${st.comments.length})`;
+  const list=document.getElementById('commentList');
+  list.innerHTML=st.comments.length?st.comments.slice().reverse().map(c=>`<div class="comment-item"><b>${esc(c.name)}</b><p>${esc(c.text)}</p></div>`).join(''):'<p style="font-size:13px;color:var(--text-dim);">Be the first to comment.</p>';
+}
+
+document.getElementById('commentForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const name=document.getElementById('commentName').value.trim(),text=document.getElementById('commentText').value.trim();
+  if(!name || !text || activeBlogId===null)return;
+
+  if(supabaseClient){
+    try{
+      const {error}=await supabaseClient.from('fs_post_comments').insert({
+        post_id:String(activeBlogId), visitor_id:fsVisitorId, name, text
+      });
+      if(error) throw error;
+      await sbLoadPostState(activeBlogId);
+    }catch(err){
+      console.error('Comment save failed:',err);
+      alert('Could not save comment. Check Supabase URL/RLS settings.');
+      return;
+    }
+  }else{
+    const st=getState(activeBlogId);st.comments.push({name,text,at:Date.now()});saveState();
+  }
+
+  e.target.reset();renderComments();openBlog(activeBlogId,false);renderBlogs();
+});
+
+document.getElementById('blogClose').addEventListener('click',closeBlog);
+document.getElementById('blogModal').addEventListener('click',e=>{if(e.target.id==='blogModal')closeBlog();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&activeBlogId!==null)closeBlog();});
+
+renderBlogs();
+if(supabaseClient) sbLoadAll();
+
 }
 async function shareBlog(){
   const post=blogs.find(x=>x.id===activeBlogId),st=getState(activeBlogId); if(!post)return;
@@ -4571,5 +4740,52 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
   renderBlogs();
 })();
 </script>
+
+<!--
+SUPABASE SETUP (run in Supabase SQL Editor)
+
+create table if not exists public.fs_post_reactions (
+  id bigint generated by default as identity primary key,
+  post_id text not null,
+  visitor_id uuid not null,
+  reaction text not null check (reaction in ('like','dislike')),
+  created_at timestamptz not null default now(),
+  unique(post_id, visitor_id)
+);
+
+create table if not exists public.fs_post_comments (
+  id bigint generated by default as identity primary key,
+  post_id text not null,
+  visitor_id uuid not null,
+  name text not null check (char_length(name) between 1 and 40),
+  text text not null check (char_length(text) between 1 and 500),
+  created_at timestamptz not null default now()
+);
+
+alter table public.fs_post_reactions enable row level security;
+alter table public.fs_post_comments enable row level security;
+
+create policy "public read reactions"
+on public.fs_post_reactions for select to anon using (true);
+
+create policy "public insert reactions"
+on public.fs_post_reactions for insert to anon with check (true);
+
+create policy "public update reactions"
+on public.fs_post_reactions for update to anon using (true) with check (true);
+
+create policy "public delete reactions"
+on public.fs_post_reactions for delete to anon using (true);
+
+create policy "public read comments"
+on public.fs_post_comments for select to anon using (true);
+
+create policy "public insert comments"
+on public.fs_post_comments for insert to anon with check (true);
+
+-- If your images are in Supabase Storage, create a PUBLIC bucket named "post-images"
+-- and upload images there. Then put each public image URL in the post.image field.
+-->
+
 </body>
 </html>
