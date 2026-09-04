@@ -680,6 +680,11 @@
   }
 
 </style>
+<style id="reaction-fix-css">
+.blog-card-action,.blog-action{cursor:pointer;user-select:none}
+.blog-card-action:disabled,.blog-action:disabled{opacity:.6;cursor:wait}
+</style>
+
 <style id="makkah-hd-pause-upgrade">
 /* Makkah Live — larger premium player + HD presentation + pause control */
 .v8-blog-grid{grid-template-columns:minmax(0,1.55fr) minmax(280px,.45fr);gap:24px;align-items:stretch}
@@ -3122,22 +3127,81 @@ async function loadBlogData(){
 async function toggleReactionFor(postId,type){
   const st=getState(postId);
   const wasActive = type==='like' ? st.liked : st.disliked;
+
   try{
+    // Do not use upsert here: it requires a UNIQUE/PRIMARY KEY constraint
+    // matching (post_id, anon_id), and older Supabase tables often don't have it.
+    const {data:existing,error:findError}=await sb
+      .from('blog_likes')
+      .select('post_id,anon_id,type')
+      .eq('post_id',postId)
+      .eq('anon_id',anonId)
+      .maybeSingle();
+
+    if(findError) throw findError;
+
     if(wasActive){
-      const {error}=await sb.from('blog_likes').delete().eq('post_id',postId).eq('anon_id',anonId);
-      if(error) throw error;
-      if(type==='like'){st.liked=false;st.likes=Math.max(0,st.likes-1);}
-      else {st.disliked=false;st.dislikes=Math.max(0,st.dislikes-1);}
-    } else {
-      const {error}=await sb.from('blog_likes').upsert({post_id:postId,anon_id:anonId,type},{onConflict:'post_id,anon_id'});
-      if(error) throw error;
-      if(type==='like'){ if(st.disliked){st.disliked=false;st.dislikes=Math.max(0,st.dislikes-1);} st.liked=true; st.likes++; }
-      else { if(st.liked){st.liked=false;st.likes=Math.max(0,st.likes-1);} st.disliked=true; st.dislikes++; }
+      if(existing){
+        const {error}=await sb.from('blog_likes')
+          .delete()
+          .eq('post_id',postId)
+          .eq('anon_id',anonId);
+        if(error) throw error;
+      }
+      if(type==='like'){
+        st.liked=false;
+        st.likes=Math.max(0,st.likes-1);
+      }else{
+        st.disliked=false;
+        st.dislikes=Math.max(0,st.dislikes-1);
+      }
+    }else{
+      if(existing){
+        const {error}=await sb.from('blog_likes')
+          .update({type})
+          .eq('post_id',postId)
+          .eq('anon_id',anonId);
+        if(error) throw error;
+
+        if(type==='like'){
+          if(st.disliked) st.dislikes=Math.max(0,st.dislikes-1);
+          st.disliked=false;
+          st.liked=true;
+          st.likes++;
+        }else{
+          if(st.liked) st.likes=Math.max(0,st.likes-1);
+          st.liked=false;
+          st.disliked=true;
+          st.dislikes++;
+        }
+      }else{
+        const {error}=await sb.from('blog_likes').insert({
+          post_id:postId,
+          anon_id:anonId,
+          type
+        });
+        if(error) throw error;
+
+        if(type==='like'){
+          if(st.disliked) st.dislikes=Math.max(0,st.dislikes-1);
+          st.disliked=false;
+          st.liked=true;
+          st.likes++;
+        }else{
+          if(st.liked) st.likes=Math.max(0,st.likes-1);
+          st.liked=false;
+          st.disliked=true;
+          st.dislikes++;
+        }
+      }
     }
   }catch(e){
     console.error('Reaction failed:',e);
-    alert('Could not save your reaction right now. Please try again.');
+    const msg = e?.message || e?.details || e?.hint || 'Unknown Supabase error';
+    alert('Reaction save failed.\n\nSupabase says: ' + msg);
+    return;
   }
+
   renderBlogs();
   if(activeBlogId===postId) openBlog(postId);
 }
