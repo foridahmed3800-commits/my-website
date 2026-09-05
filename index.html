@@ -2420,7 +2420,6 @@ body::before{
       <div class="section-head" style="margin-bottom:0;">
         <span class="tag">Journal / Blog</span>
         <h2>Ideas, stories & practical notes</h2>
-        <p>Read the latest posts from FS. Like, dislike, comment, save or share any article — reactions, saves and comments are shared with every visitor.</p>
       </div>
     </div>
     <div id="blogGrid" class="blog-grid"></div>
@@ -4063,6 +4062,17 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
       if(pickerHelp)pickerHelp.hidden=false;
       if(chromeBtn)chromeBtn.hidden=false;
       document.getElementById('v8ScanStage')?.classList.add('v8-webview');
+      // Facebook/Messenger's in-app browser asks for a "media" permission
+      // when the native file picker opens, but even after allowing it, the
+      // WebView very often fails to hand the picked file back to the page
+      // (a known limitation on Meta's side, not fixable from page JS).
+      // So inside this browser we skip the native picker entirely and send
+      // people straight to Chrome, where the picker works reliably.
+      selectBtn.textContent='↗ Open in Chrome to scan';
+      selectBtn.addEventListener('click',e=>{
+        e.preventDefault();
+        openChrome();
+      });
     }
     chromeBtn?.addEventListener('click',openChrome);
 
@@ -4741,6 +4751,16 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
 .blog-card-action.share-card{color:#83ffb3;border-color:rgba(0,245,107,.28)}
 .blog-card-action span{font-variant-numeric:tabular-nums}.blog-open{white-space:nowrap}
 @media(max-width:900px){.blog-card-actions{width:100%}.blog-meta-actions .blog-open{margin-left:0}}
+
+/* FIX: .blog-dialog (the opened blog-post popup) always keeps its original
+   light "--paper" background — it was never switched to the dark theme.
+   But an earlier global rule (".blog-dialog-content h2{color:#f2fff7}")
+   force-changes the post title to near-white, meant for sections that DID
+   get a dark background. Result: near-white title text on a light popup
+   background = invisible title, as reported. Restore a dark, readable
+   color here so it matches the popup's actual (light) background. */
+.blog-dialog-content h2,
+#blogModalTitle{color:var(--navy)!important;}
 </style>
 </body>
 </html>
