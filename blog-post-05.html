@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog Post 05 — FS.</title>
+<meta name="description" content="FS. ব্লগ থেকে একটি নতুন পোস্ট।">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Blog Post 05 — FS.">
+<meta property="og:description" content="FS. ব্লগ থেকে একটি নতুন পোস্ট।">
+<meta property="og:image" content="https://foridahmed3800-commits.github.io/images.jpg">
+<meta property="og:url" content="https://foridahmed3800-commits.github.io/blog-post-05.html">
+<meta property="og:site_name" content="FS.">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blog Post 05 — FS.">
+<meta name="twitter:description" content="FS. ব্লগ থেকে একটি নতুন পোস্ট।">
+<meta name="twitter:image" content="https://foridahmed3800-commits.github.io/images.jpg">
+
+<link rel="canonical" href="https://foridahmed3800-commits.github.io/blog-post-05.html">
+
+<style>
+  :root{--navy:#101a2e;--blue:#2f5fff;--cream:#f7f5f0;--paper:#fffdf9;--text-dim:rgba(16,26,46,.62);--line:rgba(16,26,46,.1);}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',Arial,sans-serif;background:var(--cream);color:var(--navy);}
+  .wrap{max-width:760px;margin:0 auto;padding:60px 24px 80px;}
+
+  .video-wrapper{position:relative;width:100%;padding-top:56.25%;border-radius:16px;overflow:hidden;background:#000;margin-bottom:24px;}
+  .video-wrapper iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;}
+
+  .content{background:var(--paper);border-radius:24px;padding:34px;box-shadow:0 20px 50px -20px rgba(16,26,46,.2);}
+  .date{font-size:13px;color:var(--blue);font-weight:600;}
+  h1{font-family:Georgia,serif;font-size:clamp(24px,4vw,32px);margin:10px 0 20px;}
+  p{font-size:17px;line-height:1.8;color:var(--text-dim);margin-bottom:16px;white-space:pre-line;}
+  .back{display:inline-block;margin-top:30px;font-weight:600;color:var(--blue);}
+
+  /* ---- Reaction bar ---- */
+  .reaction-bar{display:flex;align-items:center;gap:10px;margin-top:28px;padding-top:22px;border-top:1px solid var(--line);flex-wrap:wrap;}
+  .rbtn{display:flex;align-items:center;gap:7px;background:var(--cream);border:1px solid var(--line);border-radius:999px;padding:9px 16px;font-size:14px;font-weight:600;color:var(--navy);cursor:pointer;transition:.15s ease;}
+  .rbtn:hover{background:#eceae3;}
+  .rbtn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+  .rbtn svg{width:17px;height:17px;flex-shrink:0;}
+  .rbtn.dislike.active{background:#d64545;border-color:#d64545;}
+  .rbtn .count{min-width:14px;text-align:left;}
+
+  /* ---- Comments ---- */
+  .comments{margin-top:26px;padding-top:22px;border-top:1px solid var(--line);}
+  .comments h2{font-size:18px;margin-bottom:16px;}
+  .comment-form{display:flex;flex-direction:column;gap:10px;margin-bottom:22px;}
+  .comment-form input, .comment-form textarea{
+    font-family:inherit;font-size:15px;padding:12px 14px;border:1px solid var(--line);
+    border-radius:12px;background:var(--cream);color:var(--navy);resize:vertical;
+  }
+  .comment-form textarea{min-height:80px;}
+  .comment-form button{
+    align-self:flex-start;background:var(--blue);color:#fff;border:none;border-radius:999px;
+    padding:11px 22px;font-weight:700;font-size:14px;cursor:pointer;transition:.15s ease;
+  }
+  .comment-form button:hover{opacity:.9;}
+  .comment-list{display:flex;flex-direction:column;gap:14px;}
+  .comment-item{background:var(--cream);border-radius:14px;padding:14px 16px;}
+  .comment-item .c-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .comment-item .c-name{font-weight:700;font-size:14px;}
+  .comment-item .c-time{font-size:12px;color:var(--text-dim);}
+  .comment-item .c-text{font-size:15px;line-height:1.6;color:var(--navy);white-space:pre-line;}
+  .comment-empty{font-size:14px;color:var(--text-dim);}
+
+  /* ---- Share menu ---- */
+  .share-wrap{position:relative;}
+  .share-menu{
+    display:none;position:absolute;bottom:calc(100% + 10px);left:0;background:var(--paper);
+    border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 34px -14px rgba(16,26,46,.35);
+    padding:8px;min-width:190px;z-index:10;
+  }
+  .share-menu.open{display:block;}
+  .share-menu a, .share-menu button{
+    display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:none;
+    font-family:inherit;font-size:14px;color:var(--navy);padding:9px 10px;border-radius:9px;cursor:pointer;text-decoration:none;
+  }
+  .share-menu a:hover, .share-menu button:hover{background:var(--cream);}
+  .toast{
+    position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);
+    background:var(--navy);color:#fff;padding:11px 20px;border-radius:999px;font-size:14px;
+    opacity:0;pointer-events:none;transition:.25s ease;z-index:50;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="video-wrapper">
+      <iframe src="https://drive.google.com/file/d/1s5HeWndFD7Sf7BPiqQtzwp4hvD_hE7K_/preview" allow="autoplay" allowfullscreen></iframe>
+    </div>
+
+    <div class="content">
+      <span class="date">08-09-2026</span>
+      <h1>Blog Post 05</h1>
+      <p></p>
+
+      <!-- Reaction bar -->
+      <div class="reaction-bar">
+        <button class="rbtn like" id="likeBtn" onclick="toggleReaction('like')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+          <span>লাইক</span><span class="count" id="likeCount">0</span>
+        </button>
+        <button class="rbtn dislike" id="dislikeBtn" onclick="toggleReaction('dislike')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"/></svg>
+          <span>ডিসলাইক</span><span class="count" id="dislikeCount">0</span>
+        </button>
+
+        <div class="share-wrap">
+          <button class="rbtn" onclick="toggleShareMenu()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>
+            <span>শেয়ার</span>
+          </button>
+          <div class="share-menu" id="shareMenu">
+            <button onclick="nativeShare()">📤 শেয়ার করুন</button>
+            <a id="waShare" href="#" target="_blank" rel="noopener">🟢 WhatsApp</a>
+            <a id="fbShare" href="#" target="_blank" rel="noopener">🔵 Facebook</a>
+            <button onclick="copyLink()">🔗 লিংক কপি করুন</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comments -->
+      <div class="comments">
+        <h2>মন্তব্য (<span id="commentCount">0</span>)</h2>
+        <div class="comment-form">
+          <input type="text" id="commentName" placeholder="আপনার নাম" maxlength="40">
+          <textarea id="commentText" placeholder="মন্তব্য লিখুন..." maxlength="500"></textarea>
+          <button onclick="addComment()">মন্তব্য পোস্ট করুন</button>
+        </div>
+        <div class="comment-list" id="commentList"></div>
+      </div>
+
+      <a class="back" href="index.html#blogs">← সব পোস্ট দেখুন</a>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  const POST_ID = "blog-post-05";
+  const PAGE_URL = "https://foridahmed3800-commits.github.io/blog-post-05.html";
+  const PAGE_TITLE = "Blog Post 05 — FS.";
+
+  /* ---------- helpers ---------- */
+  function loadJSON(key, fallback){
+    try{
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    }catch(e){ return fallback; }
+  }
+  function saveJSON(key, val){
+    try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){}
+  }
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 1800);
+  }
+
+  /* ---------- Like / Dislike ---------- */
+  const REACT_KEY = POST_ID + ":reactions";
+  const USER_REACT_KEY = POST_ID + ":userReaction";
+
+  function getReactions(){
+    return loadJSON(REACT_KEY, {like:0, dislike:0});
+  }
+  function renderReactions(){
+    const r = getReactions();
+    const userReaction = localStorage.getItem(USER_REACT_KEY) || "";
+    document.getElementById('likeCount').textContent = r.like;
+    document.getElementById('dislikeCount').textContent = r.dislike;
+    document.getElementById('likeBtn').classList.toggle('active', userReaction === 'like');
+    document.getElementById('dislikeBtn').classList.toggle('active', userReaction === 'dislike');
+  }
+  function toggleReaction(type){
+    const r = getReactions();
+    let userReaction = localStorage.getItem(USER_REACT_KEY) || "";
+
+    if(userReaction === type){
+      // undo
+      r[type] = Math.max(0, r[type] - 1);
+      userReaction = "";
+    } else {
+      if(userReaction){ r[userReaction] = Math.max(0, r[userReaction] - 1); }
+      r[type] = (r[type] || 0) + 1;
+      userReaction = type;
+    }
+    saveJSON(REACT_KEY, r);
+    localStorage.setItem(USER_REACT_KEY, userReaction);
+    renderReactions();
+  }
+
+  /* ---------- Comments ---------- */
+  const COMMENTS_KEY = POST_ID + ":comments";
+
+  function getComments(){
+    return loadJSON(COMMENTS_KEY, []);
+  }
+  function renderComments(){
+    const comments = getComments();
+    const list = document.getElementById('commentList');
+    document.getElementById('commentCount').textContent = comments.length;
+
+    if(comments.length === 0){
+      list.innerHTML = '<p class="comment-empty">এখনো কোনো মন্তব্য নেই। প্রথম মন্তব্যটি করুন।</p>';
+      return;
+    }
+    list.innerHTML = comments.slice().reverse().map(c => `
+      <div class="comment-item">
+        <div class="c-head">
+          <span class="c-name">${escapeHTML(c.name)}</span>
+          <span class="c-time">${c.time}</span>
+        </div>
+        <div class="c-text">${escapeHTML(c.text)}</div>
+      </div>
+    `).join('');
+  }
+  function escapeHTML(str){
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+  function addComment(){
+    const nameEl = document.getElementById('commentName');
+    const textEl = document.getElementById('commentText');
+    const name = nameEl.value.trim() || "অতিথি";
+    const text = textEl.value.trim();
+
+    if(!text){
+      showToast("মন্তব্য লিখুন");
+      return;
+    }
+    const comments = getComments();
+    comments.push({
+      name: name,
+      text: text,
+      time: new Date().toLocaleString('bn-BD', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'})
+    });
+    saveJSON(COMMENTS_KEY, comments);
+    textEl.value = "";
+    renderComments();
+    showToast("মন্তব্য যোগ হয়েছে");
+  }
+
+  /* ---------- Share ---------- */
+  function toggleShareMenu(){
+    document.getElementById('shareMenu').classList.toggle('open');
+  }
+  document.addEventListener('click', function(e){
+    const wrap = document.querySelector('.share-wrap');
+    if(wrap && !wrap.contains(e.target)){
+      document.getElementById('shareMenu').classList.remove('open');
+    }
+  });
+  function nativeShare(){
+    if(navigator.share){
+      navigator.share({title: PAGE_TITLE, url: PAGE_URL}).catch(()=>{});
+    } else {
+      copyLink();
+    }
+    document.getElementById('shareMenu').classList.remove('open');
+  }
+  function copyLink(){
+    navigator.clipboard.writeText(PAGE_URL).then(()=>{
+      showToast("লিংক কপি হয়েছে");
+    }).catch(()=>{
+      showToast("লিংক কপি করা যায়নি");
+    });
+    document.getElementById('shareMenu').classList.remove('open');
+  }
+
+  /* ---------- init ---------- */
+  document.getElementById('waShare').href = "https://wa.me/?text=" + encodeURIComponent(PAGE_TITLE + " " + PAGE_URL);
+  document.getElementById('fbShare').href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(PAGE_URL);
+
+  renderReactions();
+  renderComments();
+</script>
+</body>
+</html>
