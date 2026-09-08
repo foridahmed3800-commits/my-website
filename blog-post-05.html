@@ -9,16 +9,16 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Blog Post 05 — FS.">
 <meta property="og:description" content="FS. ব্লগ থেকে একটি নতুন পোস্ট।">
-<meta property="og:image" content="https://foridahmed3800-commits.github.io/images.jpg">
-<meta property="og:url" content="https://foridahmed3800-commits.github.io/blog-post-05.html">
+<meta property="og:image" content="https://foridahmed3800-commits.github.io/my-website/images.jpg">
+<meta property="og:url" content="https://foridahmed3800-commits.github.io/my-website/blog-post-05.html">
 <meta property="og:site_name" content="FS.">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Blog Post 05 — FS.">
 <meta name="twitter:description" content="FS. ব্লগ থেকে একটি নতুন পোস্ট।">
-<meta name="twitter:image" content="https://foridahmed3800-commits.github.io/images.jpg">
+<meta name="twitter:image" content="https://foridahmed3800-commits.github.io/my-website/images.jpg">
 
-<link rel="canonical" href="https://foridahmed3800-commits.github.io/blog-post-05.html">
+<link rel="canonical" href="https://foridahmed3800-commits.github.io/my-website/blog-post-05.html">
 
 <style>
   :root{--navy:#101a2e;--blue:#2f5fff;--cream:#f7f5f0;--paper:#fffdf9;--text-dim:rgba(16,26,46,.62);--line:rgba(16,26,46,.1);}
@@ -85,9 +85,23 @@
     opacity:0;pointer-events:none;transition:.25s ease;z-index:50;
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* ---- Fixed close (X) button, always visible so mobile users can exit
+     without scrolling down to the "সব পোস্ট দেখুন" link ---- */
+  .close-btn{
+    position:fixed;top:16px;left:16px;z-index:60;
+    width:40px;height:40px;border-radius:50%;
+    background:rgba(16,26,46,.82);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px;line-height:1;text-decoration:none;
+    box-shadow:0 8px 20px -8px rgba(16,26,46,.5);
+    backdrop-filter:blur(6px);
+  }
+  .close-btn:hover{background:var(--navy);}
 </style>
 </head>
 <body>
+  <a class="close-btn" href="index.html#blogs" aria-label="বন্ধ করুন">✕</a>
   <div class="wrap">
 
     <div class="video-wrapper">
@@ -143,7 +157,7 @@
 
 <script>
   const POST_ID = "blog-post-05";
-  const PAGE_URL = "https://foridahmed3800-commits.github.io/blog-post-05.html";
+  const PAGE_URL = "https://foridahmed3800-commits.github.io/my-website/blog-post-05.html";
   const PAGE_TITLE = "Blog Post 05 — FS.";
 
   /* ---------- helpers ---------- */
