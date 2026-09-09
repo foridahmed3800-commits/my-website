@@ -1782,6 +1782,212 @@ body::before{
 @media(max-width:1100px){.qq-logo{min-width:155px}.qq-nav>a{padding:0 8px!important;font-size:10.5px!important}.qq-nav{gap:2px!important}.qq-get{padding:0 17px!important}.qq-signin{padding:0 13px!important}}
 @media(max-width:860px){.qq-header nav{min-height:64px!important}.qq-nav,.qq-nav-actions{display:none!important}.qq-header .burger{display:flex!important;margin-left:auto}.qq-header .burger span{background:#dfffea!important}}
 </style>
+
+<style id="fs-theme-blog-polish">
+/* ===== FS theme switch ===== */
+.fs-theme-toggle{
+  height:42px;
+  min-width:104px;
+  padding:0 14px;
+  border:1px solid rgba(0,245,107,.28);
+  border-radius:999px;
+  background:rgba(0,245,107,.035);
+  color:#eafff1;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  font:800 11px Inter,Arial,sans-serif;
+  cursor:pointer;
+  transition:.22s ease;
+}
+.fs-theme-toggle:hover{
+  border-color:#00f56b;
+  background:rgba(0,245,107,.10);
+  color:#00f56b;
+  box-shadow:0 0 20px rgba(0,245,107,.10);
+  transform:translateY(-1px);
+}
+.fs-theme-toggle .theme-icon{font-size:15px;line-height:1}
+.fs-theme-toggle-mobile{width:100%;margin:12px 0 4px;height:46px}
+body.light-theme .fs-theme-toggle{
+  background:#fff;
+  color:#10233d;
+  border-color:rgba(16,35,61,.18);
+}
+body.light-theme .fs-theme-toggle:hover{
+  background:#f1f7ff;
+  color:#1457d9;
+  border-color:#1457d9;
+  box-shadow:0 8px 22px rgba(20,87,217,.12);
+}
+
+/* ===== Blog exit / back controls ===== */
+.blog-close{
+  top:72px!important;
+  right:18px!important;
+  width:44px!important;
+  height:44px!important;
+  background:rgba(3,10,7,.90)!important;
+  border-color:rgba(255,255,255,.38)!important;
+  box-shadow:0 10px 28px rgba(0,0,0,.28);
+}
+.blog-close:hover{
+  background:#00f56b!important;
+  color:#00130a!important;
+  transform:translateY(-1px);
+}
+.blog-back{
+  margin-top:28px;
+  width:100%;
+  min-height:48px;
+  border:1px solid rgba(0,245,107,.28);
+  border-radius:14px;
+  background:linear-gradient(135deg,rgba(0,245,107,.08),rgba(31,230,255,.05));
+  color:#08783f;
+  font:900 13px Inter,Arial,sans-serif;
+  cursor:pointer;
+  transition:.22s ease;
+}
+.blog-back:hover{
+  transform:translateY(-2px);
+  background:linear-gradient(135deg,#00f56b,#31df8a);
+  color:#00130a;
+  border-color:#00f56b;
+  box-shadow:0 12px 28px rgba(0,245,107,.20);
+}
+@media(max-width:620px){
+  .blog-close{top:58px!important;right:12px!important;width:42px!important;height:42px!important}
+}
+
+/* ===== More polished reaction buttons ===== */
+.blog-card-actions{gap:8px!important}
+.blog-card-action,.blog-action{
+  min-height:40px!important;
+  padding:9px 13px!important;
+  border-radius:13px!important;
+  font-weight:850!important;
+  letter-spacing:.01em;
+  box-shadow:0 4px 14px rgba(0,0,0,.06);
+}
+.blog-card-action svg,.blog-action svg{
+  width:17px;height:17px;display:block;flex:none;
+}
+.blog-card-action.like-card,.blog-action.like{
+  color:#ff4f78!important;
+  border-color:rgba(255,79,120,.28)!important;
+  background:rgba(255,79,120,.055)!important;
+}
+.blog-card-action.like-card:hover,.blog-action.like:hover,
+.blog-card-action.like-card.active,.blog-action.like.active{
+  color:#fff!important;
+  background:linear-gradient(135deg,#ff4775,#e92d62)!important;
+  border-color:#ff4775!important;
+  box-shadow:0 9px 24px rgba(255,71,117,.25);
+}
+.blog-card-action.dislike-card,.blog-action.dislike{
+  color:#718096!important;
+  border-color:rgba(113,128,150,.25)!important;
+  background:rgba(113,128,150,.055)!important;
+}
+.blog-card-action.dislike-card:hover,.blog-action.dislike:hover,
+.blog-card-action.dislike-card.active,.blog-action.dislike.active{
+  color:#fff!important;
+  background:linear-gradient(135deg,#64748b,#475569)!important;
+  border-color:#64748b!important;
+  box-shadow:0 9px 24px rgba(71,85,105,.20);
+}
+.blog-card-action.comment-card{color:#0ea5c8!important}
+.blog-card-action.save-card{color:#c28a00!important}
+.blog-card-action.share-card{color:#07853c!important}
+.blog-action:not(.like):not(.dislike):hover{
+  background:#10233d!important;color:#fff!important;border-color:#10233d!important;
+}
+
+/* ===== White/light theme ===== */
+body.light-theme{
+  background:#f7f9fc!important;
+  color:#10233d!important;
+}
+body.light-theme .qq-header{
+  background:rgba(255,255,255,.92)!important;
+  border-bottom-color:rgba(16,35,61,.12)!important;
+  box-shadow:0 8px 28px rgba(16,35,61,.08)!important;
+}
+body.light-theme .qq-header:before{opacity:.65}
+body.light-theme .qq-logo,
+body.light-theme .qq-logo b{color:#10233d!important}
+body.light-theme .qq-logo strong{color:#1457d9!important}
+body.light-theme .qq-logo small{color:#718096!important}
+body.light-theme .qq-nav>a{color:#263b57!important}
+body.light-theme .qq-nav>a:hover{color:#1457d9!important;background:rgba(20,87,217,.05)!important}
+body.light-theme .qq-nav>a.active{color:#1457d9!important}
+body.light-theme .qq-signin{color:#10233d!important;border-color:rgba(16,35,61,.20)!important;background:#fff}
+body.light-theme .fs-tools-trigger{color:#10233d!important;background:#fff!important;border-color:rgba(16,35,61,.18)!important}
+body.light-theme .qq-get{background:linear-gradient(135deg,#1457d9,#2f7cff)!important;color:#fff!important;box-shadow:0 10px 25px rgba(20,87,217,.20)!important}
+body.light-theme .qq-search{color:#10233d!important}
+body.light-theme .hero,
+body.light-theme .qq-hero{background:#f7f9fc!important}
+body.light-theme .qq-grid-bg{opacity:.08}
+body.light-theme .qq-copy h1{color:#10233d!important}
+body.light-theme .qq-copy h1 em{color:#1457d9!important}
+body.light-theme .qq-copy .lede{color:#5b6b80!important}
+body.light-theme .qq-eyebrow{color:#1457d9!important;border-color:rgba(20,87,217,.20)!important;background:rgba(20,87,217,.06)!important}
+body.light-theme .section,
+body.light-theme #blogs .section,
+body.light-theme #about .section,
+body.light-theme #contact .section{background:#fff!important}
+body.light-theme .blog-card,
+body.light-theme .service-card,
+body.light-theme .b2b-card,
+body.light-theme .contact-card{background:#fff!important;color:#10233d!important;border-color:rgba(16,35,61,.10)!important}
+body.light-theme .blog-body h3,
+body.light-theme .service-card h3,
+body.light-theme .b2b-card h3,
+body.light-theme h2{color:#10233d!important}
+body.light-theme .blog-excerpt,
+body.light-theme .section-head p,
+body.light-theme .service-card p,
+body.light-theme .b2b-card p,
+body.light-theme .feature p{color:#64748b!important}
+body.light-theme .blog-meta{color:#64748b!important}
+body.light-theme .blog-open{color:#1457d9!important}
+body.light-theme .blog-modal{background:rgba(15,23,42,.40)!important}
+body.light-theme .blog-dialog{background:#fff!important;color:#10233d!important}
+body.light-theme .blog-dialog-content h2,
+body.light-theme #blogModalTitle{color:#10233d!important}
+body.light-theme .blog-full-body{color:#5b6b80!important}
+body.light-theme .comment-item{background:#f7f9fc!important;border-color:rgba(16,35,61,.10)!important}
+body.light-theme input,
+body.light-theme textarea{background:#f7f9fc!important;color:#10233d!important;border-color:rgba(16,35,61,.12)!important}
+body.light-theme .blog-action{background:#f7f9fc!important;color:#243b5a!important;border-color:rgba(16,35,61,.12)!important}
+body.light-theme .blog-action.like.active{background:linear-gradient(135deg,#ff4775,#e92d62)!important;color:#fff!important}
+body.light-theme .blog-action.dislike.active{background:linear-gradient(135deg,#64748b,#475569)!important;color:#fff!important}
+body.light-theme .blog-back{background:linear-gradient(135deg,#eefaf3,#eef8ff)!important;color:#08783f!important}
+body.light-theme footer{background:#10233d!important}
+body.light-theme .b2b-band{background:#10233d!important}
+body.light-theme .service-scroller{background:#f7f9fc!important}
+body.light-theme .service-track article{background:#fff!important}
+body.light-theme .mobile-menu{background:rgba(15,23,42,.25)!important}
+body.light-theme .mobile-menu-inner{background:#fff!important}
+body.light-theme .mobile-menu-inner a{color:#10233d!important;border-color:rgba(16,35,61,.10)!important}
+body.light-theme .burger span{background:#10233d!important}
+body.light-theme .cta-strip{background:linear-gradient(135deg,#10233d,#1e3a5f)!important}
+body.light-theme .cta-strip h2{color:#fff!important}
+body.light-theme .v10-live-forensics,
+body.light-theme .v12-live-forensics{background:#f5f8fb!important;color:#10233d}
+body.light-theme .v10-viewer,
+body.light-theme .v10-evidence-panel,
+body.light-theme .v12-stage-wrap,
+body.light-theme .v12-panel,
+body.light-theme .v12-stage{background:#fff!important}
+body.light-theme .v10-view-controls,
+body.light-theme .v12-controls{background:#f7f9fc!important}
+body.light-theme .v10-stage,
+body.light-theme .v12-stage{border-color:rgba(16,35,61,.10)!important}
+body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
+</style>
+
 </head>
 <body>
 
@@ -1817,6 +2023,9 @@ body::before{
 
       <div class="qq-nav-actions">
         <button class="qq-search" type="button" aria-label="Search">⌕</button>
+        <button class="fs-theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" title="Switch theme">
+          <span class="theme-icon">☀</span><span class="theme-label">Light</span>
+        </button>
         <a href="#contact" class="qq-signin">Sign In</a>
 
 <span class="fs-nav-divider"></span>
@@ -1866,6 +2075,9 @@ body::before{
     <a href="#blogs" class="qq-blog-nav">▣ Blog <span>→</span></a>
     <a href="#qq-community">Community <span>→</span></a>
     <a href="#about">About <span>→</span></a>
+    <button class="fs-theme-toggle fs-theme-toggle-mobile" id="themeToggleMobile" type="button" aria-label="Switch to light theme">
+      <span class="theme-icon">☀</span><span class="theme-label">Light theme</span>
+    </button>
     <a href="#contact" class="mobile-menu-cta">Get Started <span>→</span></a>
   </div>
 </div>
@@ -3147,7 +3359,12 @@ let blogState={};
 const emptyState=()=>({likes:0,dislikes:0,saves:0,liked:false,disliked:false,saved:false,comments:[]});
 const getState=id=>blogState[id] || (blogState[id]=emptyState());
 const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-const icon={like:'♥',dislike:'▼',comment:'◌',save:'🔖',share:'↗',copy:'⧉'};
+const icon={
+  like:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10v10H4a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h3Zm2 10V10l4.2-7.1a1.8 1.8 0 0 1 3.3.9V7h4.1a2 2 0 0 1 2 2.3l-1.2 8A3 3 0 0 1 18.4 20H9Z"/></svg>',
+  dislike:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17 14V4h3a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-3ZM15 4v10l-4.2 7.1a1.8 1.8 0 0 1-3.3-.9V17H3.4a2 2 0 0 1-2-2.3l1.2-8A3 3 0 0 1 5.6 4H15Z"/></svg>',
+  comment:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-5 4v-4H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/></svg>',
+  save:'🔖',share:'↗',copy:'⧉'
+};
 
 async function loadBlogData(){
   const ids=blogs.map(b=>b.id);
@@ -3409,8 +3626,34 @@ document.getElementById('commentForm').addEventListener('submit',e=>{
   e.target.reset();submitComment(activeBlogId,name,text);
 });
 document.getElementById('blogClose').addEventListener('click',closeBlog);
+document.getElementById('blogBack')?.addEventListener('click',closeBlog);
 document.getElementById('blogModal').addEventListener('click',e=>{if(e.target.id==='blogModal')closeBlog();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&activeBlogId!==null)closeBlog();});
+
+/* ================= WHITE / DARK THEME ================= */
+const THEME_KEY='fs_site_theme_v1';
+function applyTheme(mode){
+  const light=mode==='light';
+  document.body.classList.toggle('light-theme',light);
+  document.documentElement.style.colorScheme=light?'light':'dark';
+  const buttons=[document.getElementById('themeToggle'),document.getElementById('themeToggleMobile')].filter(Boolean);
+  buttons.forEach(btn=>{
+    btn.querySelector('.theme-icon').textContent=light?'☾':'☀';
+    btn.querySelector('.theme-label').textContent=light?'Dark':'Light';
+    btn.setAttribute('aria-label',light?'Switch to dark theme':'Switch to light theme');
+    btn.title=light?'Switch to dark theme':'Switch to light theme';
+  });
+}
+let savedTheme=localStorage.getItem(THEME_KEY)||'dark';
+applyTheme(savedTheme);
+function toggleSiteTheme(){
+  savedTheme=(document.body.classList.contains('light-theme'))?'dark':'light';
+  localStorage.setItem(THEME_KEY,savedTheme);
+  applyTheme(savedTheme);
+}
+document.getElementById('themeToggle')?.addEventListener('click',toggleSiteTheme);
+document.getElementById('themeToggleMobile')?.addEventListener('click',toggleSiteTheme);
+
 loadBlogData();
 
 /* ================= RESPONSIVE MOBILE MENU ================= */
