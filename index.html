@@ -1988,6 +1988,134 @@ body.light-theme .v12-stage{border-color:rgba(16,35,61,.10)!important}
 body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
 </style>
 
+
+<style id="advanced-video-fix">
+/* ===== ADVANCED VIDEO PLAYER FIX ===== */
+.blog-media,
+.blog-dialog-media,
+.v8-video-wrap {
+  position: relative !important;
+  overflow: hidden !important;
+  background: #000 !important;
+}
+
+/* Keep card/video proportions, but anchor the player to every edge. */
+.blog-media { aspect-ratio: 16 / 9 !important; min-height: 0 !important; }
+.blog-dialog-media {
+  aspect-ratio: 16 / 9 !important;
+  min-height: min(68vh, 620px) !important;
+}
+.v8-video-wrap {
+  aspect-ratio: 16 / 9 !important;
+  min-height: 0 !important;
+}
+
+/* Critical fix for iframe intrinsic-height/percentage-height rendering. */
+.blog-media > iframe,
+.blog-media > video,
+.blog-dialog-media > iframe,
+.blog-dialog-media > video,
+.v8-video-wrap > iframe,
+.v8-video-wrap > video {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  display: block !important;
+  border: 0 !important;
+  object-fit: contain !important;
+  background: #000 !important;
+}
+
+/* Advanced cinematic player frame */
+.blog-dialog-media {
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08),
+              0 24px 80px rgba(0,0,0,.28);
+}
+.blog-dialog-media::after {
+  content: "FS • HD MEDIA";
+  position: absolute;
+  left: 14px;
+  bottom: 12px;
+  z-index: 3;
+  pointer-events: none;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.58);
+  border: 1px solid rgba(255,255,255,.14);
+  color: rgba(255,255,255,.78);
+  font: 800 9px "Space Mono", monospace;
+  letter-spacing: .08em;
+}
+
+/* Give the featured Makkah stream a cleaner, larger presentation. */
+.v8-video-wrap {
+  min-height: clamp(300px, 46vw, 680px) !important;
+  max-height: 72vh;
+}
+.v8-video-wrap > iframe,
+.v8-video-wrap > video {
+  object-fit: contain !important;
+}
+
+/* Better mobile viewing: don't squash the player. */
+@media (max-width: 620px) {
+  .blog-dialog-media {
+    aspect-ratio: 16 / 10 !important;
+    min-height: 0 !important;
+    height: auto !important;
+  }
+  .v8-video-wrap {
+    min-height: 0 !important;
+    aspect-ratio: 16 / 10 !important;
+  }
+}
+
+/* Video utility strip inside the blog modal */
+.video-utility-bar {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:14px;
+  padding:10px 12px;
+  border:1px solid rgba(0,245,107,.14);
+  border-radius:14px;
+  background:rgba(3,16,11,.72);
+}
+.video-utility-bar .video-live-state {
+  color:#00f56b;
+  font:800 9px "Space Mono",monospace;
+  letter-spacing:.06em;
+}
+.video-utility-actions {
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+.video-utility-actions button,
+.video-utility-actions a {
+  border:1px solid rgba(131,255,179,.16);
+  background:#071810;
+  color:#dffff0;
+  border-radius:999px;
+  padding:7px 10px;
+  font:700 10px Inter, sans-serif;
+  text-decoration:none;
+  cursor:pointer;
+}
+.video-utility-actions button:hover,
+.video-utility-actions a:hover {
+  border-color:#00f56b;
+  color:#00f56b;
+}
+</style>
+
 </head>
 <body>
 
@@ -3548,7 +3676,7 @@ function mediaHTML(post,modal=false){
   if(post.video){
     const embedUrl=toEmbedUrl(post.video);
     const player=embedUrl
-      ? `<iframe src="${esc(embedUrl)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe>`
+      ? `<iframe src="${esc(embedUrl)}${embedUrl.includes('?')?'&':'?'}enablejsapi=1&playsinline=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="eager"></iframe>`
       : `<video controls preload="metadata" src="${esc(post.video)}"></video>`;
     return `<div class="${cls}">${player}${modal?'':'<span class="blog-video-badge">▶ VIDEO</span>'}</div>`;
   }
@@ -3587,6 +3715,21 @@ function openBlog(id){
   activeBlogId=id; const st=getState(id);
   const modal=document.getElementById('blogModal');
   document.getElementById('blogDialogMedia').innerHTML=mediaHTML(post,true);
+  const modalMedia=document.getElementById('blogDialogMedia');
+  if(post.video){
+    const videoUrl=new URL(post.video,location.href).href;
+    const utility=document.createElement('div');
+    utility.className='video-utility-bar';
+    utility.innerHTML=`
+      <span class="video-live-state">● VIDEO READY • HD VIEW</span>
+      <div class="video-utility-actions">
+        <button type="button" onclick="toggleModalFullscreen()">⛶ Fullscreen</button>
+        <button type="button" onclick="toggleModalPictureInPicture()">▣ PiP</button>
+        <button type="button" onclick="downloadCurrentVideo()">⇩ Download</button>
+        <a href="${esc(videoUrl)}" target="_blank" rel="noopener">↗ Open source</a>
+      </div>`;
+    modalMedia.insertAdjacentElement('afterend',utility);
+  }
   document.getElementById('blogModalDate').textContent=post.date;
   document.getElementById('blogModalTitle').textContent=post.title;
   document.getElementById('blogModalBody').textContent=post.body;
@@ -3600,7 +3743,13 @@ function openBlog(id){
   renderComments();
   modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
 }
-function closeBlog(){document.getElementById('blogModal').classList.remove('open');document.getElementById('blogModal').setAttribute('aria-hidden','true');document.body.style.overflow='';activeBlogId=null;}
+function closeBlog(){
+  document.getElementById('blogModal').classList.remove('open');
+  document.getElementById('blogModal').setAttribute('aria-hidden','true');
+  document.querySelectorAll('.video-utility-bar').forEach(el=>el.remove());
+  document.body.style.overflow='';
+  activeBlogId=null;
+}
 async function shareBlog(){
   const post=blogs.find(x=>x.id===activeBlogId); if(!post)return;
   const loc=getLocal(activeBlogId); loc.shares++; saveLocal();
@@ -3614,6 +3763,57 @@ async function copyBlogLink(){
   try{await navigator.clipboard.writeText(url);const loc=getLocal(activeBlogId);loc.copies++;saveLocal();openBlog(activeBlogId);renderBlogs();}
   catch(e){alert('Could not copy the link.');}
 }
+
+async function toggleModalFullscreen(){
+  const box=document.getElementById('blogDialogMedia');
+  if(!box)return;
+  try{
+    if(document.fullscreenElement) await document.exitFullscreen();
+    else await box.requestFullscreen();
+  }catch(e){ console.warn('Fullscreen unavailable',e); }
+}
+
+async function downloadCurrentVideo(){
+  const directVideo=document.querySelector('#blogDialogMedia video');
+  const iframe=document.querySelector('#blogDialogMedia iframe');
+
+  // Browser-download is possible for direct .mp4/.webm/etc. files.
+  if(directVideo && directVideo.src){
+    try{
+      const a=document.createElement('a');
+      a.href=directVideo.currentSrc || directVideo.src;
+      a.download='fs-video';
+      a.target='_blank';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      return;
+    }catch(e){
+      console.warn('Direct video download failed',e);
+    }
+  }
+
+  // YouTube embeds do not expose the underlying video file to page JavaScript.
+  if(iframe){
+    alert('This video is embedded from YouTube. The Download button cannot download the YouTube video file from this website. Use the YouTube player/source options instead.');
+    return;
+  }
+
+  alert('No downloadable video file is available for this post.');
+}
+
+async function toggleModalPictureInPicture(){
+  const media=document.querySelector('#blogDialogMedia video');
+  if(!media || !document.pictureInPictureEnabled){
+    alert('Picture-in-Picture is available for direct video files, not embedded YouTube players.');
+    return;
+  }
+  try{
+    if(document.pictureInPictureElement) await document.exitPictureInPicture();
+    else await media.requestPictureInPicture();
+  }catch(e){ console.warn('PiP unavailable',e); }
+}
+
 function focusComment(){document.getElementById('commentText').focus();}
 function renderComments(){
   const st=getState(activeBlogId);document.getElementById('commentCount').textContent=`(${st.comments.length})`;
