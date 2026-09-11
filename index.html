@@ -360,8 +360,8 @@
 
   .blog-modal{position:fixed;inset:0;background:rgba(16,26,46,.68);backdrop-filter:blur(8px);z-index:100;display:none;padding:24px;overflow:auto;}
   .blog-modal.open{display:flex;align-items:center;justify-content:center;}
-  .blog-dialog{width:min(900px,100%);max-height:92vh;overflow:auto;background:var(--paper);border-radius:26px;box-shadow:0 40px 100px rgba(0,0,0,.3);position:relative;}
-  .blog-dialog-media{background:var(--navy);aspect-ratio:16/8;position:relative;overflow:hidden;}
+  .blog-dialog{width:min(1120px,100%);max-height:96vh;overflow:auto;background:var(--paper);border-radius:24px;box-shadow:0 40px 100px rgba(0,0,0,.42);position:relative;}
+  .blog-dialog-media{background:#000;aspect-ratio:16/9;position:relative;overflow:hidden;}
   .blog-dialog-media img,.blog-dialog-media video,.blog-dialog-media iframe{width:100%;height:100%;object-fit:cover;display:block;border:0;}
   .blog-close{position:absolute;top:16px;right:16px;width:42px;height:42px;border:1px solid rgba(255,255,255,.3);background:rgba(16,26,46,.75);color:#fff;border-radius:50%;cursor:pointer;font-size:20px;z-index:2;}
   .blog-dialog-content{padding:34px;}
@@ -736,9 +736,13 @@ body{background:#03100b;color:var(--qq-text)}
 .qq-hero{padding:55px 0 32px;background:radial-gradient(circle at 72% 40%,rgba(0,245,107,.11),transparent 34%),linear-gradient(180deg,#020b08,#03130d);min-height:610px}
 .qq-grid-bg{pointer-events:none;position:absolute;inset:0;opacity:.18;background-image:linear-gradient(rgba(0,245,107,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,107,.08) 1px,transparent 1px);background-size:50px 50px;mask-image:linear-gradient(to bottom,#000,transparent 90%)}
 .qq-hero-grid{position:relative;display:grid;grid-template-columns:.82fr 1.18fr;gap:25px;align-items:center}
+  .qq-hero-grid{align-items:start}
+  .qq-hero-visual{transform:translateY(52px)}
+  @media(max-width:900px){.qq-hero-visual{transform:translateY(30px)}}
+  @media(max-width:620px){.qq-hero-visual{transform:translateY(18px)}}
 .qq-copy{z-index:2}.qq-eyebrow{display:inline-flex;align-items:center;gap:8px;color:#eafff1;border:1px solid rgba(0,245,107,.3);background:rgba(0,245,107,.05);padding:8px 12px;border-radius:999px;font:700 10px 'Space Mono',monospace;letter-spacing:.08em}.qq-eyebrow i{width:8px;height:8px;border-radius:50%;background:#ff345c;box-shadow:0 0 14px #ff345c}
 .qq-copy h1{color:#fff;font-family:Inter,sans-serif;font-weight:800;font-size:clamp(44px,5.4vw,72px);letter-spacing:-3px;line-height:.98;margin-top:24px}.qq-copy h1 em{color:var(--qq-green);font-style:normal}
-.qq-copy .lede{color:#b5c5bd;max-width:540px;font-size:15px;line-height:1.75;margin-top:24px}.qq-actions{margin-top:27px}.qq-primary{background:var(--qq-green);color:#00130a;box-shadow:0 0 35px rgba(0,245,107,.28);padding:14px 20px}.qq-primary b{margin-left:7px}.qq-play{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:#062314;font-size:10px;color:var(--qq-green)}.qq-demo{color:#fff}.qq-demo .play-circle{border-color:#81968c}.qq-community-proof{display:flex;align-items:center;gap:12px;margin-top:38px}.qq-avatars{display:flex}.qq-avatars span{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#1a3025;border:2px solid #06120d;margin-left:-7px;color:#d9ffea;font-size:9px;font-weight:800}.qq-avatars span:first-child{margin-left:0}.qq-community-proof b{display:block;font-size:11px}.qq-community-proof small{display:block;color:#7f9188;font-size:10px;margin-top:3px}
+.qq-copy .lede{color:#b5c5bd;max-width:540px;font-size:15px;line-height:1.75;margin-top:24px}.qq-actions{margin-top:27px}.qq-primary{background:var(--qq-green);color:#00130a;box-shadow:0 0 35px rgba(0,245,107,.28);padding:14px 20px}.qq-primary b{margin-left:7px}.qq-play{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:#062314;font-size:10px;color:var(--qq-green)}qq-community-proof{display:flex;align-items:center;gap:12px;margin-top:38px}.qq-avatars{display:flex}.qq-avatars span{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#1a3025;border:2px solid #06120d;margin-left:-7px;color:#d9ffea;font-size:9px;font-weight:800}.qq-avatars span:first-child{margin-left:0}.qq-community-proof b{display:block;font-size:11px}.qq-community-proof small{display:block;color:#7f9188;font-size:10px;margin-top:3px}
 
 .qq-hero-visual{height:520px;position:relative;perspective:1100px;display:flex;align-items:center;justify-content:center}
 .qq-stars{pointer-events:none;position:absolute;inset:0;background:radial-gradient(circle at 15% 20%,#b5ffcb 0 1px,transparent 2px),radial-gradient(circle at 80% 15%,#b5ffcb 0 1px,transparent 2px),radial-gradient(circle at 67% 70%,#b5ffcb 0 1px,transparent 2px),radial-gradient(circle at 30% 75%,#b5ffcb 0 1px,transparent 2px);opacity:.7}
@@ -1308,16 +1312,6 @@ body::before{
 .fs-upload-card,.fs-report-card,.fs-imei-card{background:rgba(7,24,16,.82);border:1px solid rgba(131,255,179,.14);border-radius:24px;padding:25px;box-shadow:0 28px 70px rgba(0,0,0,.22);backdrop-filter:blur(12px)}
 .fs-drop{height:220px;border:1px dashed rgba(0,245,107,.35);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,245,107,.025);text-align:center;transition:background .15s ease,border-color .15s ease}
 .fs-drop.fs-drop-active{background:rgba(0,245,107,.09);border-color:#00f56b}
-.kali-demo-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(4,10,7,.82);backdrop-filter:blur(8px);place-items:center;padding:18px}
-.kali-demo-modal.open{display:grid}
-.kali-demo-box{position:relative;width:min(640px,100%);max-height:88vh;overflow:auto;background:#06110b;border:1px solid rgba(131,255,179,.18);border-radius:20px;padding:26px}
-.kali-demo-close{position:absolute;right:14px;top:10px;background:none;border:0;color:#9fb3a8;font-size:26px;cursor:pointer;line-height:1}
-.kali-demo-head h3{color:#fff;font-family:'Space Mono',monospace;margin:10px 0 8px;font-size:20px}
-.kali-demo-head p{color:#8ba297;font-size:12.5px;line-height:1.7;max-width:520px}
-.kali-demo-video{margin-top:18px;background:#000;border-radius:14px;overflow:hidden;aspect-ratio:16/9}
-.kali-demo-video iframe{width:100%;height:100%;border:0;display:block}
-.kali-demo-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:16px;flex-wrap:wrap}
-@media(max-width:560px){.kali-demo-box{padding:18px}}
 .fs-drop input{display:none}.fs-drop-icon{font-size:35px;color:#00f56b}.fs-drop strong{color:#fff;margin-top:12px}.fs-drop small,.fs-drop em{color:#758d81;font-size:10px;margin-top:7px}.fs-drop em{font-style:normal}
 .fs-image-preview{height:180px;margin-top:15px;border:1px solid rgba(131,255,179,.1);border-radius:15px;display:grid;place-items:center;overflow:hidden;color:#687f74;font-size:11px;background:#04100b}
 .fs-image-preview img{width:100%;height:100%;object-fit:contain}.fs-forensics-actions{display:flex;gap:10px;margin-top:15px}.fs-green-btn,.fs-cyan-btn,.fs-ghost-btn{border:0;border-radius:10px;padding:12px 16px;font-weight:900;cursor:pointer}.fs-green-btn{background:#00f56b;color:#00150b}.fs-cyan-btn{background:#1fe6ff;color:#00232a}.fs-ghost-btn{background:#10221a;color:#b8cfc4;border:1px solid rgba(131,255,179,.13)}.fs-green-btn:disabled{opacity:.4;cursor:not-allowed}
@@ -1990,129 +1984,164 @@ body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
 
 
 <style id="advanced-video-fix">
-/* ===== ADVANCED VIDEO PLAYER FIX ===== */
+/* ===== ADVANCED VIDEO PLAYER — COMPACT FULL-VIEW DESIGN ===== */
 .blog-media,
 .blog-dialog-media,
-.v8-video-wrap {
-  position: relative !important;
-  overflow: hidden !important;
-  background: #000 !important;
+.v8-video-wrap{
+  position:relative !important;
+  overflow:hidden !important;
+  background:#000 !important;
 }
 
-/* Keep card/video proportions, but anchor the player to every edge. */
-.blog-media { aspect-ratio: 16 / 9 !important; min-height: 0 !important; }
-.blog-dialog-media {
-  aspect-ratio: 16 / 9 !important;
-  min-height: min(68vh, 620px) !important;
-}
-.v8-video-wrap {
-  aspect-ratio: 16 / 9 !important;
-  min-height: 0 !important;
+/* Blog cards keep a clean 16:9 frame. */
+.blog-media{
+  aspect-ratio:16/9 !important;
+  min-height:0 !important;
 }
 
-/* Critical fix for iframe intrinsic-height/percentage-height rendering. */
+/* Modal player: no artificial 68vh minimum.
+   This removes the huge black area visible under the video. */
+.blog-dialog-media{
+  width:100% !important;
+  height:auto !important;
+  aspect-ratio:auto !important;
+  height:clamp(260px, 38vw, 420px) !important;
+  min-height:0 !important;
+  max-height:420px !important;
+  border-radius:0 !important;
+  background:#000 !important;
+}
+
+/* The media always fills the exact player frame without distortion. */
 .blog-media > iframe,
 .blog-media > video,
 .blog-dialog-media > iframe,
 .blog-dialog-media > video,
 .v8-video-wrap > iframe,
-.v8-video-wrap > video {
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  min-width: 100% !important;
-  min-height: 100% !important;
-  max-width: none !important;
-  max-height: none !important;
-  display: block !important;
-  border: 0 !important;
-  object-fit: contain !important;
-  background: #000 !important;
+.v8-video-wrap > video{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  min-width:100% !important;
+  min-height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+  display:block !important;
+  border:0 !important;
+  object-fit:contain !important;
+  background:#000 !important;
 }
 
-/* Advanced cinematic player frame */
-.blog-dialog-media {
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08),
-              0 24px 80px rgba(0,0,0,.28);
+/* Cinematic edge + small HD badge. */
+.blog-dialog-media{
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),
+             0 24px 80px rgba(0,0,0,.28);
 }
-.blog-dialog-media::after {
-  content: "FS • HD MEDIA";
-  position: absolute;
-  left: 14px;
-  bottom: 12px;
-  z-index: 3;
-  pointer-events: none;
-  padding: 6px 9px;
-  border-radius: 999px;
-  background: rgba(0,0,0,.58);
-  border: 1px solid rgba(255,255,255,.14);
-  color: rgba(255,255,255,.78);
-  font: 800 9px "Space Mono", monospace;
-  letter-spacing: .08em;
+.blog-dialog-media::after{
+  content:"FS • HD MEDIA";
+  position:absolute;
+  left:14px;
+  bottom:12px;
+  z-index:3;
+  pointer-events:none;
+  padding:6px 9px;
+  border-radius:999px;
+  background:rgba(0,0,0,.58);
+  border:1px solid rgba(255,255,255,.14);
+  color:rgba(255,255,255,.78);
+  font:800 9px "Space Mono",monospace;
+  letter-spacing:.08em;
 }
 
-/* Give the featured Makkah stream a cleaner, larger presentation. */
-.v8-video-wrap {
-  min-height: clamp(300px, 46vw, 680px) !important;
-  max-height: 72vh;
+/* Makkah/live player stays responsive without forced height. */
+.v8-video-wrap{
+  min-height:0 !important;
+  max-height:72vh;
+  aspect-ratio:16/9 !important;
 }
 .v8-video-wrap > iframe,
-.v8-video-wrap > video {
-  object-fit: contain !important;
+.v8-video-wrap > video{object-fit:contain !important;}
+
+/* Real browser fullscreen: use the whole screen. */
+.blog-dialog-media:fullscreen,
+.blog-dialog-media:-webkit-full-screen{
+  width:100vw !important;
+  height:100vh !important;
+  max-height:none !important;
+  min-height:0 !important;
+  aspect-ratio:auto !important;
+  border-radius:0 !important;
+}
+.blog-dialog-media:fullscreen > iframe,
+.blog-dialog-media:fullscreen > video,
+.blog-dialog-media:-webkit-full-screen > iframe,
+.blog-dialog-media:-webkit-full-screen > video{
+  width:100vw !important;
+  height:100vh !important;
+  object-fit:contain !important;
 }
 
-/* Better mobile viewing: don't squash the player. */
-@media (max-width: 620px) {
-  .blog-dialog-media {
-    aspect-ratio: 16 / 10 !important;
-    min-height: 0 !important;
-    height: auto !important;
+/* Compact mobile presentation. */
+@media(max-width:620px){
+  .blog-modal{padding:8px !important;}
+  .blog-dialog{
+    width:100% !important;
+    max-height:96vh !important;
+    border-radius:18px !important;
   }
-  .v8-video-wrap {
-    min-height: 0 !important;
-    aspect-ratio: 16 / 10 !important;
+  .blog-dialog-media{
+    aspect-ratio:16/9 !important;
+    min-height:0 !important;
+    max-height:none !important;
+  }
+  .v8-video-wrap{
+    aspect-ratio:16/9 !important;
+    min-height:0 !important;
   }
 }
 
 /* Video utility strip inside the blog modal */
-.video-utility-bar {
+.video-utility-bar{
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:10px;
   flex-wrap:wrap;
-  margin-top:14px;
-  padding:10px 12px;
+  margin-top:10px;
+  padding:9px 11px;
   border:1px solid rgba(0,245,107,.14);
   border-radius:14px;
-  background:rgba(3,16,11,.72);
+  background:rgba(3,16,11,.82);
+  box-shadow:0 10px 30px rgba(0,0,0,.18);
 }
-.video-utility-bar .video-live-state {
+.video-utility-bar .video-live-state{
   color:#00f56b;
   font:800 9px "Space Mono",monospace;
   letter-spacing:.06em;
 }
-.video-utility-actions {
+.video-utility-actions{
   display:flex;
   gap:7px;
   flex-wrap:wrap;
 }
 .video-utility-actions button,
-.video-utility-actions a {
+.video-utility-actions a{
   border:1px solid rgba(131,255,179,.16);
   background:#071810;
   color:#dffff0;
   border-radius:999px;
   padding:7px 10px;
-  font:700 10px Inter, sans-serif;
+  font:700 10px Inter,sans-serif;
   text-decoration:none;
   cursor:pointer;
+  transition:.18s ease;
 }
 .video-utility-actions button:hover,
-.video-utility-actions a:hover {
+.video-utility-actions a:hover{
   border-color:#00f56b;
   color:#00f56b;
+  transform:translateY(-1px);
 }
 </style>
 
@@ -2226,7 +2255,6 @@ body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
 
         <div class="hero-actions qq-actions">
           <a href="#solutions" class="btn-primary qq-primary"><span class="qq-play">▶</span> Start Hacking <b>→</b></a>
-          <button type="button" id="kaliDemoOpen" class="btn-ghost qq-demo"><span class="play-circle">▷</span> Watch Demo</button>
         </div>
 
         <div class="qq-community-proof">
@@ -2286,23 +2314,6 @@ body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
   </div>
 </section>
 
-<div class="kali-demo-modal" id="kaliDemoModal" aria-hidden="true">
-  <div class="kali-demo-box">
-    <button class="kali-demo-close" id="kaliDemoClose" aria-label="Close demo">×</button>
-    <div class="kali-demo-head">
-      <span class="tag" style="color:#00f56b">FEATURED DEMO · YOUTUBE</span>
-      <h3>⌘ Kali Linux in Action</h3>
-      <p>A popular, well-known Kali Linux walkthrough from NetworkChuck — a widely-followed cybersecurity education channel.</p>
-    </div>
-    <div class="kali-demo-video">
-      <iframe id="kaliDemoIframe" src="" title="Kali Linux demo video" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-    </div>
-    <div class="kali-demo-foot">
-      <a href="https://www.youtube.com/watch?v=U7e-mcJdZok" target="_blank" rel="noopener" class="v8-watch" style="color:#00f56b">YouTube-এ দেখুন ↗</a>
-      <a href="#kali-forensics" id="kaliDemoGoLab" class="v8-watch" style="color:#00f56b">Try the real (offline) forensics lab →</a>
-    </div>
-  </div>
-</div>
 
 <section class="fs-world" id="world-control">
   <div class="fs-world-grid"></div>
@@ -3768,8 +3779,24 @@ async function toggleModalFullscreen(){
   const box=document.getElementById('blogDialogMedia');
   if(!box)return;
   try{
-    if(document.fullscreenElement) await document.exitFullscreen();
-    else await box.requestFullscreen();
+    if(document.fullscreenElement){
+      await document.exitFullscreen();
+      return;
+    }
+    if(box.requestFullscreen){
+      await box.requestFullscreen();
+      return;
+    }
+    if(box.webkitRequestFullscreen){
+      box.webkitRequestFullscreen();
+      return;
+    }
+    const media=box.querySelector('video,iframe');
+    if(media?.requestFullscreen){
+      await media.requestFullscreen();
+      return;
+    }
+    alert('Fullscreen is not supported by this browser.');
   }catch(e){ console.warn('Fullscreen unavailable',e); }
 }
 
@@ -3782,7 +3809,9 @@ async function downloadCurrentVideo(){
     try{
       const a=document.createElement('a');
       a.href=directVideo.currentSrc || directVideo.src;
-      a.download='fs-video';
+      const title=(blogs.find(x=>x.id===activeBlogId)?.title||'fs-video')
+        .replace(/[^a-z0-9]+/gi,'-').replace(/^-+|-+$/g,'').toLowerCase();
+      a.download=(title||'fs-video')+'.mp4';
       a.target='_blank';
       document.body.appendChild(a);
       a.click();
@@ -3828,7 +3857,12 @@ document.getElementById('commentForm').addEventListener('submit',e=>{
 document.getElementById('blogClose').addEventListener('click',closeBlog);
 document.getElementById('blogBack')?.addEventListener('click',closeBlog);
 document.getElementById('blogModal').addEventListener('click',e=>{if(e.target.id==='blogModal')closeBlog();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&activeBlogId!==null)closeBlog();});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&activeBlogId!==null)closeBlog();
+  if((e.key==='f'||e.key==='F')&&activeBlogId!==null&&!['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)){
+    e.preventDefault(); toggleModalFullscreen();
+  }
+});
 
 /* ================= WHITE / DARK THEME ================= */
 const THEME_KEY='fs_site_theme_v1';
@@ -4268,35 +4302,7 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
 })();
 </script>
 
-<script id="fs-kali-home-demo-js">
-(function(){
-  const openBtn=document.getElementById('kaliDemoOpen');
-  const closeBtn=document.getElementById('kaliDemoClose');
-  const modal=document.getElementById('kaliDemoModal');
-  const goLab=document.getElementById('kaliDemoGoLab');
-  const iframe=document.getElementById('kaliDemoIframe');
-  if(!openBtn||!modal||!iframe)return;
 
-  // NetworkChuck's "create the ULTIMATE hacking lab in 5min!!" — a popular,
-  // widely-watched Kali Linux walkthrough. The iframe src is only set while the
-  // modal is open, and cleared on close, so the video stops playing immediately
-  // instead of continuing in the background.
-  const VIDEO_ID='U7e-mcJdZok';
-  function openModal(){
-    iframe.src='https://www.youtube.com/embed/'+VIDEO_ID+'?autoplay=1&rel=0';
-    modal.classList.add('open');modal.setAttribute('aria-hidden','false');
-  }
-  function closeModal(){
-    modal.classList.remove('open');modal.setAttribute('aria-hidden','true');
-    iframe.src=''; // stop playback
-  }
-  openBtn.addEventListener('click',openModal);
-  closeBtn?.addEventListener('click',closeModal);
-  goLab?.addEventListener('click',closeModal);
-  modal.addEventListener('click',e=>{ if(e.target===modal)closeModal(); });
-  document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&modal.classList.contains('open'))closeModal(); });
-})();
-</script>
 
 <script id="fs-kali-live-terminal-js">
 (function(){
