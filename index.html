@@ -4872,40 +4872,38 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
     loadWeather();
   });
 
-  // Makkah Live — primary: real, permanent YouTube channel IDs via the official
-  // "live_stream" embed (https://www.youtube.com/embed/live_stream?channel=ID).
-  // This is a plain iframe src — no fetch(), no oEmbed call, no CORS dependency —
-  // so it isn't affected by cross-origin restrictions the way the old oEmbed-based
-  // resolver was (that approach silently failed for @handle/live URLs and ended in
-  // "SOURCE UNAVAILABLE"). Direct HLS sources are tried first for the best-quality
-  // native <video> playback; if those fail (CDN down/geo-blocked), we fall back to
-  // these YouTube channel embeds, which work as long as the channel is live.
+  // Makkah Live — robust YouTube-first player.
+  // The previous version tried external HLS CDNs first and marked a YouTube
+  // iframe as LIVE before it was actually usable. That could leave the player
+  // stuck/blank. We now use YouTube's live_stream endpoint first, then a second
+  // known channel as fallback. The direct HLS URLs remain optional fallback only.
   (function(){
-    const hlsSources=[
-      'https://cdn-globecast.akamaized.net/live/eds/saudi_quran/hls_roku/index.m3u8',
-      'https://media2.streambrothers.com:1936/8122/8122/playlist.m3u8'
-    ];
-    // Permanent channel IDs (UC…) resolved for the two known channels — using the
-    // ID instead of the @handle means this doesn't depend on resolving a handle at
-    // runtime, and works with the always-current "live_stream" embed endpoint.
     const youtubeSources=[
-      {channel:'UC-zwmH_IA9oLkhK5pg-eFEg', watch:'https://www.youtube.com/@makkahlivehd4385/live'},
-      {channel:'UCos52azQNBgW63_9uDJoPDA', watch:'https://www.youtube.com/@SaudiQuranTv/live'}
+      {channel:'UCos52azQNBgW63_9uDJoPDA', watch:'https://www.youtube.com/@SaudiQuranTv/live'},
+      {channel:'UC-zwmH_IA9oLkhK5pg-eFEg', watch:'https://www.youtube.com/@makkahlivehd4385/live'}
     ];
     const video=document.getElementById('v8MakkahVideo');
     const iframe=document.getElementById('v8MakkahIframe');
     const watch=document.getElementById('v8MakkahWatch');
     const status=document.getElementById('v8MakkahStatus');
     const pauseBtn=document.getElementById('v8MakkahPause');
-    let makkahPaused=false;
+    if(!iframe)return;
+
+    let sourceIndex=0, loaded=false, makkahPaused=false, fallbackTimer=null;
+    function setStatus(text,color){
+      if(status){status.textContent=text;status.style.color=color||'';}
+    }
     function setPauseLabel(){
       if(!pauseBtn)return;
       pauseBtn.textContent=makkahPaused?'▶ Resume Live':'⏸ Pause Live';
       pauseBtn.setAttribute('aria-label',makkahPaused?'Resume Makkah live':'Pause Makkah live');
     }
     function youtubeCommand(func){
-      if(!iframe || iframe.style.display==='none')return false;
-      try{ iframe.contentWindow.postMessage(JSON.stringify({event:'command',func,args:[]}), 'https://www.youtube.com'); return true; }catch(e){ return false; }
+      try{
+        if(!iframe || iframe.style.display==='none')return false;
+        iframe.contentWindow.postMessage(JSON.stringify({event:'command',func,args:[]}), '*');
+        return true;
+      }catch(e){return false;}
     }
     pauseBtn?.addEventListener('click',()=>{
       makkahPaused=!makkahPaused;
@@ -4918,168 +4916,39 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
     });
     video?.addEventListener('play',()=>{makkahPaused=false;setPauseLabel();});
     video?.addEventListener('pause',()=>{makkahPaused=true;setPauseLabel();});
-    if(!iframe)return;
 
-    function setStatus(text,color){ if(status){status.textContent=text;status.style.color=color;} }
-
-    let hlsJsPromise=null;
-    function loadHlsJs(){
-      // Kick off once and reuse — called immediately on page load so the library is
-      // usually already in memory by the time a stream URL is ready to attach.
-      if(hlsJsPromise)return hlsJsPromise;
-      hlsJsPromise=new Promise((resolve,reject)=>{
-        if(window.Hls){resolve(window.Hls);return;}
-        const s=document.createElement('script');
-        // Always-current, officially documented URL (pinned to the stable v1 line) —
-        // a hand-picked version number on cdnjs can silently 404 if it's never been mirrored.
-        s.src='https://cdn.jsdelivr.net/npm/hls.js@1';
-        s.onload=()=>resolve(window.Hls);
-        s.onerror=()=>{hlsJsPromise=null;reject(new Error('hls.js failed to load'));};
-        document.head.appendChild(s);
-      });
-      return hlsJsPromise;
-    }
-    loadHlsJs().catch(()=>{}); // pre-warm in the background, ignore failure here
-
-    let currentlyLive=false; // true once a source is actually playing — guards the periodic
-                              // re-check below from tearing down a stream that's working fine.
-
-    function tryYoutube(i){
+    function loadYoutube(i){
       if(i>=youtubeSources.length){
-        currentlyLive=false;
-        setStatus('SOURCE UNAVAILABLE — সরাসরি লিংকে দেখুন','#ff8080');
-        if(watch)watch.href='https://www.youtube.com/results?search_query=makkah+live';
+        setStatus('LIVE SOURCE UNAVAILABLE — Open YouTube','#ff8080');
+        if(watch)watch.href='https://www.youtube.com/@SaudiQuranTv/live';
         return;
       }
-      setStatus('CONNECTING…','#8f8190');
+      sourceIndex=i;
+      loaded=false;
+      clearTimeout(fallbackTimer);
       if(video)video.style.display='none';
       iframe.style.display='block';
-      // live_stream?channel=ID always shows whatever that channel currently has
-      // live (or its normal "offline" placeholder) — no fetch/CORS step needed.
-      iframe.src='https://www.youtube.com/embed/live_stream?channel='+youtubeSources[i].channel+'&autoplay=1&mute=1&rel=0&vq=hd1080&enablejsapi=1&playsinline=1&origin='+encodeURIComponent(location.origin);
+      const src='https://www.youtube.com/embed/live_stream?channel='+youtubeSources[i].channel+
+        '&autoplay=1&mute=1&rel=0&playsinline=1&enablejsapi=1&vq=hd1080&origin='+encodeURIComponent(location.origin);
+      iframe.src=src;
       if(watch)watch.href=youtubeSources[i].watch;
-      currentlyLive=true; // the embed itself loaded fine; we can't inspect cross-origin
-                           // content to confirm the channel is live right now, so we
-                           // treat a successfully loading embed as a working fallback.
-      iframe.onload=()=>{ setStatus('● LIVE SOURCE CONNECTED (YouTube)','#00f56b'); };
-      iframe.onerror=()=>{ tryYoutube(i+1); };
+      setStatus('CONNECTING TO MAKKAH LIVE…','#8f9f96');
+      iframe.onload=()=>{
+        loaded=true;
+        setStatus('● LIVE PLAYER READY','#00f56b');
+        // Give the embed a moment to initialize before issuing the play command.
+        setTimeout(()=>youtubeCommand('playVideo'),700);
+      };
+      // Do not declare failure instantly; slow mobile connections need time.
+      fallbackTimer=setTimeout(()=>{
+        if(!loaded) loadYoutube(i+1);
+      },12000);
     }
 
-    let activeHls=null; // current Hls.js instance, so we can recover it on transient errors
-
-    function withTimeout(promise,ms){
-      return new Promise((resolve,reject)=>{
-        const t=setTimeout(()=>reject(new Error('timeout')),ms);
-        promise.then(v=>{clearTimeout(t);resolve(v);},e=>{clearTimeout(t);reject(e);});
-      });
-    }
-
-    function playHlsUrl(url){
-      return new Promise((resolve,reject)=>{
-        if(video.canPlayType('application/vnd.apple.mpegurl')){
-          // Safari / iOS: native HLS support, no hls.js needed.
-          video.src=url;
-          const onReady=()=>{cleanup();resolve();};
-          const onError=()=>{cleanup();reject(new Error('native hls error'));};
-          function cleanup(){video.removeEventListener('loadedmetadata',onReady);video.removeEventListener('error',onError);}
-          video.addEventListener('loadedmetadata',onReady,{once:true});
-          video.addEventListener('error',onError,{once:true});
-          video.load();
-        } else if(window.Hls && window.Hls.isSupported()){
-          const hls=new window.Hls({
-            // Tuned for a live channel: join near the live edge fast, don't buffer more
-            // than needed, and give up on a slow/dead source quickly instead of hanging.
-            lowLatencyMode:true,
-            startLevel:-1,
-            capLevelToPlayerSize:false,
-            liveSyncDuration:6,
-            maxBufferLength:30,
-            manifestLoadingTimeOut:6000,
-            manifestLoadingMaxRetry:1,
-            levelLoadingTimeOut:6000,
-            fragLoadingTimeOut:8000
-          });
-          activeHls=hls;
-          let settled=false;
-          hls.loadSource(url);
-          hls.attachMedia(video);
-          hls.on(window.Hls.Events.MANIFEST_PARSED,()=>{ settled=true; if(hls.levels && hls.levels.length>1){ hls.currentLevel=hls.levels.length-1; } resolve(); });
-          hls.on(window.Hls.Events.ERROR,(evt,data)=>{
-            if(!data || !data.fatal)return; // ignore non-fatal — hls.js recovers those on its own
-            if(!settled){ hls.destroy(); activeHls=null; reject(new Error(data.type||'hls fatal error')); return; }
-            // Already playing — try to self-heal instead of freezing the stream.
-            if(data.type===window.Hls.ErrorTypes.NETWORK_ERROR){ hls.startLoad(); }
-            else if(data.type===window.Hls.ErrorTypes.MEDIA_ERROR){ hls.recoverMediaError(); }
-            else { hls.destroy(); activeHls=null; tryHls(0); }
-          });
-        } else {
-          reject(new Error('HLS not supported'));
-        }
-      });
-    }
-
-    async function tryHls(i){
-      if(activeHls){ activeHls.destroy(); activeHls=null; }
-      if(i>=hlsSources.length){
-        // Every direct stream failed — fall back to the YouTube channel embed.
-        setStatus('CONNECTING… (fallback)','#8f8190');
-        tryYoutube(0);
-        return;
-      }
-      setStatus('CONNECTING…','#8f8190');
-      try{
-        await loadHlsJs();
-        await withTimeout(playHlsUrl(hlsSources[i]),8000);
-        iframe.style.display='none';
-        video.style.display='block';
-        video.play().catch(()=>{ /* autoplay may be blocked until user interacts; controls are visible */ });
-        if(watch)watch.href=youtubeSources[0].watch;
-        setStatus('● LIVE SOURCE CONNECTED','#00f56b');
-        currentlyLive=true;
-      }catch(e){
-        currentlyLive=false;
-        tryHls(i+1);
-      }
-    }
-
-    if(video){
-      // 'stalled' fires very often on live HLS — it just means the next fragment
-      // hasn't arrived *yet*, which is normal and usually self-corrects in a
-      // second or two. Previously this triggered an immediate full tryHls(0)
-      // rebuild (destroy + reattach + reload), which blanked the video and
-      // showed "CONNECTING…" for every brief hiccup — causing the repeated
-      // black-screen flicker seen during normal playback. Now we try a gentle
-      // recovery first (nudge hls.js / resume playback) and only fall back to
-      // a full rebuild if playback hasn't resumed after a short grace period,
-      // canceling that timer as soon as normal playback resumes.
-      let stallTimer=null;
-      function clearStallTimer(){ if(stallTimer){ clearTimeout(stallTimer); stallTimer=null; } }
-      video.addEventListener('playing',clearStallTimer);
-      video.addEventListener('timeupdate',clearStallTimer);
-      video.addEventListener('stalled',()=>{
-        if(stallTimer)return; // already waiting on a recovery attempt
-        setStatus('BUFFERING…','#ffcf66');
-        if(activeHls)activeHls.startLoad(); // gentle nudge, no teardown
-        else video.play().catch(()=>{});
-        stallTimer=setTimeout(()=>{
-          stallTimer=null;
-          if(video.paused||video.readyState<3){
-            currentlyLive=false; setStatus('RECONNECTING…','#ffcf66'); tryHls(0);
-          }
-        },5000);
-      });
-      video.addEventListener('error',()=>{ clearStallTimer(); currentlyLive=false; setStatus('RECONNECTING…','#ffcf66'); tryHls(0); });
-      tryHls(0);
-    } else {
-      tryYoutube(0);
-    }
-    // Health check every 2 minutes, but only reconnect when the current source has
-    // actually dropped — previously this force-restarted the player every 10 minutes
-    // even while it was streaming fine, causing a visible freeze/reload glitch.
-    setInterval(()=>{
-      if(currentlyLive)return;
-      if(video){tryHls(0);} else {tryYoutube(0);}
-    },2*60*1000);
+    // YouTube is the stable primary. This avoids relying on third-party HLS CDNs
+    // that can disappear, geo-block, or reject browser requests.
+    setPauseLabel();
+    loadYoutube(0);
   })();
 
   // USGS earthquakes near Bangladesh (last 24h, rough regional bounding box)
