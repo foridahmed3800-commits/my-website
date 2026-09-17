@@ -1988,6 +1988,41 @@ body.light-theme .v12-stage{border-color:rgba(16,35,61,.10)!important}
 body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
 </style>
 
+
+<style id="makkah-mobile-size-fix">
+/* Makkah Live player — responsive size fix */
+.v8-blog-grid,
+.v8-blog-card.v8-featured,
+.v8-video-wrap{
+  min-width:0;
+  width:100%;
+}
+.v8-video-wrap{
+  aspect-ratio:16/9;
+  min-height:0 !important;
+  height:auto;
+}
+.v8-video-wrap iframe,
+.v8-video-wrap video{
+  width:100% !important;
+  height:100% !important;
+  min-width:0;
+  min-height:0;
+  display:block;
+  object-fit:cover;
+}
+@media (max-width:950px){
+  .v8-blog-grid{grid-template-columns:1fr !important;}
+  .v8-video-wrap{aspect-ratio:16/9;min-height:0 !important;}
+}
+@media (max-width:720px){
+  .v8-blog-card.v8-featured{padding:16px;}
+  .v8-video-wrap{border-radius:14px;aspect-ratio:16/9;}
+  .v8-video-pause{left:10px;bottom:10px;padding:9px 13px;font-size:11px;}
+  .v8-hd-badge{top:10px;left:10px;font-size:9px;}
+}
+</style>
+
 </head>
 <body>
 
