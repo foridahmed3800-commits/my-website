@@ -10,23 +10,6 @@
      শরীফ description text). Declaring color-scheme tells the browser this page
      is intentionally dark, so it leaves the colors we set alone. -->
 <title>FS. — Cyber Intelligence & Digital Security Studio</title>
-<meta name="description" content="FS. Security Studio — Cyber intelligence, digital security, and blog articles from Bangladesh.">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<link rel="canonical" href="./">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="FS. Security Studio">
-<meta property="og:title" content="FS. — Cyber Intelligence & Digital Security Studio">
-<meta property="og:description" content="Cyber intelligence, digital security, and articles from FS. Security Studio.">
-<meta property="og:url" content="./">
-<meta property="og:image" content="./og-cover.jpg">
-<meta property="og:image:alt" content="FS. Security Studio">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="FS. — Cyber Intelligence & Digital Security Studio">
-<meta name="twitter:description" content="Cyber intelligence, digital security, and articles from FS. Security Studio.">
-<meta name="twitter:image" content="./og-cover.jpg">
-
-<meta name="instagram:card" content="summary">
-<meta name="whatsapp:preview" content="enabled">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://cdn-globecast.akamaized.net" crossorigin>
@@ -378,20 +361,8 @@
   .blog-modal{position:fixed;inset:0;background:rgba(16,26,46,.68);backdrop-filter:blur(8px);z-index:100;display:none;padding:24px;overflow:auto;}
   .blog-modal.open{display:flex;align-items:center;justify-content:center;}
   .blog-dialog{width:min(900px,100%);max-height:92vh;overflow:auto;background:var(--paper);border-radius:26px;box-shadow:0 40px 100px rgba(0,0,0,.3);position:relative;}
-  .blog-dialog-media{
-    background:var(--navy);
-    aspect-ratio:16/8;
-    position:relative;
-    overflow:hidden;
-    margin-top:64px;
-  }
-  .blog-dialog-media img,.blog-dialog-media video,.blog-dialog-media iframe{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-    border:0;
-  }
+  .blog-dialog-media{background:var(--navy);aspect-ratio:16/8;position:relative;overflow:hidden;}
+  .blog-dialog-media img,.blog-dialog-media video,.blog-dialog-media iframe{width:100%;height:100%;object-fit:cover;display:block;border:0;}
   .blog-close{position:absolute;top:16px;right:16px;width:42px;height:42px;border:1px solid rgba(255,255,255,.3);background:rgba(16,26,46,.75);color:#fff;border-radius:50%;cursor:pointer;font-size:20px;z-index:2;}
   .blog-dialog-content{padding:34px;}
   .blog-dialog-content h2{margin:8px 0 12px;}
@@ -683,10 +654,7 @@
     .whatsapp-label{display:none;}
     .blog-modal{padding:8px;}
     .blog-dialog{border-radius:20px;max-height:94vh;}
-    .blog-dialog-media{
-      aspect-ratio:16/10;
-      margin-top:48px;
-    }
+    .blog-dialog-media{aspect-ratio:16/10;}
     .blog-dialog-content{padding:22px 18px 26px;}
     .comment-form{grid-template-columns:1fr;}
   }
@@ -3482,27 +3450,20 @@ const blogs = [{
 // ---- Supabase (shared likes / dislikes / saves / comments) ----
 const SUPABASE_URL='https://gzwbckukypeqkfvttbfn.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_FaYdMrrPX6MSsldYbDxuUQ_wPJ4AQe3';
-// Supabase publishable/anon key is intended for browser use; enforce table RLS
-// in Supabase. Guard the client so a blocked CDN does not stop the entire page.
-const sb=(window.supabase && typeof window.supabase.createClient==='function')
-  ? window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY)
-  : null;
-if(!sb) console.error('Supabase SDK did not load. Blog reactions/comments are unavailable.');
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
 // Anonymous per-browser id, just so we know which reaction/save belongs to
 // *this* visitor. It is not an account/login — it only controls button
 // highlighting, not who can react.
-const safeStorage={get(k){try{return localStorage.getItem(k)}catch(_){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){console.warn('Browser storage unavailable:',e)}}};
 const ANON_KEY='fs_anon_id_v1';
-let anonId=safeStorage.get(ANON_KEY);
-if(!anonId){anonId=(globalThis.crypto?.randomUUID?.()||'anon-'+Date.now()+'-'+Math.random().toString(36).slice(2));safeStorage.set(ANON_KEY,anonId);}
+let anonId=localStorage.getItem(ANON_KEY);
+if(!anonId){anonId=(crypto.randomUUID?crypto.randomUUID():'anon-'+Date.now()+'-'+Math.random().toString(36).slice(2));localStorage.setItem(ANON_KEY,anonId);}
 
 // Shares/copies stay local-only (not requested to be shared across visitors).
 const LOCAL_KEY='fs_blog_local_v1';
-let localState={};
-try{localState=JSON.parse(safeStorage.get(LOCAL_KEY)||'{}')||{}}catch(_){localState={}}
+let localState=JSON.parse(localStorage.getItem(LOCAL_KEY)||'{}');
 const getLocal=id=>localState[id] || (localState[id]={shares:0,copies:0});
-const saveLocal=()=>safeStorage.set(LOCAL_KEY,JSON.stringify(localState));
+const saveLocal=()=>localStorage.setItem(LOCAL_KEY,JSON.stringify(localState));
 
 let activeBlogId=null;
 let blogState={};
@@ -3520,7 +3481,6 @@ async function loadBlogData(){
   const ids=blogs.map(b=>b.id);
   blogs.forEach(b=>blogState[b.id]=emptyState());
   try{
-    if(!sb) throw new Error('Supabase SDK failed to load. Check internet/CDN access.');
     const [likesRes,savesRes,commentsRes]=await Promise.all([
       sb.from('blog_likes').select('post_id,anon_id,type').in('post_id',ids),
       sb.from('blog_saves').select('post_id,anon_id').in('post_id',ids),
@@ -3559,7 +3519,6 @@ async function toggleReactionFor(postId,type){
       .select('post_id,anon_id,type')
       .eq('post_id',postId)
       .eq('anon_id',anonId)
-      .limit(1)
       .maybeSingle();
 
     if(findError) throw findError;
@@ -3635,7 +3594,6 @@ function toggleReaction(type){toggleReactionFor(activeBlogId,type);}
 async function toggleSaveFor(postId){
   const st=getState(postId);
   try{
-    if(!sb) throw new Error('Supabase SDK failed to load.');
     if(st.saved){
       const {error}=await sb.from('blog_saves').delete().eq('post_id',postId).eq('anon_id',anonId);
       if(error) throw error;
@@ -3655,42 +3613,16 @@ async function toggleSaveFor(postId){
 function cardSave(id){toggleSaveFor(id);}
 function toggleSave(){toggleSaveFor(activeBlogId);}
 function cardComment(id){openBlog(id);setTimeout(focusComment,60);}
-function blogShareUrl(post){return new URL(post.link || location.pathname,location.href).href;}
-function updateBlogSocialMeta(post){
-  if(!post)return;
-  const url=blogShareUrl(post), title=post.title||'FS. Blog', description=String(post.body||'Read this article on FS. Security Studio.').replace(/\s+/g,' ').slice(0,250);
-  const image=post.image ? new URL(post.image,location.href).href : './og-cover.jpg';
-  document.title=title+' | FS. Security Studio';
-  const setMeta=(selector,attr,value)=>{let el=document.head.querySelector(selector);if(!el){el=document.createElement('meta');if(selector.startsWith('meta[property='))el.setAttribute('property',selector.match(/\[property="([^"]+)"\]/)[1]);else el.setAttribute('name',selector.match(/\[name="([^"]+)"\]/)[1]);document.head.appendChild(el);}el.setAttribute(attr,value);};
-  setMeta('meta[property="og:type"]','content','article');setMeta('meta[property="og:title"]','content',title);setMeta('meta[property="og:description"]','content',description);setMeta('meta[property="og:url"]','content',url);setMeta('meta[property="og:image"]','content',image);
-  setMeta('meta[name="twitter:card"]','content','summary_large_image');setMeta('meta[name="twitter:title"]','content',title);setMeta('meta[name="twitter:description"]','content',description);setMeta('meta[name="twitter:image"]','content',image);
-  let canonical=document.head.querySelector('link[rel="canonical"]');if(!canonical){canonical=document.createElement('link');canonical.rel='canonical';document.head.appendChild(canonical);}canonical.href=url;
-}
-function shareTo(platform,id){
-  const post=blogs.find(x=>x.id===id);if(!post)return;
-  updateBlogSocialMeta(post);
-  const url=encodeURIComponent(blogShareUrl(post)),title=encodeURIComponent(post.title||'FS. Blog'),text=encodeURIComponent(String(post.body||'').slice(0,250));
-  const destinations={facebook:`https://www.facebook.com/sharer/sharer.php?u=${url}`,x:`https://twitter.com/intent/tweet?url=${url}&text=${title}`,whatsapp:`https://wa.me/?text=${title}%20${url}`};
-  if(platform==='instagram'){
-    if(navigator.share){navigator.share({title:post.title,text:(post.title+' '+blogShareUrl(post)),url:blogShareUrl(post)}).catch(()=>copyShareUrl(post));}
-    else copyShareUrl(post);
-    return;
-  }
-  window.open(destinations[platform],'_blank','noopener,noreferrer,width=720,height=600');
-}
-async function copyShareUrl(post){try{await navigator.clipboard.writeText(blogShareUrl(post));alert('Blog link copied. You can paste it into Instagram or any app.');}catch(_){prompt('Copy this blog link:',blogShareUrl(post));}}
-
 async function cardShare(id){
   const post=blogs.find(x=>x.id===id); if(!post)return;
   const loc=getLocal(id); loc.shares++; saveLocal();
-  try{if(navigator.share) await navigator.share({title:post.title,text:post.body,url:blogShareUrl(post)});else await copyShareUrl(post);}
-  catch(e){if(e?.name!=='AbortError') await copyShareUrl(post);} 
+  try{await navigator.share({title:post.title,text:post.body,url:new URL(post.link,location.href).href});}
+  catch(e){try{await navigator.clipboard.writeText(new URL(post.link,location.href).href);}catch(_){}}
   renderBlogs();
 }
 
 async function submitComment(postId,name,text){
   try{
-    if(!sb) throw new Error('Supabase SDK failed to load.');
     const {error}=await sb.from('blog_comments').insert({post_id:postId,name,text});
     if(error) throw error;
     getState(postId).comments.push({name,text,at:Date.now()});
@@ -3764,7 +3696,6 @@ function renderBlogs(){
 function openBlog(id){
   const post=blogs.find(x=>x.id===id); if(!post)return;
   activeBlogId=id; const st=getState(id);
-  updateBlogSocialMeta(post);
   const modal=document.getElementById('blogModal');
   document.getElementById('blogDialogMedia').innerHTML=mediaHTML(post,true);
   document.getElementById('blogModalDate').textContent=post.date;
@@ -3776,10 +3707,6 @@ function openBlog(id){
     <button class="blog-action" onclick="focusComment()">${icon.comment} Comment <span>${st.comments.length}</span></button>
     <button class="blog-action save ${st.saved?'active':''}" onclick="toggleSave()">${icon.save} Save <span>${st.saves}</span></button>
     <button class="blog-action" onclick="shareBlog()">${icon.share} Share <span>${getLocal(activeBlogId).shares}</span></button>
-    <button class="blog-action" onclick="shareTo('facebook',activeBlogId)">Facebook</button>
-    <button class="blog-action" onclick="shareTo('x',activeBlogId)">X</button>
-    <button class="blog-action" onclick="shareTo('instagram',activeBlogId)">Instagram</button>
-    <button class="blog-action" onclick="shareTo('whatsapp',activeBlogId)">WhatsApp</button>
     <button class="blog-action" onclick="copyBlogLink()">${icon.copy} Copy link <span>${getLocal(activeBlogId).copies}</span></button>`;
   renderComments();
   modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
@@ -3788,8 +3715,8 @@ function closeBlog(){document.getElementById('blogModal').classList.remove('open
 async function shareBlog(){
   const post=blogs.find(x=>x.id===activeBlogId); if(!post)return;
   const loc=getLocal(activeBlogId); loc.shares++; saveLocal();
-  try{if(navigator.share) await navigator.share({title:post.title,text:post.body,url:blogShareUrl(post)});else await copyShareUrl(post);}
-  catch(e){if(e?.name!=='AbortError') await copyShareUrl(post);} 
+  try{await navigator.share({title:post.title,text:post.body,url:new URL(post.link,location.href).href});}
+  catch(e){try{await navigator.clipboard.writeText(new URL(post.link,location.href).href);alert('Share link copied to clipboard.');}catch(_){}}
   openBlog(activeBlogId);renderBlogs();
 }
 async function copyBlogLink(){
