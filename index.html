@@ -2027,6 +2027,66 @@ body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
 }
 </style>
 
+
+<style id="blog-youtube-player-size-fix">
+/* Blog video player: keep the complete 16:9 YouTube player visible. */
+#blogGrid .blog-card{min-width:0;overflow:hidden}
+#blogGrid .blog-media{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  aspect-ratio:16/9!important;
+  overflow:hidden!important;
+  background:#000!important;
+  isolation:isolate;
+}
+#blogGrid .blog-media iframe,
+#blogGrid .blog-media video,
+#blogGrid .blog-media img{
+  position:absolute!important;
+  inset:0!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  border:0!important;
+  object-fit:contain!important;
+}
+#blogGrid .blog-media .blog-video-badge{z-index:3;pointer-events:none}
+#blogDialogMedia.blog-dialog-media{
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  aspect-ratio:16/9!important;
+  background:#000!important;
+  overflow:hidden!important;
+}
+#blogDialogMedia.blog-dialog-media iframe,
+#blogDialogMedia.blog-dialog-media video,
+#blogDialogMedia.blog-dialog-media img{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  display:block!important;
+  border:0!important;
+  object-fit:contain!important;
+  background:#000!important;
+}
+@media(max-width:600px){
+  #blogGrid .blog-media{aspect-ratio:16/9!important}
+  #blogDialogMedia.blog-dialog-media{aspect-ratio:16/9!important;border-radius:12px}
+}
+</style>
+
 </head>
 <body>
 
