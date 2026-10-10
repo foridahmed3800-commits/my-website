@@ -365,6 +365,9 @@
   .blog-dialog-media img,.blog-dialog-media video,.blog-dialog-media iframe{width:100%;height:100%;object-fit:cover;display:block;border:0;}
   .blog-close{position:absolute;top:16px;right:16px;width:42px;height:42px;border:1px solid rgba(255,255,255,.3);background:rgba(16,26,46,.75);color:#fff;border-radius:50%;cursor:pointer;font-size:20px;z-index:2;}
   .blog-dialog-content{padding:34px;}
+  /* Place the blog video below the post title instead of above the title. */
+  .blog-dialog-media-lowered{aspect-ratio:16/9;margin:22px 0 8px;border-radius:16px;}
+  .blog-dialog-media-lowered iframe,.blog-dialog-media-lowered video,.blog-dialog-media-lowered img{width:100%;height:100%;object-fit:contain;background:#000;}
   .blog-dialog-content h2{margin:8px 0 12px;}
   .blog-full-body{white-space:pre-line;font-size:16px;line-height:1.9;color:var(--text-dim);margin-top:22px;}
   .blog-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px;padding-top:20px;border-top:1px solid var(--line);}
@@ -655,6 +658,7 @@
     .blog-modal{padding:8px;}
     .blog-dialog{border-radius:20px;max-height:94vh;}
     .blog-dialog-media{aspect-ratio:16/10;}
+    .blog-dialog-media-lowered{aspect-ratio:16/9;margin:18px 0 8px;}
     .blog-dialog-content{padding:22px 18px 26px;}
     .comment-form{grid-template-columns:1fr;}
   }
@@ -2676,10 +2680,10 @@ body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
 <div id="blogModal" class="blog-modal" aria-hidden="true">
   <article class="blog-dialog" role="dialog" aria-modal="true" aria-labelledby="blogModalTitle">
     <button class="blog-close" id="blogClose" aria-label="Close">×</button>
-    <div id="blogDialogMedia" class="blog-dialog-media"></div>
     <div class="blog-dialog-content">
       <span id="blogModalDate" class="blog-date"></span>
       <h2 id="blogModalTitle"></h2>
+      <div id="blogDialogMedia" class="blog-dialog-media blog-dialog-media-lowered"></div>
       <div id="blogModalBody" class="blog-full-body"></div>
       <div id="blogActions" class="blog-actions"></div>
       <div class="comment-box">
@@ -5238,44 +5242,5 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);})
 .blog-dialog-content h2,
 #blogModalTitle{color:var(--navy)!important;}
 </style>
-
-<style id="desktop-blog-video-player-fix">
-/* Desktop blog modal: make the entire embedded player fill its 16:9 frame.
-   Mobile sizing remains governed by the existing max-width:600px rules. */
-@media (min-width: 601px) {
-  #blogModal { padding: clamp(16px, 2.5vw, 36px); }
-  #blogModal .blog-dialog {
-    width: min(1180px, calc(100vw - 64px));
-    max-width: 100%;
-    max-height: 94vh;
-  }
-  #blogModal .blog-dialog-media {
-    position: relative !important;
-    width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 16 / 9 !important;
-    min-height: 0 !important;
-    overflow: hidden !important;
-    background: #000 !important;
-    flex: 0 0 auto;
-  }
-  #blogModal .blog-dialog-media > iframe,
-  #blogModal .blog-dialog-media > video,
-  #blogModal .blog-dialog-media > img {
-    position: absolute !important;
-    inset: 0 !important;
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-    min-width: 0 !important;
-    min-height: 0 !important;
-    max-width: none !important;
-    max-height: none !important;
-    border: 0 !important;
-    object-fit: contain !important;
-  }
-}
-</style>
-
 </body>
 </html>
