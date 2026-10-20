@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="dark">
+<meta name="description" content="বাংলাদেশের সাইবার নিরাপত্তা সমস্যা, অনলাইন প্রতারণা সচেতনতা, নিরাপদ ডিজিটাল অভ্যাস এবং ethical cybersecurity learning resources.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://foridahmed3800-commits.github.io/my-website/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FS. Cyber Intelligence & Digital Security Studio">
+<meta property="og:title" content="Bangladesh Cyber Watch — Cyber Safety & Digital Security">
+<meta property="og:description" content="বাংলাদেশের সাইবার ঝুঁকি, ফিশিং, অ্যাকাউন্ট দখল, আর্থিক প্রতারণা এবং নিরাপদ থাকার ব্যবহারিক নির্দেশিকা।">
+<meta property="og:url" content="https://foridahmed3800-commits.github.io/my-website/">
+<meta property="og:locale" content="bn_BD">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Bangladesh Cyber Watch — Cyber Safety & Digital Security">
+<meta name="twitter:description" content="বাংলাদেশের সাইবার ঝুঁকি ও নিরাপদ থাকার ব্যবহারিক নির্দেশিকা।">
+
 <!-- This page ships its own dark design. Without this hint, some mobile browsers'
      automatic "dark theme for websites" feature tries to re-color already-dark
      pages and can tint plain text an unintended blue/cyan (seen on the মক্কা
@@ -2087,6 +2100,26 @@ body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
 }
 </style>
 
+
+<style id="bd-cyber-upgrade">
+/* Bangladesh Cyber Watch: animated 3D radar accents; informational only, not a live scanner. */
+.v8-cyber-status{position:relative;isolation:isolate;overflow:hidden}
+.v8-cyber-status:after{content:"";position:absolute;width:210px;height:210px;right:-80px;top:55px;border:1px solid rgba(31,230,255,.22);border-radius:50%;box-shadow:0 0 0 18px rgba(31,230,255,.035),0 0 0 38px rgba(31,230,255,.025);animation:bdRadarOrbit 12s linear infinite;pointer-events:none;z-index:-1}
+.v8-cyber-status:before{content:"";position:absolute;width:130px;height:130px;right:-40px;top:95px;border:1px dashed rgba(0,245,107,.32);border-radius:50%;animation:bdRadarOrbit 9s linear infinite reverse;pointer-events:none;z-index:-1}
+.bd-problem-grid{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:24px}
+.bd-problem{border:1px solid rgba(131,255,179,.15);border-radius:16px;padding:20px;background:linear-gradient(145deg,rgba(7,30,20,.92),rgba(3,14,12,.92));transform-style:preserve-3d;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.bd-problem:hover{transform:perspective(700px) rotateX(3deg) rotateY(-3deg) translateY(-4px);border-color:rgba(31,230,255,.45);box-shadow:0 18px 35px rgba(0,0,0,.22)}
+.bd-problem .bd-icon{font-size:25px;filter:drop-shadow(0 0 12px rgba(0,245,107,.25))}
+.bd-problem h3{font-size:15px;color:#eafff1;margin:12px 0 8px}
+.bd-problem p{font-size:12px;line-height:1.7;color:#8da49a}
+.bd-cyber-safety-note{margin-top:18px;padding:15px 17px;border:1px solid rgba(31,230,255,.18);border-radius:14px;color:#9cb6ab;background:rgba(31,230,255,.035);font-size:12px;line-height:1.75}
+.bd-cyber-safety-note strong{color:#b5ffe0}
+@keyframes bdRadarOrbit{to{transform:rotate(360deg)}}
+@media(max-width:850px){.bd-problem-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.bd-problem-grid{grid-template-columns:1fr}.bd-problem{padding:18px}}
+@media(prefers-reduced-motion:reduce){.v8-cyber-status:before,.v8-cyber-status:after{animation:none}.bd-problem:hover{transform:none}}
+</style>
+
 </head>
 <body>
 
@@ -3100,6 +3133,17 @@ If you've scanned an image in the Digital Forensics Lab below, real file data wi
       </article>
     </div>
 
+    
+    <div class="bd-problem-grid" aria-label="বাংলাদেশে সাধারণ সাইবার ঝুঁকি">
+      <article class="bd-problem"><div class="bd-icon" aria-hidden="true">🎣</div><h3>ফিশিং ও ভুয়া লিংক</h3><p>নকল লগইন পেজ, চাকরি বা পুরস্কারের বার্তায় পাসওয়ার্ড ও OTP চুরির চেষ্টা।</p></article>
+      <article class="bd-problem"><div class="bd-icon" aria-hidden="true">💳</div><h3>মোবাইল আর্থিক প্রতারণা</h3><p>ভুয়া কাস্টমার কেয়ার, PIN/OTP চাওয়া এবং টাকা ফেরতের নামে প্রতারণা।</p></article>
+      <article class="bd-problem"><div class="bd-icon" aria-hidden="true">🔐</div><h3>অ্যাকাউন্ট দখল</h3><p>দুর্বল বা পুনর্ব্যবহৃত পাসওয়ার্ড, recovery-code চুরি এবং social engineering।</p></article>
+      <article class="bd-problem"><div class="bd-icon" aria-hidden="true">🪪</div><h3>ব্যক্তিগত তথ্য ফাঁস</h3><p>অনুমতি ছাড়া ফোন নম্বর, ছবি, পরিচয়সংক্রান্ত তথ্য বা private message প্রকাশ।</p></article>
+      <article class="bd-problem"><div class="bd-icon" aria-hidden="true">🦠</div><h3>Malware ও ভুয়া APK</h3><p>অচেনা অ্যাপ/ফাইল থেকে ডিভাইসের তথ্য চুরি বা ক্ষতিকর কার্যকলাপের ঝুঁকি।</p></article>
+      <article class="bd-problem"><div class="bd-icon" aria-hidden="true">🌐</div><h3>ওয়েবসাইটের দুর্বলতা</h3><p>পুরোনো সফটওয়্যার, ভুল permission, দুর্বল access control ও database misconfiguration।</p></article>
+    </div>
+    <div class="bd-cyber-safety-note"><strong>নিরাপদ থাকার নিয়ম:</strong> আলাদা শক্তিশালী password/passkey ও 2-step verification ব্যবহার করুন, OTP/PIN কাউকে দেবেন না, software আপডেট রাখুন এবং সন্দেহজনক লিংক খুলবেন না। এই অংশটি awareness content—এটি live attack detection বা সম্পূর্ণ security audit নয়।</div>
+
     <div class="v8-disclaimer">⚠️ <b>Live attack detection নয়:</b> public advisory বা threat feed দেখে কোনো নির্দিষ্ট government website-এর compromise নিশ্চিত করা যায় না। নিশ্চিত incident-এর জন্য authorized monitoring/SOC এবং BGD e-GOV CIRT-এর official channels ব্যবহার করুন।</div>
   </div>
 </section>
@@ -3362,6 +3406,34 @@ If you've scanned an image in the Digital Forensics Lab below, real file data wi
    Add posts here. `video` can be a local .mp4 URL or a hosted video URL.
 */
 const blogs = [
+{
+  id: 16,
+  date: "2026-10-20",
+  title: "বাংলাদেশের সাইবার সমস্যা: ঝুঁকি, প্রতিরোধ ও অভিযোগ",
+  video: "",
+  image: "",
+  link: "blog-post-16.html",
+  body: `<p>বাংলাদেশে ইন্টারনেট ব্যবহারকারীরা ফিশিং, ভুয়া চাকরি/পুরস্কারের বিজ্ঞাপন, সামাজিক যোগাযোগমাধ্যমের অ্যাকাউন্ট দখল, মোবাইল আর্থিক সেবার প্রতারণা, ব্যক্তিগত তথ্য ফাঁস এবং ক্ষতিকর অ্যাপের মতো ঝুঁকির মুখোমুখি হতে পারেন। এই পোস্টটি সচেতনতার জন্য—এটি কোনো নির্দিষ্ট ঘটনার লাইভ রিপোর্ট নয়।</p>
+<h3>সাধারণ সাইবার ঝুঁকি</h3>
+<ul>
+<li><strong>ফিশিং:</strong> নকল লগইন পেজ বা ভুয়া লিংকে পাসওয়ার্ড/OTP দেওয়ানো।</li>
+<li><strong>আর্থিক প্রতারণা:</strong> PIN/OTP চাওয়া, ভুয়া কাস্টমার কেয়ার, টাকা ফেরতের নামে প্রতারণা।</li>
+<li><strong>অ্যাকাউন্ট দখল:</strong> দুর্বল/পুনর্ব্যবহৃত পাসওয়ার্ড ও ভুয়া verification লিংক।</li>
+<li><strong>গোপনীয়তা লঙ্ঘন:</strong> অনুমতি ছাড়া ছবি, ফোন নম্বর বা ব্যক্তিগত তথ্য ছড়িয়ে দেওয়া।</li>
+<li><strong>ওয়েবসাইট ও ডিভাইসের ঝুঁকি:</strong> পুরোনো সফটওয়্যার, ভুল server configuration, malware এবং দুর্বল access control।</li>
+</ul>
+<h3>নিজেকে সুরক্ষিত রাখুন</h3>
+<ul>
+<li>প্রতিটি গুরুত্বপূর্ণ অ্যাকাউন্টে আলাদা শক্তিশালী পাসওয়ার্ড এবং সম্ভব হলে passkey/2-step verification ব্যবহার করুন।</li>
+<li>কাউকে OTP, PIN, recovery code বা password দেবেন না—কাস্টমার কেয়ার পরিচয় দিলেও নয়।</li>
+<li>লিংকের ডোমেইন নিজে যাচাই করুন; অচেনা APK বা attachment ইনস্টল করবেন না।</li>
+<li>ফোন, ব্রাউজার, CMS ও plugin আপডেট রাখুন; প্রয়োজন নেই এমন permission বন্ধ করুন।</li>
+<li>ওয়েবসাইটে server-side validation, least-privilege access, rate limiting, backups এবং database Row Level Security (RLS) ব্যবহার করুন।</li>
+</ul>
+<h3>ঘটনা ঘটলে</h3>
+<p>প্রমাণ হিসেবে URL, সময়, transaction ID, screenshot ও message সংরক্ষণ করুন; আর্থিক প্রতারণায় দ্রুত সংশ্লিষ্ট ব্যাংক/মোবাইল আর্থিক সেবার official support-এ যোগাযোগ করুন। সাইবার অভিযোগ ও পরামর্শের জন্য BGD e-GOV CIRT-এর official website এবং জাতীয় সাইবার সুরক্ষা এজেন্সির বর্তমান official reporting channel যাচাই করুন। জরুরি বিপদে স্থানীয় জরুরি সেবার সহায়তা নিন।</p>
+<p><strong>সতর্কতা:</strong> এই ওয়েবপেজের স্কোর/animation কোনো real-time attack detection বা পূর্ণাঙ্গ security audit নয়।</p>`
+},
 {
   id: 15,
   date: "2026-10-17",
@@ -3772,8 +3844,17 @@ function cardComment(id){openBlog(id);setTimeout(focusComment,60);}
 async function cardShare(id){
   const post=blogs.find(x=>x.id===id); if(!post)return;
   const loc=getLocal(id); loc.shares++; saveLocal();
-  try{await navigator.share({title:post.title,text:post.body,url:new URL(post.link,location.href).href});}
-  catch(e){try{await navigator.clipboard.writeText(new URL(post.link,location.href).href);}catch(_){}}
+  const shareUrl = new URL(post.link || location.pathname, location.href).href;
+  const shareText = String(post.body || '').replace(/<[^>]*>/g,' ').replace(/\\s+/g,' ').slice(0,240);
+  try{
+    if(navigator.share){ await navigator.share({title:post.title,text:shareText,url:shareUrl}); }
+    else if(navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(shareUrl); alert('Blog link copied. Paste it into Facebook or Messenger.'); }
+    else { window.prompt('Copy this blog link to share:',shareUrl); }
+  }catch(e){
+    if(e && e.name !== 'AbortError'){
+      try{ if(navigator.clipboard && window.isSecureContext){await navigator.clipboard.writeText(shareUrl); alert('Blog link copied.');} else {window.prompt('Copy this blog link to share:',shareUrl);} }catch(_){window.prompt('Copy this blog link to share:',shareUrl);}
+    }
+  }
   renderBlogs();
 }
 
