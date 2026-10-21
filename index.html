@@ -3,6 +3,72 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script id="fs-phone-desktop-fix">
+/* ===== Smartphone "Desktop site" mode fix =====
+   Only runs when a phone is showing the page in "Desktop site" mode (layout viewport ~980px
+   on a ~400px screen). Normal phone mode and real desktop/laptop are NOT touched.
+   It (1) scales the page so text/buttons are readable, and
+        (2) applies the mobile layout rules (nav -> burger, 1-column grids, etc.). */
+(function(){
+  function detect(){
+    try{
+      var s=window.screen||{}, sw=s.width||0, sh=s.height||0, mn=Math.min(sw,sh), iw=window.innerWidth;
+      var touch=(navigator.maxTouchPoints>0)||('ontouchstart' in window)||(window.matchMedia&&matchMedia('(pointer:coarse)').matches);
+      if(!touch||!mn||mn>600||iw<700) return null;
+      if(Math.abs(iw-sw)<30||Math.abs(iw-sh)<30) return null; /* normal mobile mode */
+      var W=Math.max(320,Math.min(960,sw||mn));
+      return {W:W,z:Math.max(1,iw/W)};
+    }catch(e){return null;}
+  }
+  var st=detect(), d=document.documentElement;
+  if(st){
+    d.classList.add('fs-pd');
+    d.style.zoom=st.z;
+    window.__fsPD=st;
+  }
+  /* switching Desktop site on/off or rotating -> reload once so everything re-evaluates */
+  var t; window.addEventListener('resize',function(){
+    clearTimeout(t); t=setTimeout(function(){
+      var n=detect();
+      if(!!n!==!!st || (n&&st&&Math.abs(n.W-st.W)>40)) location.reload();
+    },500);
+  });
+  if(!st) return;
+  var W=st.W;
+  function conv(txt){
+    return txt.replace(/\(\s*(max|min)-width\s*:\s*([\d.]+)px\s*\)/g,function(m,k,v){
+      v=parseFloat(v); var ok=(k==='max')?(W<=v):(W>=v);
+      return ok?'(min-width:0px)':'(min-width:99999px)';
+    });
+  }
+  function walk(rules){
+    for(var i=0;i<rules.length;i++){
+      var r=rules[i];
+      if(r.type===4 && r.media){ /* CSSMediaRule */
+        var o=r.media.mediaText;
+        if(/(max|min)-width/.test(o)){ try{ r.media.mediaText=conv(o); }catch(e){} }
+      }
+      if(r.cssRules && r.cssRules.length) walk(r.cssRules);
+    }
+  }
+  function apply(){
+    for(var i=0;i<document.styleSheets.length;i++){
+      var sh=document.styleSheets[i], rules;
+      try{ rules=sh.cssRules; }catch(e){ continue; } /* cross-origin sheet (Google Fonts) */
+      if(!rules||sh.__fsPD) continue;
+      sh.__fsPD=true; walk(rules);
+    }
+  }
+  document.addEventListener('DOMContentLoaded',apply);
+  window.addEventListener('load',apply);
+})();
+</script>
+<style id="fs-phone-desktop-css">
+/* only active in phone + "Desktop site" mode */
+html.fs-pd, html.fs-pd body{overflow-x:hidden !important; max-width:100% !important;}
+html.fs-pd img, html.fs-pd video, html.fs-pd canvas, html.fs-pd iframe{max-width:100%;}
+</style>
+
 <meta name="color-scheme" content="dark">
 <!-- This page ships its own dark design. Without this hint, some mobile browsers'
      automatic "dark theme for websites" feature tries to re-color already-dark
@@ -4175,7 +4241,7 @@ if(mobileMenu){
   });
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&mobileMenu?.classList.contains('open'))setMenu(false);});
-window.addEventListener('resize',()=>{if(window.innerWidth>860)setMenu(false);});
+window.addEventListener('resize',()=>{if(window.innerWidth>860 && !document.documentElement.classList.contains('fs-pd'))setMenu(false);});
 
 </script>
 
