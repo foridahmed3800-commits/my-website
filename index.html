@@ -2134,6 +2134,34 @@ body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
   #blogDialogMedia.blog-dialog-media:has(img) img{max-height:60vh!important}
 }
 </style>
+<style id="blog-uniform-photo-height-final">
+/* All blog photos: identical 16:9 frames; never grow with portrait images. */
+#blogGrid .blog-media:has(img),
+#blogDialogMedia.blog-dialog-media:has(img),
+#blogDialogMedia.blog-dialog-media:has(img) > div {
+  width:100%!important;
+  aspect-ratio:16/9!important;
+  height:auto!important;
+  max-height:none!important;
+  min-height:0!important;
+  position:relative!important;
+  overflow:hidden!important;
+  background:transparent!important;
+}
+#blogGrid .blog-media img,
+#blogDialogMedia.blog-dialog-media img,
+#blogDialogMedia.blog-dialog-media:has(img) > div img {
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  max-height:100%!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  display:block!important;
+  background:transparent!important;
+}
+</style>
 </head>
 <body>
 
