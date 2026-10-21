@@ -2225,6 +2225,7 @@ body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
 <a href="#contact" class="nav-cta qq-get">Get Started</a>
       </div>
 
+      <button class="qq-search qq-search-m" type="button" aria-label="Search">⌕</button>
       <button class="burger" id="menuToggle" type="button" aria-label="Open menu"
               aria-controls="mobileMenu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -5694,5 +5695,229 @@ click('intelDnsCheck',async()=>{const d=$('intelDomain').value.trim().toLowerCas
 click('intelIpCheck',async()=>{const ip=$('intelIp').value.trim();if(!/^[a-fA-F0-9:.]{2,45}$/.test(ip)||(!ip.includes('.')&&!ip.includes(':')))return show('intelIpResult','সঠিক IPv4/IPv6 address লিখুন।');show('intelIpResult','IP তথ্য লোড হচ্ছে…');try{const x=await fetchJSON('https://ipwho.is/'+encodeURIComponent(ip));if(!x.success)return show('intelIpResult',x.message||'তথ্য পাওয়া যায়নি।');show('intelIpResult','IP: '+x.ip+'\nCountry: '+(x.country||'—')+'\nRegion: '+(x.region||'—')+'\nISP: '+(x.connection?.isp||'—')+'\nASN: '+(x.connection?.asn||'—')+'\n\nℹ IP geolocation আনুমানিক, ব্যক্তির ঠিকানা নয়।')}catch(e){show('intelIpResult','IP API সংযোগ ব্যর্থ। পরে চেষ্টা করুন।')}});
 click('intelHeaderCheck',()=>{const raw=$('intelHeaders').value.slice(0,50000);if(!raw.trim())return show('intelHeaderResult','Email header পেস্ট করুন।');const lines=raw.replace(/\r\n/g,'\n').replace(/\n[ \t]+/g,' ').split('\n');const get=name=>lines.filter(x=>x.toLowerCase().startsWith(name.toLowerCase()+':')).map(x=>x.slice(name.length+1).trim()).join(' | ');const auth=get('Authentication-Results')+' '+get('ARC-Authentication-Results');const status=key=>{const m=auth.match(new RegExp('(?:^|[;\s])'+key+'\s*=\s*([a-z]+)','i'));return m?m[1].toUpperCase():'Not found'};const from=get('From'),reply=get('Reply-To');show('intelHeaderResult','From: '+(from||'Not found')+'\nReply-To: '+(reply||'Not found')+'\nSPF: '+status('spf')+'\nDKIM: '+status('dkim')+'\nDMARC: '+status('dmarc')+'\n\n⚠ Header text পরিবর্তন করা সম্ভব। এটি authenticity guarantee নয়।')});
 const quiz=[{q:'অপরিচিত লিংকে OTP চাইলে কী করবেন?',a:['OTP দিয়ে দেব','লিংক বন্ধ করে অফিসিয়াল অ্যাপ ব্যবহার করব','বন্ধুকে ফরওয়ার্ড করব'],ok:1,why:'OTP কখনো অজানা লিংকে দেওয়া উচিত নয়।'},{q:'Two-factor authentication (2FA) কেন জরুরি?',a:['অ্যাকাউন্টের নিরাপত্তার আরেকটি স্তর যোগ করে','ইন্টারনেট দ্রুত করে','পাসওয়ার্ড সবার সঙ্গে শেয়ার করতে দেয়'],ok:0,why:'2FA পাসওয়ার্ড ফাঁস হলেও অতিরিক্ত সুরক্ষা দিতে পারে।'},{q:'একটি URL-এ HTTPS থাকলে কি সেটি অবশ্যই নিরাপদ?',a:['হ্যাঁ','না, ফিশিং সাইটেও HTTPS থাকতে পারে','সবসময় সরকারি ওয়েবসাইট'],ok:1,why:'HTTPS সংযোগ এনক্রিপ্ট করে, ওয়েবসাইটের বিশ্বাসযোগ্যতা নিশ্চিত করে না।'},{q:'অচেনা ফাইল পেলে প্রথম কাজ কী?',a:['সরাসরি চালু করব','সবাইকে পাঠাব','উৎস যাচাই করব এবং সন্দেহ হলে খুলব না'],ok:2,why:'অজানা attachment থেকে ম্যালওয়্যার ছড়াতে পারে।'}];let qi=0,score=0,answered=false;function render(){answered=false;const x=quiz[qi];$('intelQuizQuestion').textContent=(qi+1)+'/'+quiz.length+' · '+x.q;$('intelQuizOptions').replaceChildren();x.a.forEach((label,i)=>{const b=document.createElement('button');b.type='button';b.className='intel-quiz-option';b.textContent=label;b.addEventListener('click',()=>{if(answered)return;answered=true;score+=Number(i===x.ok);$('intelQuizOptions').querySelectorAll('button').forEach(btn=>btn.disabled=true);show('intelQuizResult',(i===x.ok?'✅ সঠিক! ':'❌ ভুল উত্তর। ')+x.why+'\nScore: '+score+'/'+(qi+1))});$('intelQuizOptions').append(b)});$('intelQuizNext').textContent=qi===quiz.length-1?'আবার শুরু করুন ↻':'পরের প্রশ্ন →';if(qi===0)show('intelQuizResult','উত্তর নির্বাচন করুন।')}click('intelQuizNext',()=>{qi++;if(qi>=quiz.length){qi=0;score=0}render()});render();})();</script>
+<style id="fullwidth-fix">
+/* Fix: দুই পাশের ফাঁকা বাদ — কনটেন্ট এখন পুরো প্রস্থ নেয় */
+.wrap,
+.qq-header .wrap,
+header .wrap{
+  max-width:none !important;
+  width:100% !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  padding-left:clamp(12px,2vw,40px) !important;
+  padding-right:clamp(12px,2vw,40px) !important;
+}
+.contact-card{max-width:none !important;}
+</style>
+<style id="fs-find-css">
+.fs-find-overlay{position:fixed;inset:0;z-index:2147483000;display:none;align-items:flex-start;justify-content:center;padding:max(72px,10vh) 16px 16px;background:rgba(0,6,3,.72);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.fs-find-overlay.open{display:flex}
+.fs-find-box{width:min(760px,100%);max-height:min(78vh,720px);display:flex;flex-direction:column;background:#07130d;border:1px solid rgba(0,245,107,.35);border-radius:20px;box-shadow:0 30px 90px rgba(0,0,0,.6),0 0 40px rgba(0,245,107,.12);overflow:hidden;font-family:'Inter',sans-serif;color:#e8fff0}
+.fs-find-top{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(0,245,107,.18)}
+.fs-find-top .ic{font-size:22px;color:#00f56b;line-height:1}
+.fs-find-input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#fff;font-size:17px;font-family:inherit;padding:6px 0}
+.fs-find-input::-webkit-search-cancel-button,.fs-find-input::-webkit-search-decoration{-webkit-appearance:none;display:none}
+.fs-find-input::placeholder{color:rgba(223,255,234,.45)}
+.fs-find-esc{border:1px solid rgba(0,245,107,.3);background:rgba(0,245,107,.08);color:#bfffd6;border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;font-family:inherit}
+.fs-find-meta{padding:8px 18px;font-size:12px;color:rgba(223,255,234,.55);border-bottom:1px solid rgba(0,245,107,.08)}
+.fs-find-list{overflow:auto;overscroll-behavior:contain;padding:8px;flex:1}
+.fs-find-item{display:block;width:100%;text-align:left;background:transparent;border:1px solid transparent;border-radius:12px;padding:11px 13px;margin-bottom:4px;cursor:pointer;color:inherit;font-family:inherit}
+.fs-find-item:hover,.fs-find-item.active{background:rgba(0,245,107,.09);border-color:rgba(0,245,107,.35)}
+.fs-find-sec{display:inline-block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#00f56b;background:rgba(0,245,107,.1);border-radius:999px;padding:3px 9px;margin-bottom:6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fs-find-snip{display:block;font-size:14px;line-height:1.55;color:rgba(232,255,240,.86);word-break:break-word}
+.fs-find-snip mark{background:rgba(0,245,107,.28);color:#fff;border-radius:3px;padding:0 2px}
+.fs-find-empty{padding:34px 18px;text-align:center;color:rgba(223,255,234,.6);font-size:14px;line-height:1.7}
+.fs-find-hint{display:flex;gap:14px;flex-wrap:wrap;padding:9px 18px;border-top:1px solid rgba(0,245,107,.12);font-size:11.5px;color:rgba(223,255,234,.45)}
+.fs-find-flash{outline:3px solid #00f56b!important;outline-offset:6px;border-radius:8px;animation:fsFindFlash 2.4s ease-out 1}
+@keyframes fsFindFlash{0%,60%{box-shadow:0 0 0 8px rgba(0,245,107,.28)}100%{box-shadow:0 0 0 8px rgba(0,245,107,0)}}
+body.light-theme .fs-find-overlay{background:rgba(16,35,61,.45)}
+body.light-theme .fs-find-box{background:#fff;color:#10233d;border-color:rgba(16,35,61,.18);box-shadow:0 30px 90px rgba(16,35,61,.3)}
+body.light-theme .fs-find-input{color:#10233d}
+body.light-theme .fs-find-input::placeholder,body.light-theme .fs-find-meta,body.light-theme .fs-find-empty,body.light-theme .fs-find-hint{color:rgba(16,35,61,.55)}
+body.light-theme .fs-find-snip{color:#243b5a}
+body.light-theme .fs-find-snip mark{background:#c9f7da;color:#06371c}
+body.light-theme .fs-find-sec{color:#067a38;background:rgba(6,122,56,.1)}
+body.light-theme .fs-find-item:hover,body.light-theme .fs-find-item.active{background:rgba(6,122,56,.08);border-color:rgba(6,122,56,.35)}
+body.light-theme .fs-find-esc{color:#10233d;border-color:rgba(16,35,61,.25);background:rgba(16,35,61,.05)}
+body.light-theme .fs-find-top .ic{color:#067a38}
+@media(max-width:600px){.fs-find-overlay{padding-top:12px}.fs-find-box{max-height:92vh}.fs-find-input{font-size:16px}.fs-find-hint{display:none}}
+</style>
+<div class="fs-find-overlay" id="fsFind" role="dialog" aria-modal="true" aria-label="সার্চ">
+  <div class="fs-find-box">
+    <div class="fs-find-top">
+      <span class="ic" aria-hidden="true">⌕</span>
+      <input class="fs-find-input" id="fsFindInput" type="search" autocomplete="off" spellcheck="false" placeholder="পুরো সাইটে খুঁজুন… (যেমন: Kali, IMEI, ব্লগ, মক্কা)">
+      <button class="fs-find-esc" id="fsFindClose" type="button">Esc</button>
+    </div>
+    <div class="fs-find-meta" id="fsFindMeta">টাইপ করুন — সব সেকশনের লেখা থেকে খুঁজে দেবে</div>
+    <div class="fs-find-list" id="fsFindList"></div>
+    <div class="fs-find-hint"><span>↑ ↓ বেছে নিন</span><span>Enter যান</span><span>Esc বন্ধ</span><span>Ctrl/⌘ + K বা / দিয়ে খুলুন</span></div>
+  </div>
+</div>
+<script id="fs-find-js">
+(function(){
+  var ov=document.getElementById('fsFind'),inp=document.getElementById('fsFindInput'),
+      list=document.getElementById('fsFindList'),meta=document.getElementById('fsFindMeta'),
+      closeBtn=document.getElementById('fsFindClose');
+  if(!ov||!inp)return;
+  var index=[],results=[],active=0,lastFocus=null;
+  var SKIP={SCRIPT:1,STYLE:1,NOSCRIPT:1,TEMPLATE:1,SVG:1,CANVAS:1,TEXTAREA:1,OPTION:1,IFRAME:1};
+  var dispCache=new Map();
+
+  function esc(t){return t.replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]});}
+  function norm(t){return (t||'').toLowerCase();}
+  function blockOf(el){
+    while(el&&el!==document.body){
+      var d=dispCache.get(el);
+      if(d===undefined){d=getComputedStyle(el).display;dispCache.set(el,d);}
+      if(d!=='inline'&&d!=='contents')return el;
+      el=el.parentElement;
+    }
+    return document.body;
+  }
+  function sectionInfo(el){
+    var sec=el.closest('section,footer,header,.section');
+    if(!sec)return {id:'',label:'পেজ'};
+    var h=sec.querySelector('h1,h2,h3');
+    var label=(h&&h.textContent.trim())||sec.getAttribute('aria-label')||sec.id||(sec.tagName==='FOOTER'?'Footer':'সেকশন');
+    return {id:sec.id,label:label.replace(/\s+/g,' ').slice(0,60)};
+  }
+  function build(){
+    index=[];dispCache=new Map();
+    var map=new Map(),order=[];
+    var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:function(n){
+      var t=n.nodeValue;if(!t||!t.trim())return NodeFilter.FILTER_REJECT;
+      var p=n.parentElement;if(!p)return NodeFilter.FILTER_REJECT;
+      if(SKIP[p.tagName]||SKIP[(p.tagName||'').toUpperCase()])return NodeFilter.FILTER_REJECT;
+      if(p.closest('#fsFind,#fsFindCss,script,style,svg,.fs-matrix-bg,[aria-hidden="true"]:not(button)'))return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;}});
+    var n;
+    while((n=w.nextNode())){
+      var b=blockOf(n.parentElement);
+      if(!map.has(b)){map.set(b,[]);order.push(b);}
+      map.get(b).push(n.nodeValue);
+    }
+    var seen=new Set();
+    order.forEach(function(b){
+      if(!b.getClientRects().length)return;           // hidden (display:none) skip
+      var text=map.get(b).join(' ').replace(/\s+/g,' ').trim();
+      if(text.length<2)return;
+      var info=sectionInfo(b);
+      var key=info.id+'|'+text;
+      if(seen.has(key))return;seen.add(key);
+      var isHead=/^H[1-6]$/.test(b.tagName);
+      var isMenu=!!b.closest('header,.qq-header,#mobileMenu');
+      index.push({el:b,text:text,low:norm(text),sec:isMenu?'মেনু':info.label,head:isHead,menu:isMenu});
+    });
+  }
+  function search(q){
+    var AL={'ব্লগ':'blog','ব্লগs':'blog','মক্কা':'makkah','মাক্কা':'makkah','কালী':'kali','আইএমইআই':'imei','সার্ভিস':'service','সেবা':'service','যোগাযোগ':'contact','কন্টাক্ট':'contact','ফরেনসিক':'forensic','সাইবার':'cyber','নিরাপত্তা':'safety','সিকিউরিটি':'security','আবহাওয়া':'weather','ইমেজ':'image'};
+    var base=norm(q).split(/\s+/).filter(Boolean);
+    var terms=base.slice();
+    if(!terms.length)return [];
+    var out=[];
+    index.forEach(function(it){
+      var ok=true,first=1e9;
+      for(var i=0;i<terms.length;i++){var p=it.low.indexOf(terms[i]);if(p<0&&AL[terms[i]])p=it.low.indexOf(AL[terms[i]]);if(p<0){ok=false;break;}if(p<first)first=p;}
+      if(!ok)return;
+      var score=first+(it.head?-500:0)+(it.menu?-300:0)+Math.min(it.text.length,400)/10;
+      out.push({it:it,score:score,terms:terms.map(function(t){return (it.low.indexOf(t)<0&&AL[t])?AL[t]:t;})});
+    });
+    out.sort(function(a,b){return a.score-b.score;});
+    return out.slice(0,60);
+  }
+  function snippet(it,terms){
+    var low=it.low,pos=low.indexOf(terms[0]);if(pos<0)pos=0;
+    var start=Math.max(0,pos-55),end=Math.min(it.text.length,pos+130);
+    var s=it.text.slice(start,end);
+    var html=esc(s);
+    terms.slice().sort(function(a,b){return b.length-a.length}).forEach(function(t){
+      if(!t)return;
+      var re=new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');
+      html=html.replace(re,function(m){return '<mark>'+m+'</mark>';});
+    });
+    return (start>0?'… ':'')+html+(end<it.text.length?' …':'');
+  }
+  function render(q){
+    list.innerHTML='';active=0;
+    if(!q.trim()){results=[];meta.textContent='টাইপ করুন — সব সেকশনের লেখা থেকে খুঁজে দেবে';return;}
+    results=search(q);
+    if(!results.length){
+      meta.textContent='০ টি ফলাফল';
+      list.innerHTML='<div class="fs-find-empty">“'+esc(q)+'” নামে কিছু পাওয়া যায়নি।<br>অন্য শব্দ বা ছোট শব্দ দিয়ে চেষ্টা করুন।</div>';
+      return;
+    }
+    meta.textContent=results.length+' টি ফলাফল';
+    var frag=document.createDocumentFragment();
+    results.forEach(function(r,i){
+      var b=document.createElement('button');
+      b.type='button';b.className='fs-find-item'+(i===0?' active':'');b.setAttribute('data-i',i);
+      b.innerHTML='<span class="fs-find-sec">'+esc(r.it.sec)+'</span><span class="fs-find-snip">'+snippet(r.it,r.terms)+'</span>';
+      frag.appendChild(b);
+    });
+    list.appendChild(frag);
+  }
+  function setActive(i){
+    var items=list.querySelectorAll('.fs-find-item');if(!items.length)return;
+    active=(i+items.length)%items.length;
+    items.forEach(function(e,k){e.classList.toggle('active',k===active);});
+    items[active].scrollIntoView({block:'nearest'});
+  }
+  function open(){
+    lastFocus=document.activeElement;
+    var mm=document.getElementById('mobileMenu');
+    if(mm&&mm.classList){mm.classList.remove('open','active','show');}
+    build();ov.classList.add('open');
+    inp.value=inp.value||'';render(inp.value);
+    setTimeout(function(){inp.focus();inp.select();},30);
+  }
+  function close(){
+    ov.classList.remove('open');
+    if(lastFocus&&lastFocus.focus)try{lastFocus.focus({preventScroll:true});}catch(e){}
+  }
+  function go(i){
+    var r=results[i];if(!r)return;
+    var el=r.it.el;close();
+    // menu entries: follow their link/anchor
+    if(r.it.menu){
+      var a=el.closest('a')||el.querySelector('a');
+      if(a&&a.getAttribute('href')&&a.getAttribute('href').charAt(0)==='#'){
+        var t=document.querySelector(a.getAttribute('href'));
+        if(t){t.scrollIntoView({behavior:'smooth',block:'start'});return;}
+      }
+      if(a){setTimeout(function(){a.click();},60);return;}
+    }
+    setTimeout(function(){
+      el.scrollIntoView({behavior:'smooth',block:'center'});
+      el.classList.remove('fs-find-flash');void el.offsetWidth;el.classList.add('fs-find-flash');
+      setTimeout(function(){el.classList.remove('fs-find-flash');},2600);
+    },60);
+  }
+  inp.addEventListener('input',function(){render(inp.value);});
+  inp.addEventListener('keydown',function(e){
+    if(e.key==='ArrowDown'){e.preventDefault();setActive(active+1);}
+    else if(e.key==='ArrowUp'){e.preventDefault();setActive(active-1);}
+    else if(e.key==='Enter'){e.preventDefault();go(active);}
+  });
+  list.addEventListener('click',function(e){var b=e.target.closest('.fs-find-item');if(b)go(+b.getAttribute('data-i'));});
+  list.addEventListener('mousemove',function(e){var b=e.target.closest('.fs-find-item');if(b){var i=+b.getAttribute('data-i');if(i!==active)setActive(i);}});
+  closeBtn.addEventListener('click',close);
+  ov.addEventListener('mousedown',function(e){if(e.target===ov)close();});
+  document.addEventListener('click',function(e){
+    var btn=e.target.closest&&e.target.closest('.qq-search');
+    if(btn){e.preventDefault();open();}
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'&&ov.classList.contains('open')){close();return;}
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();ov.classList.contains('open')?close():open();return;}
+    var tag=(e.target.tagName||'').toLowerCase();
+    if(e.key==='/'&&!ov.classList.contains('open')&&tag!=='input'&&tag!=='textarea'&&!e.target.isContentEditable){e.preventDefault();open();}
+  });
+})();
+</script>
+<style id="fs-find-mobile-css">
+.qq-search-m{display:none!important}
+@media(max-width:1100px){.qq-search-m{display:grid!important;margin-left:auto;margin-right:10px;flex:none}}
+</style>
 </body>
 </html>
