@@ -2228,6 +2228,12 @@ body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
   background:transparent!important;
 }
 </style>
+<style id="yt-facade-css">
+.yt-facade{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;border:0;padding:0;margin:0;cursor:pointer;background-color:#000;background-size:cover;background-position:center;z-index:2}
+.yt-facade .yt-play{position:absolute;left:50%;top:50%;width:64px;height:44px;margin:-22px 0 0 -32px;border-radius:12px;background:rgba(220,0,0,.92);transition:transform .15s,background .15s}
+.yt-facade .yt-play::after{content:"";position:absolute;left:26px;top:13px;border-style:solid;border-width:9px 0 9px 15px;border-color:transparent transparent transparent #fff}
+.yt-facade:hover .yt-play,.yt-facade:focus-visible .yt-play{transform:scale(1.1);background:#f00}
+</style>
 </head>
 <body>
 
@@ -4117,18 +4123,61 @@ function toEmbedUrl(url){
   return null; // not a known embed provider -> treat as a direct video file
 }
 
+function ytId(url){
+  const m=String(url).match(/(?:youtube\.com\/watch\?(?:.*&)?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{6,})/);
+  return m?m[1]:null;
+}
+function ytEmbedSrc(id){
+  return `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1&modestbranding=1`;
+}
+
 function mediaHTML(post,modal=false){
   const cls=modal?'':'blog-media';
   if(post.video){
-    const embedUrl=toEmbedUrl(post.video);
-    const player=embedUrl
-      ? `<iframe src="${esc(embedUrl)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe>`
-      : `<video controls preload="metadata" src="${esc(post.video)}"></video>`;
+    const id=ytId(post.video);
+    let player;
+    if(id){
+      // Fast path: YouTube iframe is heavy (~1MB each). Cards show a lightweight
+      // thumbnail + play button; the real player loads only on click.
+      // In the modal (single video) the player loads straight away.
+      player=modal
+        ? `<iframe src="${esc(ytEmbedSrc(id))}" title="${esc(post.title)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`
+        : `<button type="button" class="yt-facade" data-yt="${esc(id)}" aria-label="Play video: ${esc(post.title)}" style="background-image:url('https://i.ytimg.com/vi/${esc(id)}/mqdefault.jpg')"><span class="yt-play"></span></button>`;
+    } else {
+      const embedUrl=toEmbedUrl(post.video);
+      player=embedUrl
+        ? `<iframe src="${esc(embedUrl)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe>`
+        : `<video controls preload="none" src="${esc(post.video)}"></video>`;
+    }
     return `<div class="${cls}">${player}${modal?'':'<span class="blog-video-badge">▶ VIDEO</span>'}</div>`;
   }
-  if(post.image) return `<div class="${cls}"><img src="${esc(post.image)}" alt="${esc(post.title)}" loading="lazy"></div>`;
+  if(post.image) return `<div class="${cls}"><img src="${esc(post.image)}" alt="${esc(post.title)}" loading="lazy" decoding="async"></div>`;
   return modal?'<div class="media-placeholder" style="height:100%;">FS. Journal</div>':'<div class="blog-media"><div class="media-placeholder">FS. Journal</div></div>';
 }
+
+// Click a thumbnail -> swap in the real YouTube player (autoplay)
+document.addEventListener('click',e=>{
+  const b=e.target.closest&&e.target.closest('.yt-facade'); if(!b)return;
+  const f=document.createElement('iframe');
+  f.src=ytEmbedSrc(b.dataset.yt);
+  f.title=b.getAttribute('aria-label')||'YouTube video';
+  f.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+  f.allowFullscreen=true;
+  b.replaceWith(f);
+});
+// Warm up the connection to YouTube when the user hovers/touches a thumbnail
+(function(){
+  let done=false;
+  function warm(e){
+    if(done||!(e.target.closest&&e.target.closest('.yt-facade')))return;
+    done=true;
+    ['https://www.youtube-nocookie.com','https://i.ytimg.com'].forEach(h=>{
+      const l=document.createElement('link');l.rel='preconnect';l.href=h;document.head.appendChild(l);
+    });
+  }
+  document.addEventListener('pointerover',warm,{passive:true});
+  document.addEventListener('touchstart',warm,{passive:true});
+})();
 
 function renderBlogs(){
   const grid=document.getElementById('blogGrid');
@@ -4174,7 +4223,7 @@ function openBlog(id){
   renderComments();
   modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
 }
-function closeBlog(){document.getElementById('blogModal').classList.remove('open');document.getElementById('blogModal').setAttribute('aria-hidden','true');document.body.style.overflow='';activeBlogId=null;}
+function closeBlog(){document.getElementById('blogDialogMedia').innerHTML='';document.getElementById('blogModal').classList.remove('open');document.getElementById('blogModal').setAttribute('aria-hidden','true');document.body.style.overflow='';activeBlogId=null;}
 async function shareBlog(){
   const post=blogs.find(x=>x.id===activeBlogId); if(!post)return;
   const loc=getLocal(activeBlogId); loc.shares++; saveLocal();
