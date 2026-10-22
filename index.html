@@ -3919,7 +3919,7 @@ const blogs = [{
 // ---- Supabase (shared likes / dislikes / saves / comments) ----
 const SUPABASE_URL='https://gzwbckukypeqkfvttbfn.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_FaYdMrrPX6MSsldYbDxuUQ_wPJ4AQe3';
-const sb=(window.supabase&&window.supabase.createClient)?window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
 // Anonymous per-browser id, just so we know which reaction/save belongs to
 // *this* visitor. It is not an account/login — it only controls button
@@ -3938,46 +3938,6 @@ let activeBlogId=null;
 let blogState={};
 const emptyState=()=>({likes:0,dislikes:0,saves:0,liked:false,disliked:false,saved:false,comments:[]});
 const getState=id=>blogState[id] || (blogState[id]=emptyState());
-
-// ---- Local cache: refresh dile like/dislike/save/comment sathe sathe dekhay,
-// Supabase response ashar por server-er data diye update hoy. ----
-const CACHE_KEY='fs_blog_cache_v2';
-function saveCache(){
-  try{
-    const out={};
-    Object.keys(blogState).forEach(id=>{
-      const s=blogState[id];
-      out[id]={likes:s.likes,dislikes:s.dislikes,saves:s.saves,liked:s.liked,disliked:s.disliked,saved:s.saved,comments:s.comments};
-    });
-    localStorage.setItem(CACHE_KEY,JSON.stringify(out));
-  }catch(e){}
-}
-function loadCache(){
-  try{
-    const c=JSON.parse(localStorage.getItem(CACHE_KEY)||'{}');
-    blogs.forEach(b=>{
-      const s=c[b.id];
-      blogState[b.id]=s?Object.assign(emptyState(),s,{comments:Array.isArray(s.comments)?s.comments:[]}):emptyState();
-    });
-  }catch(e){
-    blogs.forEach(b=>blogState[b.id]=emptyState());
-  }
-}
-// Pura grid re-render na kore shudhu button/count update (video reload hobe na)
-function updateCardUI(id){
-  const art=document.querySelector('.blog-card[data-pid="'+id+'"]'); if(!art)return;
-  const st=getState(id);
-  const set=(sel,active,n)=>{
-    const b=art.querySelector(sel); if(!b)return;
-    if(active!==null)b.classList.toggle('active',!!active);
-    const sp=b.querySelector('span'); if(sp)sp.textContent=n;
-  };
-  set('.like-card',st.liked,st.likes);
-  set('.dislike-card',st.disliked,st.dislikes);
-  set('.comment-card',null,st.comments.length);
-  set('.save-card',st.saved,st.saves);
-  set('.share-card',null,getLocal(id).shares);
-}
 const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const icon={
   like:'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10v10H4a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h3Zm2 10V10l4.2-7.1a1.8 1.8 0 0 1 3.3.9V7h4.1a2 2 0 0 1 2 2.3l-1.2 8A3 3 0 0 1 18.4 20H9Z"/></svg>',
@@ -3988,10 +3948,8 @@ const icon={
 
 async function loadBlogData(){
   const ids=blogs.map(b=>b.id);
-  loadCache();
-  renderBlogs();
+  blogs.forEach(b=>blogState[b.id]=emptyState());
   try{
-    if(!sb) throw new Error('Supabase library did not load');
     const [likesRes,savesRes,commentsRes]=await Promise.all([
       sb.from('blog_likes').select('post_id,anon_id,type').in('post_id',ids),
       sb.from('blog_saves').select('post_id,anon_id').in('post_id',ids),
@@ -4000,7 +3958,6 @@ async function loadBlogData(){
     if(likesRes.error) throw likesRes.error;
     if(savesRes.error) throw savesRes.error;
     if(commentsRes.error) throw commentsRes.error;
-    blogs.forEach(b=>blogState[b.id]=emptyState()); // server data diye fresh start
     (likesRes.data||[]).forEach(r=>{
       const st=getState(r.post_id);
       if(r.type==='like'){st.likes++; if(r.anon_id===anonId)st.liked=true;}
@@ -4015,9 +3972,8 @@ async function loadBlogData(){
   }catch(e){
     console.error('Could not load shared blog data from Supabase:',e);
   }
-  saveCache();
-  blogs.forEach(b=>updateCardUI(b.id));
-  if(activeBlogId!==null){renderBlogActions();renderComments();}
+  renderBlogs();
+  if(activeBlogId!==null) openBlog(activeBlogId);
 }
 
 async function toggleReactionFor(postId,type){
@@ -4098,9 +4054,8 @@ async function toggleReactionFor(postId,type){
     return;
   }
 
-  saveCache();
-  updateCardUI(postId);
-  if(activeBlogId===postId) renderBlogActions();
+  renderBlogs();
+  if(activeBlogId===postId) openBlog(postId);
 }
 function cardReact(id,type){toggleReactionFor(id,type);}
 function toggleReaction(type){toggleReactionFor(activeBlogId,type);}
@@ -4121,9 +4076,8 @@ async function toggleSaveFor(postId){
     console.error('Save failed:',e);
     alert('Could not save this post right now. Please try again.');
   }
-  saveCache();
-  updateCardUI(postId);
-  if(activeBlogId===postId) renderBlogActions();
+  renderBlogs();
+  if(activeBlogId===postId) openBlog(postId);
 }
 function cardSave(id){toggleSaveFor(id);}
 function toggleSave(){toggleSaveFor(activeBlogId);}
@@ -4133,7 +4087,7 @@ async function cardShare(id){
   const loc=getLocal(id); loc.shares++; saveLocal();
   try{await navigator.share({title:post.title,text:post.body,url:new URL(post.link,location.href).href});}
   catch(e){try{await navigator.clipboard.writeText(new URL(post.link,location.href).href);}catch(_){}}
-  updateCardUI(id);
+  renderBlogs();
 }
 
 async function submitComment(postId,name,text){
@@ -4146,9 +4100,7 @@ async function submitComment(postId,name,text){
     alert('Could not post your comment right now. Please try again.');
     return;
   }
-  saveCache();
-  renderComments(); updateCardUI(postId);
-  if(activeBlogId===postId) renderBlogActions();
+  renderComments(); openBlog(postId); renderBlogs();
 }
 
 // Some `video` values are direct file URLs (.mp4 etc.) that the native
@@ -4232,7 +4184,7 @@ function renderBlogs(){
   if(!blogs.length){grid.innerHTML='<div class="blog-empty">No blog posts yet.</div>';return;}
   grid.innerHTML=blogs.map(post=>{
     const st=getState(post.id);
-    return `<article class="blog-card" data-pid="${post.id}">
+    return `<article class="blog-card">
       ${mediaHTML(post)}
       <div class="blog-body">
         <span class="blog-date">${esc(post.date)}</span>
@@ -4253,17 +4205,6 @@ function renderBlogs(){
   }).join('');
 }
 
-function renderBlogActions(){
-  if(activeBlogId===null)return;
-  const st=getState(activeBlogId);
-  document.getElementById('blogActions').innerHTML=`
-    <button class="blog-action like ${st.liked?'active':''}" onclick="toggleReaction('like')">${icon.like} Like <span>${st.likes}</span></button>
-    <button class="blog-action dislike ${st.disliked?'active':''}" onclick="toggleReaction('dislike')">${icon.dislike} Dislike <span>${st.dislikes}</span></button>
-    <button class="blog-action" onclick="focusComment()">${icon.comment} Comment <span>${st.comments.length}</span></button>
-    <button class="blog-action save ${st.saved?'active':''}" onclick="toggleSave()">${icon.save} Save <span>${st.saves}</span></button>
-    <button class="blog-action" onclick="shareBlog()">${icon.share} Share <span>${getLocal(activeBlogId).shares}</span></button>
-    <button class="blog-action" onclick="copyBlogLink()">${icon.copy} Copy link <span>${getLocal(activeBlogId).copies}</span></button>`;
-}
 function openBlog(id){
   const post=blogs.find(x=>x.id===id); if(!post)return;
   activeBlogId=id; const st=getState(id);
@@ -4272,7 +4213,13 @@ function openBlog(id){
   document.getElementById('blogModalDate').textContent=post.date;
   document.getElementById('blogModalTitle').textContent=post.title;
   document.getElementById('blogModalBody').textContent=post.body;
-  renderBlogActions();
+  document.getElementById('blogActions').innerHTML=`
+    <button class="blog-action like ${st.liked?'active':''}" onclick="toggleReaction('like')">${icon.like} Like <span>${st.likes}</span></button>
+    <button class="blog-action dislike ${st.disliked?'active':''}" onclick="toggleReaction('dislike')">${icon.dislike} Dislike <span>${st.dislikes}</span></button>
+    <button class="blog-action" onclick="focusComment()">${icon.comment} Comment <span>${st.comments.length}</span></button>
+    <button class="blog-action save ${st.saved?'active':''}" onclick="toggleSave()">${icon.save} Save <span>${st.saves}</span></button>
+    <button class="blog-action" onclick="shareBlog()">${icon.share} Share <span>${getLocal(activeBlogId).shares}</span></button>
+    <button class="blog-action" onclick="copyBlogLink()">${icon.copy} Copy link <span>${getLocal(activeBlogId).copies}</span></button>`;
   renderComments();
   modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
 }
@@ -4282,12 +4229,12 @@ async function shareBlog(){
   const loc=getLocal(activeBlogId); loc.shares++; saveLocal();
   try{await navigator.share({title:post.title,text:post.body,url:new URL(post.link,location.href).href});}
   catch(e){try{await navigator.clipboard.writeText(new URL(post.link,location.href).href);alert('Share link copied to clipboard.');}catch(_){}}
-  renderBlogActions();updateCardUI(activeBlogId);
+  openBlog(activeBlogId);renderBlogs();
 }
 async function copyBlogLink(){
   const post=blogs.find(x=>x.id===activeBlogId); if(!post)return;
   const url=new URL(post.link,location.href).href;
-  try{await navigator.clipboard.writeText(url);const loc=getLocal(activeBlogId);loc.copies++;saveLocal();renderBlogActions();updateCardUI(activeBlogId);}
+  try{await navigator.clipboard.writeText(url);const loc=getLocal(activeBlogId);loc.copies++;saveLocal();openBlog(activeBlogId);renderBlogs();}
   catch(e){alert('Could not copy the link.');}
 }
 function focusComment(){document.getElementById('commentText').focus();}
