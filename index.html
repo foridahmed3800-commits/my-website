@@ -6055,6 +6055,29 @@ header.qq-header{position:fixed !important;top:0 !important;left:0 !important;ri
 body{padding-top:var(--fs-header-h,72px) !important;}
 html{scroll-padding-top:calc(var(--fs-header-h,72px) + 8px);}
 .mobile-menu{z-index:99990 !important;}
+/* Desktop: keep ALL header items (incl. Tools + Get Started) inside the screen */
+@media(min-width:1101px){
+  header.qq-header .wrap{padding-left:clamp(12px,1.4vw,28px)!important;padding-right:clamp(12px,1.4vw,28px)!important;}
+  header.qq-header nav{gap:clamp(6px,.9vw,18px)!important;flex-wrap:nowrap!important;}
+  header.qq-header .qq-nav{gap:1px!important;min-width:0!important;}
+  header.qq-header .qq-nav>a{padding:0 clamp(5px,.6vw,11px)!important;font-size:clamp(10.5px,.85vw,11.5px)!important;white-space:nowrap!important;}
+  header.qq-header .qq-nav>a.qq-makkah-nav{padding:0 clamp(8px,.9vw,15px)!important;}
+  header.qq-header .qq-nav-actions{gap:clamp(4px,.5vw,9px)!important;flex:none!important;}
+  header.qq-header .qq-nav-actions>*{white-space:nowrap!important;}
+  header.qq-header .qq-logo{flex:none!important;}
+}
+@media(min-width:1101px) and (max-width:1700px){
+  header.qq-header .fs-theme-toggle .theme-label{display:none!important;}
+  header.qq-header .fs-theme-toggle{padding-left:10px!important;padding-right:10px!important;min-width:0!important;}
+  header.qq-header .qq-signin{padding:9px 13px!important;}
+  header.qq-header .qq-get{padding:10px 14px!important;}
+}
+@media(min-width:1101px) and (max-width:1380px){
+  header.qq-header .qq-logo small{display:none!important;}
+  header.qq-header .qq-nav>a span{display:none!important;}
+  header.qq-header .qq-nav-actions>.qq-search{display:none!important;}
+  header.qq-header .fs-nav-divider{display:none!important;}
+}
 </style>
 <script id="fs-fixed-nav-js">
 (function(){
