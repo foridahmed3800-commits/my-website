@@ -1821,6 +1821,20 @@ body::before{
 .qq-nav .qq-blog-nav::after{background:#00f56b;}
 </style>
 
+
+<style id="fs-blog-app-download-style">
+.fs-app-download{position:relative;isolation:isolate;display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:6px 16px 6px 9px;border:1px solid rgba(0,245,107,.48);border-radius:15px;background:linear-gradient(135deg,rgba(0,245,107,.16),rgba(31,230,255,.09));color:#effff5!important;text-decoration:none!important;box-shadow:0 0 22px rgba(0,245,107,.12),inset 0 0 18px rgba(0,245,107,.045);transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;white-space:nowrap;overflow:hidden}
+.fs-app-download:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.13),transparent 75%);transform:translateX(-120%);transition:transform .65s ease}
+.fs-app-download:hover{transform:translateY(-2px);border-color:#00f56b;box-shadow:0 0 30px rgba(0,245,107,.25),inset 0 0 20px rgba(0,245,107,.07)}
+.fs-app-download:hover:before{transform:translateX(120%)}
+.fs-app-download-icon{width:32px;height:32px;display:grid;place-items:center;border-radius:10px;background:#00f56b;color:#00130a;font-size:21px;font-weight:900;box-shadow:0 0 16px rgba(0,245,107,.3)}
+.fs-app-download-copy{display:flex;flex-direction:column;gap:2px}.fs-app-download-copy b{font-size:11px;font-weight:900;letter-spacing:.01em}.fs-app-download-copy small{font-size:8px;color:#9ccbb0;letter-spacing:.04em}
+@media(max-width:1100px){.fs-app-download{padding-right:11px;gap:7px}.fs-app-download-copy b{font-size:10px}}
+@media(max-width:860px){.fs-app-download{display:none!important}}
+.mobile-menu .fs-app-download-mobile{display:flex;align-items:center;justify-content:center;gap:10px;margin:12px 0 4px;padding:14px 16px;border:1px solid rgba(0,245,107,.5);border-radius:14px;background:linear-gradient(120deg,rgba(0,245,107,.16),rgba(31,230,255,.08));color:#eafff1!important;font-weight:900;box-shadow:0 0 22px rgba(0,245,107,.12)}
+.mobile-menu .fs-app-download-mobile small{display:block;color:#8fbba0;font-size:10px;font-weight:600;margin-top:3px}
+</style>
+
 <style id="advanced-fs-nav-v3">
 /* Advanced FS. cyber navigation v3 */
 .qq-header{position:sticky!important;top:0!important;z-index:9999!important;background:rgba(1,9,6,.82)!important;border-bottom:1px solid rgba(0,245,107,.14)!important;box-shadow:0 10px 35px rgba(0,0,0,.28),inset 0 -1px 0 rgba(0,245,107,.035)!important;}
@@ -2298,6 +2312,7 @@ body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
   </div>
 </div>
 
+<a href="https://expo.dev/accounts/foridf/projects/FS-Blog/builds/7cb64965-6ba3-4914-95e9-a64d11eef079" class="fs-app-download" target="_blank" rel="noopener noreferrer" aria-label="Download FS-Blog Android app"><span class="fs-app-download-icon">↓</span><span class="fs-app-download-copy"><b>Download App</b><small>FS-Blog · Android APK</small></span></a>
 <a href="#contact" class="nav-cta qq-get">Get Started</a>
       </div>
 
@@ -2312,6 +2327,8 @@ body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
 
 <div class="mobile-menu qq-mobile" id="mobileMenu" aria-hidden="true">
   <div class="mobile-menu-inner">
+    <a href="https://expo.dev/accounts/foridf/projects/FS-Blog/builds/7cb64965-6ba3-4914-95e9-a64d11eef079" class="fs-app-download-mobile" target="_blank" rel="noopener noreferrer"><span>⬇</span><span>Download FS-Blog App<small>Android APK · Install on your phone</small></span></a>
+
     <a href="#blogs" class="qq-blog-nav">▣ Blog <span>→</span></a>
     <a href="#home">Home <span>→</span></a>
     <a href="#live-image-forensics">🔬 Live Scan <span>→</span></a>
