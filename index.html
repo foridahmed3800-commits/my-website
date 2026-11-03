@@ -2252,6 +2252,101 @@ body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
 .yt-facade .yt-play::after{content:"";position:absolute;left:26px;top:13px;border-style:solid;border-width:9px 0 9px 15px;border-color:transparent transparent transparent #fff}
 .yt-facade:hover .yt-play,.yt-facade:focus-visible .yt-play{transform:scale(1.1);background:#f00}
 </style>
+<meta name="theme-color" content="#020b08">
+
+<style id="fs-android-app-layout-fix">
+/* Android WebView / edge-to-edge safe-area polish */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+body {
+  padding-bottom: calc(34px + env(safe-area-inset-bottom, 0px));
+}
+img, video, iframe, canvas, svg {
+  max-width: 100%;
+}
+@media (max-width: 860px) {
+  .qq-header {
+    padding-top: max(22px, env(safe-area-inset-top, 0px));
+  }
+  .qq-header nav {
+    min-height: 68px;
+    gap: 10px;
+  }
+  .qq-logo {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+  .qq-logo > span:last-child {
+    min-width: 0;
+  }
+  .qq-logo strong {
+    display: inline-block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+  .burger {
+    flex: 0 0 42px;
+    min-width: 42px;
+    min-height: 42px;
+  }
+  .qq-mobile {
+    top: calc(90px + env(safe-area-inset-top, 0px)) !important;
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+    padding-bottom: 12px;
+  }
+  .mobile-menu-inner {
+    padding-bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+  }
+}
+@media (max-width: 640px) {
+  body {
+    padding-bottom: calc(46px + env(safe-area-inset-bottom, 0px));
+  }
+  .wrap {
+    width: 100%;
+    max-width: 100%;
+  }
+  .qq-hero, .qq-dashboard-section, .fs-command-center,
+  section, .section {
+    min-width: 0;
+  }
+  .whatsapp-float {
+    right: 16px !important;
+    bottom: calc(42px + env(safe-area-inset-bottom, 0px)) !important;
+    width: 54px;
+    height: 54px;
+    z-index: 10010;
+  }
+  .whatsapp-label {
+    bottom: calc(54px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  .fs-matrix-hud {
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  .fs-app-download-mobile {
+    width: 100%;
+    min-height: 52px;
+    box-sizing: border-box;
+  }
+}
+@media (max-width: 380px) {
+  .qq-logo .qq-symbol {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+  }
+  .qq-logo strong {
+    font-size: 17px;
+  }
+  .qq-logo small {
+    font-size: 10px;
+  }
+}
+</style>
+
 </head>
 <body>
 
@@ -2312,7 +2407,7 @@ body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
   </div>
 </div>
 
-<a href="https://github.com/foridahmed3800-commits/my-website/releases/latest/download/fs.apk" class="fs-app-download" download="FS-Blog.apk" aria-label="Download FS-Blog Android app"><span class="fs-app-download-icon">↓</span><span class="fs-app-download-copy"><b>Download App</b><small>FS-Blog · Android APK</small></span></a>
+<a href="./FS-Blog.apk" class="fs-app-download" download="FS-Blog.apk" type="application/vnd.android.package-archive" aria-label="Download FS-Blog Android APK"><span class="fs-app-download-icon">↓</span><span class="fs-app-download-copy"><b>Download App</b><small>Direct APK download · Android</small></span></a>
 <a href="#contact" class="nav-cta qq-get">Get Started</a>
       </div>
 
@@ -2327,7 +2422,7 @@ body.light-theme .qq-mobile .mobile-menu-inner{background:#fff!important}
 
 <div class="mobile-menu qq-mobile" id="mobileMenu" aria-hidden="true">
   <div class="mobile-menu-inner">
-    <a href="https://github.com/foridahmed3800-commits/my-website/releases/latest/download/fs.apk" class="fs-app-download-mobile" download="FS-Blog.apk"><span>⬇</span><span>Download FS-Blog App<small>Android APK · Install on your phone</small></span></a>
+    <a href="./FS-Blog.apk" class="fs-app-download-mobile" download="FS-Blog.apk" type="application/vnd.android.package-archive"><span>⬇</span><span>Download FS-Blog App<small>Direct APK download · Android</small></span></a>
 
     <a href="#blogs" class="qq-blog-nav">▣ Blog <span>→</span></a>
     <a href="#home">Home <span>→</span></a>
