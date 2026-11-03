@@ -5836,6 +5836,50 @@ window.addEventListener('resize',()=>{if(window.innerWidth>860 && !document.docu
 #blogModalTitle{color:var(--navy)!important;}
 </style>
 
+<style id="fs-blog-modal-app-fix">
+/* App/mobile: blog popup must start BELOW the sticky header, and the
+   close (X) button stays visible + lower while the post scrolls. */
+@media (max-width:860px){
+  .blog-modal{
+    z-index:9990!important;
+    padding:calc(var(--fs-hdr,96px) + 12px) 10px calc(12px + env(safe-area-inset-bottom,0px))!important;
+    align-items:flex-start!important;
+  }
+  .blog-modal.open{align-items:flex-start!important;}
+  .blog-dialog{
+    max-height:calc(100vh - var(--fs-hdr,96px) - 24px - env(safe-area-inset-bottom,0px))!important;
+    max-height:calc(100dvh - var(--fs-hdr,96px) - 24px - env(safe-area-inset-bottom,0px))!important;
+    overscroll-behavior:contain;
+  }
+  .blog-close{
+    position:sticky!important;
+    top:14px!important;
+    right:auto!important;
+    display:flex!important;
+    align-items:center;justify-content:center;
+    margin:14px 14px -58px auto!important;
+    width:44px!important;height:44px!important;
+    z-index:5!important;
+  }
+  .blog-dialog-content{padding-top:22px!important;}
+  #blogModalDate,#blogModalTitle{padding-right:52px;}
+}
+</style>
+
+<script id="fs-blog-modal-app-fix-js">
+(function(){
+  function setHdr(){
+    var h=document.querySelector('.qq-header');
+    if(h) document.documentElement.style.setProperty('--fs-hdr',Math.ceil(h.getBoundingClientRect().height)+'px');
+  }
+  window.addEventListener('load',setHdr);
+  window.addEventListener('resize',setHdr);
+  var m=document.getElementById('blogModal');
+  if(m) new MutationObserver(setHdr).observe(m,{attributes:true,attributeFilter:['class']});
+  setHdr();
+})();
+</script>
+
 <style id="bd-cyber-safety-css">
 .bd-safety-section{padding:92px 0;background:radial-gradient(circle at 85% 8%,rgba(0,245,107,.09),transparent 28%),linear-gradient(180deg,#04110c,#06170f);color:#f3fff7;border-top:1px solid rgba(0,245,107,.15);border-bottom:1px solid rgba(0,245,107,.15)}
 .bd-safety-head{max-width:760px;margin-bottom:34px}
