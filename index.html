@@ -4065,7 +4065,41 @@ const icon={
   save:'🔖',share:'↗',copy:'⧉'
 };
 
+/* ===== LIVE POSTS (website + APK) =====
+   Posts are read from the Supabase table `blog_posts`, so a new post appears
+   on the website and in the APK instantly, with no rebuild. The `blogs` array
+   above stays as the built-in fallback, and the last good copy is cached
+   locally so the app still shows posts offline. */
+const BLOGS_CACHE_KEY='fs_blog_posts_cache_v1';
+const BASE_POST_IDS=new Set(blogs.map(b=>b.id));
+function normPost(p){return {id:Number(p.id),date:p.date||'',title:p.title||'',video:p.video||'',image:p.image||'',link:p.link||'',body:p.body||''};}
+function mergePosts(list){
+  list.forEach(p=>{
+    const post=normPost(p); if(!Number.isFinite(post.id))return;
+    const i=blogs.findIndex(b=>b.id===post.id);
+    if(i>=0)blogs[i]=post; else blogs.push(post);
+  });
+  blogs.sort((a,b)=>b.id-a.id);
+}
+function postUrl(post){return post.link?new URL(post.link,location.href).href:location.href.split('#')[0]+'#blog-'+post.id;}
+async function syncRemotePosts(){
+  try{mergePosts(JSON.parse(localStorage.getItem(BLOGS_CACHE_KEY)||'[]'));}catch(_){}
+  renderBlogs();
+  try{
+    const {data,error}=await sb.from('blog_posts').select('id,date,title,video,image,link,body').eq('published',true).order('id',{ascending:false});
+    if(error)throw error;
+    const remote=data||[];
+    const remoteIds=new Set(remote.map(p=>Number(p.id)));
+    const keep=blogs.filter(b=>BASE_POST_IDS.has(b.id)||remoteIds.has(b.id));
+    blogs.splice(0,blogs.length,...keep);
+    mergePosts(remote);
+    try{localStorage.setItem(BLOGS_CACHE_KEY,JSON.stringify(remote));}catch(_){}
+  }catch(e){console.error('Could not load live blog posts:',e);}
+  renderBlogs();
+}
+
 async function loadBlogData(){
+  await syncRemotePosts();
   const ids=blogs.map(b=>b.id);
   blogs.forEach(b=>blogState[b.id]=emptyState());
   try{
@@ -4093,6 +4127,7 @@ async function loadBlogData(){
   }
   renderBlogs();
   if(activeBlogId!==null) openBlog(activeBlogId);
+  else{const m=location.hash.match(/^#blog-(\d+)$/); if(m)openBlog(Number(m[1]));}
 }
 
 async function toggleReactionFor(postId,type){
@@ -4204,8 +4239,8 @@ function cardComment(id){openBlog(id);setTimeout(focusComment,60);}
 async function cardShare(id){
   const post=blogs.find(x=>x.id===id); if(!post)return;
   const loc=getLocal(id); loc.shares++; saveLocal();
-  try{await navigator.share({title:post.title,text:post.body,url:new URL(post.link,location.href).href});}
-  catch(e){try{await navigator.clipboard.writeText(new URL(post.link,location.href).href);}catch(_){}}
+  try{await navigator.share({title:post.title,text:post.body,url:postUrl(post)});}
+  catch(e){try{await navigator.clipboard.writeText(postUrl(post));}catch(_){}}
   renderBlogs();
 }
 
@@ -4346,13 +4381,13 @@ function closeBlog(){document.getElementById('blogDialogMedia').innerHTML='';doc
 async function shareBlog(){
   const post=blogs.find(x=>x.id===activeBlogId); if(!post)return;
   const loc=getLocal(activeBlogId); loc.shares++; saveLocal();
-  try{await navigator.share({title:post.title,text:post.body,url:new URL(post.link,location.href).href});}
-  catch(e){try{await navigator.clipboard.writeText(new URL(post.link,location.href).href);alert('Share link copied to clipboard.');}catch(_){}}
+  try{await navigator.share({title:post.title,text:post.body,url:postUrl(post)});}
+  catch(e){try{await navigator.clipboard.writeText(postUrl(post));alert('Share link copied to clipboard.');}catch(_){}}
   openBlog(activeBlogId);renderBlogs();
 }
 async function copyBlogLink(){
   const post=blogs.find(x=>x.id===activeBlogId); if(!post)return;
-  const url=new URL(post.link,location.href).href;
+  const url=postUrl(post);
   try{await navigator.clipboard.writeText(url);const loc=getLocal(activeBlogId);loc.copies++;saveLocal();openBlog(activeBlogId);renderBlogs();}
   catch(e){alert('Could not copy the link.');}
 }
