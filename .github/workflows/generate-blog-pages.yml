@@ -1,0 +1,49 @@
+name: Generate blog share pages
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/10 * * * *'   # every 10 minutes
+  push:
+    branches: [main]
+    paths: [blog-template.html, scripts/**, index.html]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: blog-pages
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate blog pages
+        run: node scripts/generate-blog-pages.mjs
+
+      - name: Draw preview pictures (only when needed)
+        if: ${{ hashFiles('og-pending.json') != '' }}
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y fonts-noto-core
+          pip install playwright
+          playwright install --with-deps chromium
+          python scripts/render-cards.py
+
+      - name: Commit changes
+        run: |
+          git config user.name  "fs-blog-robot"
+          git config user.email "fs-blog-robot@users.noreply.github.com"
+          git add -A blog-post-*.html og-images
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "Auto-generate blog share pages"
+            git push
+          fi
