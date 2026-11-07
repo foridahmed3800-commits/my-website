@@ -91,11 +91,9 @@ html.fs-pd img, html.fs-pd video, html.fs-pd canvas, html.fs-pd iframe{max-width
 <meta property="og:title" content="FS. — Cyber Intelligence & Digital Security Studio">
 <meta property="og:description" content="FS. ব্লগ ও ডিজিটাল সিকিউরিটি স্টুডিও — ইসলামিক রিমাইন্ডার, সাইবার সিকিউরিটি ও গবেষণা নিয়ে লেখা। Mymensingh, Bangladesh.">
 <meta property="og:url" content="https://foridahmed3800-commits.github.io/my-website/">
-<meta property="og:image" content="https://foridahmed3800-commits.github.io/my-website/ar.jpg">
-<meta property="og:image:secure_url" content="https://foridahmed3800-commits.github.io/my-website/ar.jpg">
+<meta property="og:image" content="https://foridahmed3800-commits.github.io/my-website/tree.jpg">
+<meta property="og:image:secure_url" content="https://foridahmed3800-commits.github.io/my-website/tree.jpg">
 <meta property="og:image:type" content="image/jpeg">
-<meta property="og:image:width" content="947">
-<meta property="og:image:height" content="540">
 <meta property="og:image:alt" content="FS. Journal">
 <meta property="og:locale" content="bn_BD">
 <meta property="og:locale:alternate" content="en_US">
@@ -104,7 +102,7 @@ html.fs-pd img, html.fs-pd video, html.fs-pd canvas, html.fs-pd iframe{max-width
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="FS. — Cyber Intelligence & Digital Security Studio">
 <meta name="twitter:description" content="FS. ব্লগ ও ডিজিটাল সিকিউরিটি স্টুডিও — ইসলামিক রিমাইন্ডার, সাইবার সিকিউরিটি ও গবেষণা নিয়ে লেখা। Mymensingh, Bangladesh.">
-<meta name="twitter:image" content="https://foridahmed3800-commits.github.io/my-website/ar.jpg">
+<meta name="twitter:image" content="https://foridahmed3800-commits.github.io/my-website/tree.jpg">
 <meta name="twitter:image:alt" content="FS. Journal">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -4130,6 +4128,17 @@ async function probePostPages(){
     }catch(_){}
   }));
 }
+/* Resolve the post's own page right before sharing (no race with probePostPages).
+   Returns immediately when the link is already known. */
+async function ensurePostPage(post){
+  if(post.link) return post.link;
+  try{
+    const f='blog-post-'+post.id+'.html';
+    const r=await fetch(f,{method:'HEAD',cache:'no-store'});
+    if(r.ok) post.link=f;
+  }catch(_){}
+  return post.link;
+}
 async function syncRemotePosts(){
   try{mergePosts(JSON.parse(localStorage.getItem(BLOGS_CACHE_KEY)||'[]'));}catch(_){}
   renderBlogs();
@@ -4287,6 +4296,7 @@ function toggleSave(){toggleSaveFor(activeBlogId);}
 function cardComment(id){openBlog(id);setTimeout(focusComment,60);}
 async function cardShare(id){
   const post=blogs.find(x=>x.id===id); if(!post)return;
+  await ensurePostPage(post);
   const loc=getLocal(id); loc.shares++; saveLocal();
   try{await navigator.share({title:post.title,text:post.body,url:postUrl(post)});}
   catch(e){try{await navigator.clipboard.writeText(postUrl(post));}catch(_){}}
@@ -4429,6 +4439,7 @@ function openBlog(id){
 function closeBlog(){document.getElementById('blogDialogMedia').innerHTML='';document.getElementById('blogModal').classList.remove('open');document.getElementById('blogModal').setAttribute('aria-hidden','true');document.body.style.overflow='';activeBlogId=null;}
 async function shareBlog(){
   const post=blogs.find(x=>x.id===activeBlogId); if(!post)return;
+  await ensurePostPage(post);
   const loc=getLocal(activeBlogId); loc.shares++; saveLocal();
   try{await navigator.share({title:post.title,text:post.body,url:postUrl(post)});}
   catch(e){try{await navigator.clipboard.writeText(postUrl(post));alert('Share link copied to clipboard.');}catch(_){}}
@@ -4436,6 +4447,7 @@ async function shareBlog(){
 }
 async function copyBlogLink(){
   const post=blogs.find(x=>x.id===activeBlogId); if(!post)return;
+  await ensurePostPage(post);
   const url=postUrl(post);
   try{await navigator.clipboard.writeText(url);const loc=getLocal(activeBlogId);loc.copies++;saveLocal();openBlog(activeBlogId);renderBlogs();}
   catch(e){alert('Could not copy the link.');}
