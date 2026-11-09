@@ -3719,6 +3719,14 @@ If you've scanned an image in the Digital Forensics Lab below, real file data wi
    Add posts here. `video` can be a local .mp4 URL or a hosted video URL.
 */
 const blogs = [{
+  id: 26,
+  date: "07-11-26",
+  title: "Blog Post 26: Dr. Naik",
+  video: "https://youtu.be/Ca0ul37X9ls?si=cz7hOKE5LTOVtM90",
+  image: "",
+  link: "blog-post-26.html",
+  body: ``
+},{
   id: 24,
   date: "07-11-26",
   title: "Blog Post 24: ",
@@ -4108,7 +4116,19 @@ function mergePosts(list){
   });
   blogs.sort((a,b)=>b.id-a.id);
 }
-function postUrl(post){return post.link?new URL(post.link,location.href).href:location.href.split('#')[0]+'#blog-'+post.id;}
+/* ===== SHARE LINK (per-post social preview) =====
+   Facebook/WhatsApp/Telegram crawlers do NOT run JavaScript, so a link like
+   site/#blog-45 always shows the homepage preview (wrong image/title).
+   Fix: every post without its own static page is shared through the Cloudflare
+   Worker (share-worker.js), which reads the post from Supabase and returns real
+   <meta og:*> tags for THAT post, then sends the human visitor to the post.
+   Paste your Worker URL below (no trailing slash). */
+const SHARE_BASE='https://fs-share.foridahmed3800.workers.dev';
+function postUrl(post){
+  if(post.link)return new URL(post.link,location.href).href;
+  if(SHARE_BASE && SHARE_BASE.indexOf('YOUR-NAME')===-1)return SHARE_BASE+'/p/'+post.id;
+  return location.href.split('#')[0]+'#blog-'+post.id;
+}
 /* If a post has no page of its own yet, look for blog-post-<id>.html (made by the
    GitHub robot or by hand). If it exists, share that link so Facebook/WhatsApp show
    the post's own preview; otherwise sharing falls back to the site link (#blog-<id>). */
