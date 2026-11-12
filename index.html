@@ -6315,5 +6315,188 @@ html{scroll-padding-top:calc(var(--fs-header-h,72px) + 8px);}
   if(window.ResizeObserver){new ResizeObserver(set).observe(h);}
 })();
 </script>
+<style id="fs-img-zoom-css">
+#blogGrid .blog-media > img,#blogDialogMedia img{cursor:zoom-in}
+#fsLb{position:fixed;inset:0;z-index:2147483000;display:none;background:rgba(0,0,0,.94);touch-action:none;user-select:none;-webkit-user-select:none}
+#fsLb.open{display:block}
+#fsLbStage{position:absolute;inset:0;overflow:hidden;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:grab}
+#fsLbStage.drag{cursor:grabbing}
+#fsLbImg{max-width:96vw;max-height:88vh;transform-origin:center center;will-change:transform;-webkit-user-drag:none;user-select:none;pointer-events:none;border-radius:6px}
+.fsLbBar{position:absolute;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;gap:8px;align-items:center;background:rgba(30,30,30,.85);padding:6px 10px;border-radius:999px;z-index:2}
+.fsLbBar button,#fsLbClose{border:0;background:rgba(255,255,255,.14);color:#fff;font:700 20px/1 system-ui,sans-serif;width:42px;height:42px;border-radius:50%;cursor:pointer}
+.fsLbBar button:active,#fsLbClose:active{background:rgba(255,255,255,.3)}
+#fsLbPct{color:#fff;font:600 13px system-ui,sans-serif;min-width:46px;text-align:center}
+#fsLbClose{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:14px;z-index:3;font-size:26px}
+</style>
+<div id="fsLb" aria-hidden="true" role="dialog" aria-label="Image viewer">
+  <button id="fsLbClose" type="button" aria-label="Close">×</button>
+  <div id="fsLbStage"><img id="fsLbImg" alt="" draggable="false"></div>
+  <div class="fsLbBar">
+    <button type="button" id="fsLbOut" aria-label="Zoom out">−</button>
+    <span id="fsLbPct">100%</span>
+    <button type="button" id="fsLbIn" aria-label="Zoom in">+</button>
+    <button type="button" id="fsLbReset" aria-label="Reset" style="font-size:15px">1:1</button>
+  </div>
+</div>
+<script id="fs-img-zoom-js">
+(function(){
+  var lb=document.getElementById('fsLb'),stage=document.getElementById('fsLbStage'),img=document.getElementById('fsLbImg'),pct=document.getElementById('fsLbPct');
+  var s=1,x=0,y=0,MIN=1,MAX=6,pts={},startDist=0,startS=1,lastTap=0,moved=false;
+  function apply(){
+    // keep image from being dragged completely off-screen
+    var w=img.clientWidth*s,h=img.clientHeight*s,mx=Math.max(0,(w-innerWidth)/2+80),my=Math.max(0,(h-innerHeight)/2+80);
+    if(s<=1){x=0;y=0;} else {x=Math.max(-mx,Math.min(mx,x));y=Math.max(-my,Math.min(my,y));}
+    img.style.transform='translate('+x+'px,'+y+'px) scale('+s+')';
+    pct.textContent=Math.round(s*100)+'%';
+  }
+  function zoomAt(ns,cx,cy){
+    ns=Math.max(MIN,Math.min(MAX,ns));
+    var r=stage.getBoundingClientRect(),ox=cx-(r.left+r.width/2),oy=cy-(r.top+r.height/2),k=ns/s;
+    x=ox-(ox-x)*k;y=oy-(oy-y)*k;s=ns;apply();
+  }
+  function open(src,alt){
+    s=1;x=0;y=0;img.src=src;img.alt=alt||'';apply();
+    lb.classList.add('open');lb.setAttribute('aria-hidden','false');
+    document.documentElement.setAttribute('data-fslb','1');
+  }
+  function close(){
+    lb.classList.remove('open');lb.setAttribute('aria-hidden','true');img.removeAttribute('src');
+    document.documentElement.removeAttribute('data-fslb');
+  }
+  // open on click of blog images (cards + post popup)
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(!t||t.tagName!=='IMG')return;
+    if(!(t.closest('#blogGrid .blog-media')||t.closest('#blogDialogMedia')))return;
+    e.preventDefault();e.stopPropagation();
+    open(t.currentSrc||t.src,t.alt);
+  },true);
+  document.getElementById('fsLbClose').addEventListener('click',close);
+  document.getElementById('fsLbIn').addEventListener('click',function(){zoomAt(s*1.5,innerWidth/2,innerHeight/2)});
+  document.getElementById('fsLbOut').addEventListener('click',function(){zoomAt(s/1.5,innerWidth/2,innerHeight/2)});
+  document.getElementById('fsLbReset').addEventListener('click',function(){s=1;x=0;y=0;apply()});
+  // Esc closes viewer first (not the blog popup behind it)
+  document.addEventListener('keydown',function(e){
+    if(!lb.classList.contains('open'))return;
+    if(e.key==='Escape'){e.stopPropagation();e.preventDefault();close();}
+    else if(e.key==='+'||e.key==='='){zoomAt(s*1.3,innerWidth/2,innerHeight/2)}
+    else if(e.key==='-'){zoomAt(s/1.3,innerWidth/2,innerHeight/2)}
+  },true);
+  // mouse wheel / trackpad zoom
+  stage.addEventListener('wheel',function(e){e.preventDefault();zoomAt(s*(e.deltaY<0?1.15:1/1.15),e.clientX,e.clientY)},{passive:false});
+  // pointer: drag to pan, pinch to zoom, double-tap to zoom
+  function dist(){var k=Object.keys(pts);if(k.length<2)return 0;var a=pts[k[0]],b=pts[k[1]];return Math.hypot(a.x-b.x,a.y-b.y)}
+  function mid(){var k=Object.keys(pts),a=pts[k[0]],b=pts[k[1]];return{x:(a.x+b.x)/2,y:(a.y+b.y)/2}}
+  stage.addEventListener('pointerdown',function(e){
+    stage.setPointerCapture(e.pointerId);pts[e.pointerId]={x:e.clientX,y:e.clientY};moved=false;
+    if(Object.keys(pts).length===2){startDist=dist();startS=s}
+    stage.classList.add('drag');
+  });
+  stage.addEventListener('pointermove',function(e){
+    var p=pts[e.pointerId];if(!p)return;
+    var n=Object.keys(pts).length;
+    if(n===2){var d=dist();if(startDist){var m=mid();zoomAt(startS*d/startDist,m.x,m.y)}moved=true}
+    else if(n===1&&s>1){x+=e.clientX-p.x;y+=e.clientY-p.y;apply();moved=true}
+    if(Math.abs(e.clientX-p.x)+Math.abs(e.clientY-p.y)>2)moved=true;
+    p.x=e.clientX;p.y=e.clientY;
+  });
+  function up(e){
+    var had=!!pts[e.pointerId];delete pts[e.pointerId];startDist=0;
+    if(!Object.keys(pts).length)stage.classList.remove('drag');
+    if(!had||e.type==='pointercancel')return;
+    if(!moved&&!Object.keys(pts).length){
+      var now=Date.now();
+      if(now-lastTap<300){ if(s>1.05){s=1;x=0;y=0;apply()} else zoomAt(2.5,e.clientX,e.clientY); lastTap=0; }
+      else{
+        lastTap=now;
+        // single tap on empty dark area (outside the image) closes
+        if(e.target===stage){var r=img.getBoundingClientRect();
+          if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)setTimeout(function(){if(lastTap===now&&lb.classList.contains('open'))close()},320);}
+      }
+    }
+  }
+  stage.addEventListener('pointerup',up);stage.addEventListener('pointercancel',up);
+  stage.addEventListener('dblclick',function(e){e.preventDefault()});
+  window.addEventListener('resize',function(){if(lb.classList.contains('open'))apply()});
+})();
+</script>
+
+<style id="fs-dl-css">
+.fs-dl-btn{position:absolute;top:10px;left:10px;z-index:6;display:inline-flex;align-items:center;gap:6px;border:0;cursor:pointer;padding:8px 13px;border-radius:999px;background:rgba(0,0,0,.72);color:#fff;font:700 12px/1 system-ui,-apple-system,sans-serif;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 2px 10px rgba(0,0,0,.35);text-decoration:none}
+.fs-dl-btn:hover{background:#00c853;color:#00130a}
+.fs-dl-btn.busy{opacity:.6;pointer-events:none}
+#fsLbDl{font-size:18px}
+</style>
+<script id="fs-dl-js">
+(function(){
+  function ytId(u){var m=String(u).match(/(?:youtube\.com\/watch\?(?:.*&)?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{6,})/);return m?m[1]:null}
+  // returns {url,name} or null when the source cannot be downloaded from here
+  function dlInfo(p){
+    if(!p)return null;
+    var base=String(p.title||'blog').replace(/[\\\/:*?"<>|]+/g,'').trim().slice(0,60)||'blog';
+    if(p.video){
+      if(ytId(p.video))return null;                       // YouTube: not downloadable from a site
+      var m=String(p.video).match(/drive\.google\.com\/file\/d\/([^\/?]+)/)||String(p.video).match(/drive\.google\.com\/open\?id=([^&]+)/);
+      if(m)return {url:'https://drive.google.com/uc?export=download&id='+m[1],name:base+'.mp4',ext:true};
+      if(/vimeo\.com/.test(p.video))return null;
+      var fn=String(p.video).split('?')[0].split('/').pop()||(base+'.mp4');
+      return {url:p.video,name:fn};
+    }
+    if(p.image){
+      if(/^data:/.test(p.image)){var t=(p.image.match(/^data:image\/(\w+)/)||[])[1]||'jpg';return {url:p.image,name:base+'.'+t}}
+      var f=String(p.image).split('?')[0].split('/').pop()||(base+'.jpg');
+      return {url:p.image,name:f};
+    }
+    return null;
+  }
+  function anchorDownload(url,name){
+    var a=document.createElement('a');a.href=url;a.download=name||'';a.rel='noopener';a.target='_blank';
+    document.body.appendChild(a);a.click();a.remove();
+  }
+  function saveFile(url,name,external,btn){
+    if(external){anchorDownload(url,name);return}      // e.g. Google Drive: browser handles it
+    if(btn)btn.classList.add('busy');
+    fetch(url).then(function(r){if(!r.ok)throw 0;return r.blob()}).then(function(b){
+      var o=URL.createObjectURL(b);anchorDownload(o,name);setTimeout(function(){URL.revokeObjectURL(o)},4000);
+    }).catch(function(){anchorDownload(url,name)}).then(function(){if(btn)btn.classList.remove('busy')});
+  }
+  var DL_ICON='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 20h16"/></svg>';
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+
+  // add a Download button inside every blog media box (cards + popup)
+  if(typeof mediaHTML==='function'){
+    var orig=mediaHTML;
+    window.mediaHTML=mediaHTML=function(post,modal){
+      var h=orig(post,modal),d=dlInfo(post);
+      if(!d)return h;
+      var label=post.video?'Download video':'Download image';
+      var btn='<button type="button" class="fs-dl-btn" data-url="'+esc(d.url)+'" data-name="'+esc(d.name)+'" data-ext="'+(d.ext?1:0)+'" aria-label="'+label+'">'+DL_ICON+'<span>'+(post.video?'Video':'Image')+'</span></button>';
+      var i=h.lastIndexOf('</div>');
+      return i<0?h:h.slice(0,i)+btn+h.slice(i);
+    };
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('.fs-dl-btn');if(!b)return;
+    e.preventDefault();e.stopPropagation();
+    saveFile(b.dataset.url,b.dataset.name,b.dataset.ext==='1',b);
+  },true);
+
+  // download button inside the zoom viewer too
+  var bar=document.querySelector('#fsLb .fsLbBar');
+  if(bar&&!document.getElementById('fsLbDl')){
+    var x=document.createElement('button');x.type='button';x.id='fsLbDl';x.setAttribute('aria-label','Download image');x.innerHTML=DL_ICON;
+    x.addEventListener('click',function(){
+      var im=document.getElementById('fsLbImg'),src=im&&im.src;if(!src)return;
+      var n=src.split('?')[0].split('/').pop();if(!n||/^data:/.test(src)||n.length>80)n='image.jpg';
+      saveFile(src,n,false,x);
+    });
+    bar.appendChild(x);
+  }
+
+  // re-draw what the page already rendered before this script ran
+  try{ if(typeof renderBlogs==='function')renderBlogs(); if(typeof activeBlogId!=='undefined'&&activeBlogId!==null&&typeof openBlog==='function')openBlog(activeBlogId); }catch(e){}
+})();
+</script>
+
 </body>
 </html>
